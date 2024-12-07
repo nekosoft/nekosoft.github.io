@@ -47,8 +47,8 @@ params:
     displayTitle: true
     displayLogo: true
     logo:
-      path: images/skull.png
-      dark: images/skull.png
+      path: images/skull_script_kitty.svg
+      dark: images/skull_script_kitty.svg
       link: /
       width: 40
       height: 20
