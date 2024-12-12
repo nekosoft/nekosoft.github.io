@@ -34,7 +34,7 @@ Let's take a brief overview about what makes up a domain name and a quick overvi
 
 ### A Domain Name
 
-![Domain Name Overview](../images/domain_name.png)
+![Domain Name Overview](/images/domain_name.png)
 
 # Who registered a domain name?
 
@@ -44,7 +44,7 @@ Who or what registered a domain name could be our first piece of information abo
 
 ### A Uniform Resource Locator (URL)
 
-![Anatomy of a URL](../images/anatomy_URL.png)
+![Anatomy of a URL](nekosoft.github.io/content/images/anatomy_URL.png)
 
 The `://` is a delimeter between the protocol and the web address. The double slash is [Sir Tim Berners-Lee's](https://en.wikipedia.org/wiki/Tim_Berners-Lee) [biggest mistake](https://archive.nytimes.com/bits.blogs.nytimes.com/2009/10/12/the-webs-inventor-regrets-one-small-thing/), "it seemed like a good idea at the time"
 
