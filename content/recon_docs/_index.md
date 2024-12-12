@@ -7,5 +7,6 @@ This is the beginning of the Technical Reconnaissance documentation.
 
 
 - How to use these docs
+- Attribution
 
 
