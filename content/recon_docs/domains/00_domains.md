@@ -1,9 +1,7 @@
 ---
 title: Domain Names
-type: recon_docs
+type: docs
 prev: recon_docs/domains/
-sidebar:
-  open: true
 ---
 
 Talk about reconnaissance specific to a domain name. DNS may or may not fit here. 
