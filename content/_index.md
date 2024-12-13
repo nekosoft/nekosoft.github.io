@@ -9,5 +9,5 @@ tldr; I'm Yianna Paris and this site is a collection of my research, documentati
 
 {{< cards >}}
   {{< card link="recon_docs" title="Recon Docs" icon="book-open" >}}
-  {{< card link="about" title="About" icon="user" >}}
+  <!-- {{< card link="about" title="About" icon="user" >}} -->
 {{< /cards >}}
