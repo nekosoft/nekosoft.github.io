@@ -1,5 +1,5 @@
 ---
-title: Domain Names
+title: Domain Names and URL's
 type: docs
 prev: recon_docs/domains/
 next: recond_docs/domains/01_service_enumeration
