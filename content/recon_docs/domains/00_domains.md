@@ -2,6 +2,7 @@
 title: Domain Names
 type: docs
 prev: recon_docs/domains/
+next: recond_docs/domains/01_service_enumeration
 ---
 
 I like to start with domain names, when you visit `example.com` you're visiting a human readable address, something that's easy for you to remember. Other systems look up what the address is, if we can visit it, if anything is hosted there and the location where those files are hosted. I was curious about this, so I start from a broad business approach to reconnaissance, to then something technically deep. I'll cover:
