@@ -17,3 +17,7 @@ For example, in an Internet of Things (IoT) device, the Data Distribution Servic
 
 
 ## Fingerprinting
+
+- need to update
+- what is fingerprinting
+- how to?
