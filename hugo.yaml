@@ -24,9 +24,9 @@ menu:
     - name: Recon Docs
       pageRef: /recon_docs
       weight: 1
-    - name: About
-      pageRef: /about
-      weight: 3
+    # - name: About
+    #   pageRef: /about
+    #   weight: 3
     - name: Contact ↗
       url: "https://github.com/nekosoft"
       weight: 4
