@@ -4,7 +4,7 @@ title: Script Kitty Security Blog
 # import hextra as module
 module:
   imports:
-  - path: github.com/imfing/hextra
+  - path: github.com/nekosoft/hextra
 
 markup:
   # allow raw html
