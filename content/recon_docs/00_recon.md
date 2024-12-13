@@ -1,5 +1,5 @@
 ---
-title: Demo Page
+title: An Approach to Technical Reconnaissance
 type: docs
 prev: /
 next: recon_docs/domains/
