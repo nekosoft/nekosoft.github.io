@@ -85,6 +85,44 @@ In the above URL, the `about` appears before the domain name, this is the sub-do
 
 You might notice that it looks different to the path and file extension. Both are valid ways to structure data, it just depends on needs. What's important for us is knowing that they are different, which opens up how many permutations - or how many possible ways - there is to go through the data, what is the most efficient way, vs what it is we are actually looking for. There might be some simple ways to find some of this information thanks to what the backend sends to the frontend.
 
+Look out for:
+
+- file types, programming languages - like .js for javascript
+- file names with a certain pattern / string, like passwords.xls
+
+What you will generally find sent to the client:
+
+- html, styling pages
+- some javascript, routes for the page
+- anything rendered in the client or designed for client efficiency, so it might do some checks or calculations client-side
+- commented out code
+- trackers to sites for various metrics, such as for marketing, usage of the site, device or network statistics
+- the server's response to the client's request
+
+The more juicy things can include:
+
+- credentials and hardcoded passwords
+- cryptographic certificates
+- data leakage
+- ... and much more
+
+## Resolving to an IP Address
+
+- can talk about dig and ns lookups, etc..
+- light overview of what an IP address is, mainly to establish language in this documentation
+- maybe a future expansion is talking more about networking and pivoting
+
+
+## Autonomous System Numbers
+
+When I spoke to some developers about my reconnaissance approach, I had one person in the audience who really understood (and knew a lot more about) what I was talking about, especially when I started digging into networking details. I've never been a system administrator, the most I learned about networking was at university and on the job with cloud computing. Then I learned more about on-premises servers when I started learning hacking networks and systems with OSCP. My background is building websites, software, and using many programming languages and libraries, as well as a bit of web hosting. All this to say I'm not an expert in networking or ASN's, but here's what I've learned so far.
+
+- Find a way to describe what an autonomous system is. Maybe add a diagram?
+
+There are multiple layers to hosting or serving software online, and without throwing more models at you, just know there are models that exist and we will probably go over them as they relate to the "breadth" of reconnaissance you can perform. 
+
+- can link to external resources
+
 ---
 
 Domain Names
