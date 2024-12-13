@@ -18,9 +18,9 @@ markup:
 
 menu:
   main:
-    - name: Docs
-      pageRef: /docs
-      weight: 2
+    # - name: Docs
+    #   pageRef: /docs
+    #   weight: 2
     - name: Recon Docs
       pageRef: /recon_docs
       weight: 1
