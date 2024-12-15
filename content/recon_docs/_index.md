@@ -1,5 +1,5 @@
 ---
-title: Documentation
+title: Technical Reconnaissance Documentation
 next: 00_recon
 sidebar:
   open: true
