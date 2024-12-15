@@ -1,6 +1,5 @@
 ---
 title: Internet of Things (IoT) Research
-next: 00_recon
 sidebar:
   open: true
 ---
