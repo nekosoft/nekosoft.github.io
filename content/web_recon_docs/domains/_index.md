@@ -1,5 +1,5 @@
 ---
-title: Domains
+title: 3. Domains
 type: docs
 prev: web_recon_docs/web_reconnaissance
 next: web_recon_docs/domains/domains

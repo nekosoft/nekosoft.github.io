@@ -1,5 +1,5 @@
 ---
-title: An Approach to Web Reconnaissance
+title: 1. An Approach to Web Reconnaissance
 type: docs
 prev: /
 next: web_recon_docs/domains/
