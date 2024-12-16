@@ -21,8 +21,8 @@ menu:
     # - name: Docs
     #   pageRef: /docs
     #   weight: 2
-    - name: Recon Docs
-      pageRef: /recon_docs
+    - name: Web Recon Docs
+      pageRef: /web_recon_docs
       weight: 1
     # - name: About
     #   pageRef: /about
