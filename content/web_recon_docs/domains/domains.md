@@ -53,11 +53,24 @@ Who or what registered a domain name could be our first piece of information abo
 
 ## How to expand the attack surface
 
-Domain Names
+We are looking for some key information that can point to more assets. Every time we find something new, it's important to validate and verify this is the target we are investigating. It might be related in some way, such as a third party vendor, in which case we want to be clear about the scope.
 
-- who registered them
+Do we want to find a vulnerability in the third party vendor? Do we have permission? Would this be a more critical exploitable vulnerability?
+
+Some of the information we gather includes:
+
+- who registered the domain, this is often someone tied to the stakeholder who looks after administration and possibly network engineering
+    - look for domains registered by employees of the company
+    - inspect if any domains were registered by private email addresses, such as an employee's personal gmail account
+    - did they register any other domain names?
+    - historical and current whois records
 - where are they hosted
-- historical and current whois records
+    - does the domain resolve to an address that serves information, hosts a website or application?
+    - what kind of infrastucture is used?
 - reputation
+    - is this a trustworthy domain or does it have a reputation for sending spam?
 - typo squatted domains
+    - can the domain be easily mispelled? are these registered?
+    - are there any websites impersonating the legitimate website?
 - Top Level Domains
+    - is the same company registering domain names across Top Level Domains, such as registering the same word for `.com`, `.nl`, and `.com.au`
