@@ -21,6 +21,12 @@ Depending on the protocol, there may be standardized ways to communicate. This c
 
 We will go over several different architecture patterns, how they relate to protocols, database quirks and more. An important aspect is understanding how this communication happens and at what aspect we might be able to find certain data.
 
+### Some assumptions we have about what we are investigating:
+
+- there is data that needs protection, something that shouldn't be accessible to the public (such as personal identifiable information, think your full name and address)
+- there are features that are of high value, such as a payment system
+- there is a way to communicate with this data, we may need to look at authentication and authorisation
+
 ### What we are looking for:
 
 - how does the client communicate with the server?
@@ -35,16 +41,6 @@ We will go over several different architecture patterns, how they relate to prot
 ### Where can we find it:
 
 #### Common API Architectures and Designs
-
-
-
-
-Some assumptions we have about what we are investigating:
-
-- there is data that needs protection, something that shouldn't be accessible to the public (such as personal identifiable information, think your full name and address)
-- there are features that are of high value, such as a payment system
-- there is a way to communicate with this data, we may need to look at authentication and authorisation
-
 
 
 
