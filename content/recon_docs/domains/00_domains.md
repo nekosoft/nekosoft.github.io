@@ -49,3 +49,16 @@ https://data.iana.org/TLD/tlds-alpha-by-domain.txt
 ### Who registered a domain name?
 
 Who or what registered a domain name could be our first piece of information about a target's attack surface. From a business standpoint, who works for the company, their current and past products, mergers and acquisitions, could all be pieces of information that could lead to an entrypoint into gaining unauthorized access into the company and its data.
+
+
+## How to expand the attack surface
+
+
+Domain Names
+
+- who registered them
+- where are they hosted
+- historical and current whois records
+- reputation
+- typo squatted domains
+- Top Level Domains
