@@ -10,14 +10,42 @@ prev: recon_docs/domains/00_domains
 
 ## Protocols and Common Ports
 
-Protocols are usually defined. There are some protocols where only a model is defined, and it's largely up to the developer to implement it that way unless there is widespread usage and a need for standardisation. Developers can still choose to implement something against the standard, which we will talk about more when covering topics such as REST, IoT  security frameworks, They can still change things or not adhere to the architecture or standards. Some are more widely adopted, where you'll see more maturity. This means that more people make an effort to make sure they adhere to and improve the standards, so that it can improve certain aspects (like security).
+Different protocols communicate in various ways. They might have a structured way to send and receive data, or completely unstructured. 
+
+There are some protocols where only a model is defined, and it's largely up to the developer to implement it that way unless there is widespread usage and a need for standardisation. Developers can still choose to implement something against the standard, which we will talk about more when covering more topics such as specific protocols, API designs and frameworks.
 
 
 ## Communication and API's
 
-Different protocols communicate in various ways. They might have a structured way to send and receive data, or completely unstructured. It depends on the needs of the information being sent. We will go over several different protocols, API architecture patterns, database quirks and more. An important aspect is understanding how this communication happens and at what aspect we might be able to find certain data.
+Depending on the protocol, there may be standardized ways to communicate. This could include API design and what functionality and data is available, it could be fundamentally how a message is sent and received.
 
-For example, in an Internet of Things (IoT) device, the Data Distribution Service (DDS) acts as a middleware protocol. It's usage is for real-time systems, think up-to-the-millisecond real-time, dependable and performant.
+We will go over several different architecture patterns, how they relate to protocols, database quirks and more. An important aspect is understanding how this communication happens and at what aspect we might be able to find certain data.
+
+### What we are looking for:
+
+- how does the client communicate with the server?
+    - it could be API design / architecture pattern
+    - official and unofficial documentation
+- what kind of information could we potentially access?
+    - API or function calls that are being made, some might be hidden
+- what would the security boundaries be?
+    - it could be between accounts, databases and more
+
+
+### Where can we find it:
+
+#### Common API Architectures and Designs
+
+
+
+
+Some assumptions we have about what we are investigating:
+
+- there is data that needs protection, something that shouldn't be accessible to the public (such as personal identifiable information, think your full name and address)
+- there are features that are of high value, such as a payment system
+- there is a way to communicate with this data, we may need to look at authentication and authorisation
+
+
 
 
 ## Fingerprinting
