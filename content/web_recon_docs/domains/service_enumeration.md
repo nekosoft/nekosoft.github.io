@@ -1,7 +1,7 @@
 ---
 title: Service and Software Enumeration for Modern Web Applications, IoT
 type: docs
-prev: web_recon_docs/domains/domains
+prev: web_recon_docs/domains/urls
 ---
 
 - this might be split into two different sections. Not all IoT will include a web application or web communication. 

@@ -1,7 +1,7 @@
 ---
 title: Domains
 type: docs
-prev: web_recon_docs/recon_intro
+prev: web_recon_docs/web_reconnaissance
 next: web_recon_docs/domains/domains
 sidebar:
   open: true
