@@ -8,6 +8,6 @@ tldr; I'm Yianna Paris and this site is a collection of my research, documentati
 ## Explore
 
 {{< cards >}}
-  {{< card link="recon_docs" title="Recon Docs" icon="book-open" >}}
+  {{< card link="web_recon_docs" title="Web Recon Docs" icon="book-open" >}}
   <!-- {{< card link="about" title="About" icon="user" >}} -->
 {{< /cards >}}
