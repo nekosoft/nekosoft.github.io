@@ -9,13 +9,21 @@ This section outlines a few things, I'm still unsure if they go together.
 
 A URL can be created from a domain name or an IP, but a URL also points to a host as the resource needs to "live" somewhere. So in my mind, understanding a URL and where that could be located (such as an on-premises or cloud server) go together. This is an avenue to "expand the attack surface".
 
+We now understand domains, so what happens next? Sometimes people want to host something online so others can view a website, download a file or play a game. Some companies host these files for other people, so we get into the realm of hosted servers vs something self-managed. 
+
+How do we get a URL? Let's say we have google.com, we now have a Uniform Resource Identifier (URI). It's something that has a pattern and I can go find it. There are others that exist in the world, like ISBN's. A more specific description would be to tell us how we can find that resource, for example by using a protocol like HTTP. 
+
+So we get http://google.com, we now have a URL. Several URL's could exist, hosting an array of data, communications, and possibilities of routing information between services.
+
+Daniel Miessler does this explanation better here: https://danielmiessler.com/p/difference-between-uri-url/
+
 ### A Uniform Resource Locator (URL)
 
 - some people call a URL a URI, depending on how you define these
 - https://google.com - I define a URL to contain a URI, which is the resource and a protocol, therefore we also know how to locate or find the resource
 - google.com - a URI, which identifies the resource but hasn't defined how we get there
+- when you find a domain name, you can start testing for locations of content
 
-Daniel Miessler does this better here: https://danielmiessler.com/p/difference-between-uri-url/
 
 ![Anatomy of a URL](/images/anatomy_URL.png)
 
@@ -28,6 +36,7 @@ The protocol here is important. Generally speaking, if you are browsing "the int
 It looks big and scary but we can see an error message that we could assume means the certificate data is invalid, which could be for a number of reasons - depending on the browser you use this could look different.
 
 We will get to why these are important. For now, understanding the protocol means you have an understanding on how you might be able to communicate or use this resource, if it exists and if it is something you can interact with. There are many more protocols that exist, each with their own details to get into.
+
 
 ## File paths and File extensions
 
