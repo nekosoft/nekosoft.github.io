@@ -1,5 +1,5 @@
 ---
-title: Technical Reconnaissance Documentation
+title: Web Reconnaissance Documentation
 next: 00_recon
 sidebar:
   open: true
