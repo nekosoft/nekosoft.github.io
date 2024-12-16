@@ -18,13 +18,4 @@ This is an overview of potential terminology, technologies, networking concepts 
 - sub-domains
 - file extensions
 
----
 
-Domain Names
-
-- who registered them
-- where are they hosted
-- historical and current whois records
-- reputation
-- typo squatted domains
-- Top Level Domains
