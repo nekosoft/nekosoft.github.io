@@ -29,9 +29,7 @@ Daniel Miessler does this explanation better here: https://danielmiessler.com/p/
 
 The `://` is a delimeter between the protocol and the web address. The double slash is [Sir Tim Berners-Lee's](https://en.wikipedia.org/wiki/Tim_Berners-Lee) [biggest mistake](https://archive.nytimes.com/bits.blogs.nytimes.com/2009/10/12/the-webs-inventor-regrets-one-small-thing/) - at least according to him, "it seemed like a good idea at the time".
 
-The protocol here is important. Generally speaking, if you are browsing "the internet", you're probably browsing sites using the HTTPS (or HTTP) protocol. Depending on your browser, you might see something like this warning to let you know that a website doesn't have a valid TLS certificate.
-
-![HTTP Warning](/images/http_warning.png)
+The protocol, or scheme, is important. Generally speaking, if you are browsing "the internet", you're probably browsing sites using the HTTPS (or HTTP) protocol, but you might also see others like FTP, MQTT, LDAP and more.
 
 It looks big and scary but we can see an error message that we could assume means the certificate date is invalid, which could be because it expired.
 
