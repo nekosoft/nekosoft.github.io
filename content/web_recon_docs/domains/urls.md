@@ -31,9 +31,7 @@ The `://` is a delimeter between the protocol and the web address. The double sl
 
 The protocol, or scheme, is important. Generally speaking, if you are browsing "the internet", you're probably browsing sites using the HTTPS (or HTTP) protocol, but you might also see others like FTP, MQTT, LDAP and more.
 
-It looks big and scary but we can see an error message that we could assume means the certificate date is invalid, which could be because it expired.
-
-Understanding the protocol means you have an understanding on how you might be able to communicate or use this resource, to check if it exists and if there is more information you can find there. There are many more protocols that exist, each with their own details to get into.
+Understanding the protocol means you have an understanding on how you might be able to communicate or use this resource, to check if it exists and if there is more information you can find there. You might need to structure a message a certain way to get a response, further information such as the functions and parameters, authentication, authorisation and more will determine how to interact with the protocol. Some protections might come later, and it's best to test it anyway because sometimes what specifications might tell us about what something should do, how it's been implemented can vary greatly.
 
 
 ## File paths and File extensions
@@ -95,3 +93,8 @@ When I spoke to some developers about my reconnaissance approach, I had one pers
 There are multiple layers to hosting or serving software online, and without throwing more models at you, just know there are models that exist and we will probably go over them as they relate to the "breadth" of reconnaissance you can perform. 
 
 - can link to external resources
+
+
+## References
+
+- https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL
