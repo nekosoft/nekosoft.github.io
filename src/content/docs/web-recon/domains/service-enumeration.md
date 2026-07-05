@@ -2,6 +2,7 @@
 title: Service and Software Enumeration for Modern Web Applications, IoT
 section: web-recon
 order: 6
+tags: ["Reconnaissance", "IoT", "Web & Cloud"]
 ---
 
 - this might be split into two different sections. Not all IoT will include a web application or web communication. 

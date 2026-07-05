@@ -1,0 +1,179 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { slugifyTag } from '../../utils/tags';
+import { docHref, SECTIONS } from '../../utils/docsNav';
+
+type DocEntry = CollectionEntry<'docs'>;
+type BlogEntry = CollectionEntry<'blog'>;
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs', ({ data }) => !data.draft);
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  const groups = new Map<
+    string,
+    { slug: string; label: string; docs: DocEntry[]; posts: BlogEntry[] }
+  >();
+
+  const ensure = (tag: string) => {
+    const slug = slugifyTag(tag);
+    if (!groups.has(slug)) {
+      groups.set(slug, { slug, label: tag, docs: [], posts: [] });
+    }
+    return groups.get(slug)!;
+  };
+
+  for (const doc of docs) for (const t of doc.data.tags) ensure(t).docs.push(doc);
+  for (const post of posts)
+    for (const t of post.data.tags) ensure(t).posts.push(post);
+
+  return [...groups.values()].map((group) => ({
+    params: { tag: group.slug },
+    props: group,
+  }));
+}
+
+const { label, docs, posts } = Astro.props;
+
+docs.sort((a, b) => a.data.order - b.data.order);
+posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const total = docs.length + posts.length;
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout
+  title={`${label} — Luda Hex`}
+  description={`Docs and writing tagged ${label}.`}
+>
+  <section class="container tagpage">
+    <p class="eyebrow">// tag</p>
+    <h1>{label}</h1>
+    <p class="count">
+      {total} {total === 1 ? 'entry' : 'entries'} · <a href="/blog">all writing</a>
+    </p>
+
+    {
+      docs.length > 0 && (
+        <>
+          <h2>Documentation</h2>
+          <ul class="hits">
+            {docs.map((doc) => (
+              <li>
+                <a href={docHref(doc)}>
+                  <span class="kind">{SECTIONS[doc.data.section]}</span>
+                  <span class="title">{doc.data.title}</span>
+                  {doc.data.description && <span class="desc">{doc.data.description}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+
+    {
+      posts.length > 0 && (
+        <>
+          <h2>Blog</h2>
+          <ul class="hits">
+            {posts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`}>
+                  <span class="kind">
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {fmtDate(post.data.pubDate)}
+                    </time>
+                  </span>
+                  <span class="title">{post.data.title}</span>
+                  {post.data.description && <span class="desc">{post.data.description}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .tagpage {
+    padding-block: var(--space-7);
+    max-width: 800px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-2);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    margin-block: var(--space-5) var(--space-3);
+  }
+
+  .hits {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .hits a {
+    display: grid;
+    gap: 3px;
+    padding: var(--space-4);
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .hits a:hover {
+    border-color: var(--magenta);
+    box-shadow: var(--glow-magenta);
+  }
+
+  .kind {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .title {
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .hits a:hover .title {
+    color: var(--magenta);
+  }
+
+  .desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+</style>

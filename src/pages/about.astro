@@ -1,49 +1,84 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { slugifyTag } from '../utils/tags';
+
+// Resume-style facts — edit these lists to keep the about page current.
+// A plain string is a static chip. Give an item a `tag` to turn it into a
+// link that filters the blog to that keyword (/blog?tag=…). The `tag` must
+// match a tag used on a blog post for the filtered view to show anything.
+type Chip = string | { label: string; tag: string };
+
+const resume: { label: string; items: Chip[] }[] = [
+  {
+    label: 'Experience areas',
+    items: [
+      { label: 'Offensive Security', tag: 'Offensive Security' },
+      { label: 'Application Security', tag: 'Application Security' },
+      'Open source intelligence',
+      { label: 'Reconnaissance and initial access', tag: 'Reconnaissance' },
+      'CI/CD Tooling and Controls',
+      'Secure Development Practices',
+      { label: 'LLM and Agentic AI Security', tag: 'LLM / Agentic AI' },
+      'SOC & Incident Response',
+      'Threat Hunting',
+      'Secure Cloud Architecture',
+      'Security Training',
+    ],
+  },
+  {
+    label: 'Tech Stack domains',
+    items: [
+      { label: 'Web & Cloud', tag: 'Web & Cloud' },
+      { label: 'Embedded & Hardware', tag: 'Embedded & Hardware' },
+      { label: 'Radio & Wireless Protocols - IoT', tag: 'IoT' },
+      { label: 'LLM / Agentic AI', tag: 'LLM / Agentic AI' },
+    ],
+  },
+  {
+    label: 'Education',
+    items: ['B.Sc Computer Science', 'B.Des Digital Media Design'],
+  },
+  {
+    label: 'Curious about',
+    items: [
+      'Agriculture',
+      'Robotics',
+      'Space technologies',
+      'Autonomous vehicles',
+      'Biometrics and access control',
+      'Surveillance technologies',
+    ],
+  },
+];
 ---
 
 <BaseLayout
   title="About — Luda Hex"
   description="About Yianna Paris, the security specialist behind Luda Hex."
 >
-  <section class="container about">
+  <section class="container intro">
     <div class="prose">
       <p class="eyebrow">// about</p>
       <h1>Hi, I'm Yianna</h1>
-      <p>
-        I like to break systems and help others build them securely. 
-      </p>
+      <p>I like to break systems and help others build them securely.</p>
       <p>
         I'm a consultant in Offensive and Application Security. You can find me
         speaking at conferences, training at events such as DEFCON or creating
-        security workshops for private company events.
+        security workshops for private companies.
       </p>
       <p>
-        My focus areas are an intersection of web and cloud, embedded technologies, 
-        hardware and radio devices, wireless protocols, and LLM / Agentic AI apps. 
-        I really love agriculture and robotics.
+        They told me buffer overflows were dead, and then I discovered IoT and embedded
+        software still have these issues. They also said the same about SQL injection,
+        then we hooked up Agentic AI and LLMs to databases and reimagined the problem.
+        Telling me it's impossible or too difficult just makes me try harder. I am 
+        comfortable reading, analysing and quickly getting up to speed in almost any tech stack.
       </p>
       <p>
-        My favourite programming language is C, for no other reason than it 
-        was the first language I was introduced to that was always called "terrible" —
-        and I wanted to learn all the technicalities of why. They told me buffer
-        overflows were dead, and then I discovered IoT and embedded software. 
-        Telling me it's impossible or too difficult just makes me try harder.
-        I am comfortable reading, analysing and quickly getting up to speed in
-        almost any tech stack. 
+        My broad experience in various security domains gives me the
+        organisational context and empathy needed to help bridge knowledge gaps
+        and find the important problems.
       </p>
-      <p>
-        I know what it's like to work in a Security Operations Center responding to
-        incidents, setting up threat hunting workflows, as well as testing apps 
-        and designing secure cloud architecture. It gives me the organisational context
-        and empathy needed to help bridge knowledge gaps and find the important problems.
-      </p>
-      <p>
-        I have a Bachelor of Computer Science and a Bachelor of Digital
-        Media Design if that matters, it's a creative mix that means I don't 
-        really fit in with either group. 
-      </p>
-      <p>
+      <p class="find">
         Find me on
         <a href="https://www.linkedin.com/in/salted-hash/">LinkedIn</a> or
         <a href="https://github.com/nekosoft">GitHub</a>.
@@ -57,14 +92,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       height="200"
     />
   </section>
+
+  <section class="container">
+    <dl class="resume">
+      {
+        resume.map((row) => (
+          <div class="row">
+            <dt>{row.label}</dt>
+            <dd>
+              <ul class="chips">
+                {row.items.map((item) => {
+                  const label = typeof item === 'string' ? item : item.label;
+                  const tag = typeof item === 'string' ? undefined : item.tag;
+                  return (
+                    <li>
+                      {tag ? (
+                        <a class="chip chip-link" href={`/tags/${slugifyTag(tag)}`}>
+                          {label}
+                        </a>
+                      ) : (
+                        <span class="chip">{label}</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
 </BaseLayout>
 
 <style>
-  .about {
+  .intro {
     display: flex;
     gap: var(--space-7);
     align-items: flex-start;
-    padding-block: var(--space-7);
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-6);
   }
 
   h1 {
@@ -74,15 +141,108 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin-block: var(--space-2) var(--space-4);
   }
 
+  .find {
+    color: var(--text-muted);
+  }
+
   .mascot {
     flex-shrink: 0;
     filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.25));
   }
 
+  /* resume block */
+  .resume {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 820px;
+    border-top: 1px solid var(--border);
+    margin-bottom: var(--space-8);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border);
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    padding-top: 3px;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.9rem;
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  /* static, non-interactive chip — muted so it doesn't read as clickable */
+  span.chip {
+    color: var(--text-muted);
+  }
+
+  /* linked chip — filters the blog by this keyword */
+  .chip-link {
+    color: var(--text);
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .chip-link::after {
+    content: '↗';
+    margin-left: 0.35em;
+    font-size: 0.8em;
+    color: var(--cyan);
+    opacity: 0.75;
+  }
+
+  .chip-link:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
   @media (max-width: 700px) {
-    .about {
+    .intro {
       flex-direction: column-reverse;
       align-items: center;
+      text-align: center;
+    }
+
+    .find {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
     }
   }
 </style>

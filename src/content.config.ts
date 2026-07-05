@@ -8,6 +8,7 @@ const docs = defineCollection({
     description: z.string().optional(),
     section: z.enum(['web-recon', 'iot']),
     order: z.number(),
+    tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
 });

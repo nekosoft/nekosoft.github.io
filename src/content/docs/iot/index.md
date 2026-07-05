@@ -2,6 +2,7 @@
 title: Internet of Things (IoT) Research
 section: iot
 order: 0
+tags: ["IoT", "Embedded & Hardware"]
 ---
 
 This documentation will:
