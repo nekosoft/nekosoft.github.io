@@ -2,6 +2,7 @@
 title: An Approach to Web Reconnaissance
 section: web-recon
 order: 1
+tags: ["Reconnaissance", "Offensive Security"]
 ---
 
 Expand on:

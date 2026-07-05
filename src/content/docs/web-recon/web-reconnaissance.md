@@ -2,6 +2,7 @@
 title: High Level Overview on Web Reconnaissance Sources
 section: web-recon
 order: 2
+tags: ["Reconnaissance", "Web & Cloud"]
 ---
 
 This is an overview of potential terminology, technologies, networking concepts and more when it comes to web related reconnaissance. This section might get broken up into smaller sections in future.

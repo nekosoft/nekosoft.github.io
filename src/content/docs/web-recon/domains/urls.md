@@ -2,6 +2,7 @@
 title: URLs and Hosted Resources
 section: web-recon
 order: 5
+tags: ["Reconnaissance", "Web & Cloud"]
 ---
 
 This section outlines a few things, I'm still unsure if they go together.

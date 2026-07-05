@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+import { slugifyTag } from '../utils/tags';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -29,7 +30,9 @@ const { title, description, pubDate, tags } = post.data;
           tags.length > 0 && (
             <ul class="tags">
               {tags.map((tag) => (
-                <li>#{tag}</li>
+                <li>
+                  <a href={`/tags/${slugifyTag(tag)}`}>#{tag}</a>
+                </li>
               ))}
             </ul>
           )
@@ -78,8 +81,13 @@ const { title, description, pubDate, tags } = post.data;
     padding: 0;
   }
 
-  .tags li {
+  .tags a {
     color: var(--cyan);
+  }
+
+  .tags a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .back {

@@ -2,6 +2,7 @@
 title: Domains
 section: web-recon
 order: 3
+tags: ["Reconnaissance", "Web & Cloud"]
 ---
 
 - Business side of Domain Names
