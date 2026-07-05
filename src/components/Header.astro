@@ -1,4 +1,6 @@
 ---
+import Search from './Search.astro';
+
 const nav = [
   { label: 'docs', href: '/docs/web-recon' },
   { label: 'blog', href: '/blog' },
@@ -31,6 +33,8 @@ const path = Astro.url.pathname;
         }
       </ul>
     </nav>
+
+    <Search />
 
     <div class="social">
       <a href="https://github.com/nekosoft" aria-label="GitHub" title="GitHub">
