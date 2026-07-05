@@ -1,10 +1,29 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { slugifyTag } from '../../utils/tags';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// All tags with counts, most-used first.
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const allTags = [...tagCounts.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+);
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 ---
 
 <BaseLayout
@@ -25,63 +44,282 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
             height="110"
           />
           <p>
-            Nothing here yet — the cauldron is still bubbling. In the
-            meantime, the <a href="/docs/web-recon">research docs</a> are
-            where the action is.
+            Nothing here yet — the cauldron is still bubbling. In the meantime,
+            the <a href="/docs/web-recon">research docs</a> are where the action
+            is.
           </p>
         </div>
       ) : (
-        <ul class="posts">
-          {posts.map((post) => (
-            <li>
-              <a href={`/blog/${post.id}`}>
-                <h2>{post.data.title}</h2>
-                {post.data.description && <p>{post.data.description}</p>}
-                <time datetime={post.data.pubDate.toISOString()}>
-                  {post.data.pubDate.toLocaleDateString('en-GB', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <>
+          <div class="filters">
+            <input
+              id="post-search"
+              type="search"
+              placeholder="Search posts…"
+              aria-label="Search posts"
+              autocomplete="off"
+            />
+            {allTags.length > 0 && (
+              <div class="tag-bar" role="group" aria-label="Filter by tag">
+                {allTags.map(([tag, n]) => (
+                  <button
+                    type="button"
+                    class="tag"
+                    data-tag={slugifyTag(tag)}
+                    aria-pressed="false"
+                  >
+                    {tag} <span class="n">{n}</span>
+                  </button>
+                ))}
+                <button type="button" id="clear-filters" class="clear" hidden>
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+
+          <p id="result-count" class="count" aria-live="polite" />
+
+          <ul class="posts" role="list">
+            {posts.map((post) => {
+              const slugs = post.data.tags.map(slugifyTag).join(' ');
+              const searchable = [
+                post.data.title,
+                post.data.description ?? '',
+                ...post.data.tags,
+              ]
+                .join(' ')
+                .toLowerCase();
+              return (
+                <li data-post data-tags={slugs} data-search={searchable}>
+                  <a href={`/blog/${post.id}`}>
+                    <h2>{post.data.title}</h2>
+                    {post.data.description && <p>{post.data.description}</p>}
+                    <div class="post-meta">
+                      <time datetime={post.data.pubDate.toISOString()}>
+                        {fmtDate(post.data.pubDate)}
+                      </time>
+                      {post.data.tags.length > 0 && (
+                        <ul class="post-tags">
+                          {post.data.tags.map((t) => (
+                            <li>#{t}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div id="no-results" class="no-results" hidden>
+            No posts match those filters. <button type="button" id="reset-empty">Clear filters</button>
+          </div>
+        </>
       )
     }
   </section>
 </BaseLayout>
 
+<script>
+  const searchEl = document.getElementById('post-search') as HTMLInputElement | null;
+
+  if (searchEl) {
+    const clearBtn = document.getElementById('clear-filters');
+    const resetEmpty = document.getElementById('reset-empty');
+    const tagButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('.tag[data-tag]'),
+    );
+    const posts = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-post]'),
+    );
+    const count = document.getElementById('result-count');
+    const noResults = document.getElementById('no-results');
+
+    const active = new Set<string>();
+    let query = '';
+
+    function syncURL() {
+      const params = new URLSearchParams();
+      if (active.size) params.set('tag', [...active].join(','));
+      if (query) params.set('q', query);
+      const qs = params.toString();
+      history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+    }
+
+    function apply() {
+      let visible = 0;
+      for (const post of posts) {
+        const tags = (post.dataset.tags || '').split(' ').filter(Boolean);
+        const matchTag =
+          active.size === 0 || [...active].some((t) => tags.includes(t));
+        const matchText =
+          !query || (post.dataset.search || '').includes(query);
+        const show = matchTag && matchText;
+        post.hidden = !show;
+        if (show) visible++;
+      }
+      if (count) count.textContent = `${visible} post${visible === 1 ? '' : 's'}`;
+      if (noResults) noResults.hidden = visible !== 0;
+      if (clearBtn) clearBtn.hidden = active.size === 0 && !query;
+      syncURL();
+    }
+
+    function setTag(slug: string, on: boolean) {
+      const btn = tagButtons.find((b) => b.dataset.tag === slug);
+      if (!btn) return;
+      btn.setAttribute('aria-pressed', String(on));
+      if (on) active.add(slug);
+      else active.delete(slug);
+    }
+
+    function clearAll() {
+      active.clear();
+      tagButtons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      query = '';
+      searchEl.value = '';
+      apply();
+    }
+
+    tagButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        setTag(btn.dataset.tag!, btn.getAttribute('aria-pressed') !== 'true');
+        apply();
+      });
+    });
+
+    searchEl.addEventListener('input', () => {
+      query = searchEl.value.trim().toLowerCase();
+      apply();
+    });
+
+    clearBtn?.addEventListener('click', clearAll);
+    resetEmpty?.addEventListener('click', clearAll);
+
+    // Initial state from the URL (?tag=a,b&q=text) — lets the about-page
+    // chips deep-link straight into a filtered view.
+    const params = new URLSearchParams(location.search);
+    params.get('tag')?.split(',').forEach((s) => s && setTag(s, true));
+    const q = params.get('q');
+    if (q) {
+      query = q.toLowerCase();
+      searchEl.value = q;
+    }
+    apply();
+  }
+</script>
+
 <style>
   .blog {
     padding-block: var(--space-7);
-    max-width: 800px;
+    max-width: 820px;
   }
 
   h1 {
     font-family: var(--font-display);
     font-size: clamp(1.7rem, 4vw, 2.4rem);
     font-weight: 500;
-    margin-block: var(--space-2) var(--space-6);
+    margin-block: var(--space-2) var(--space-5);
   }
 
-  .empty {
+  /* filters */
+  .filters {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: var(--space-4);
-    padding: var(--space-7) var(--space-5);
-    border: 1px dashed var(--border-bright);
-    border-radius: var(--radius-lg);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  #post-search {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  #post-search::placeholder {
     color: var(--text-muted);
   }
 
-  .empty p {
-    max-width: 42ch;
+  #post-search:focus-visible {
+    border-color: var(--purple);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
   }
 
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .tag {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: var(--space-1) var(--space-3);
+    color: var(--text-muted);
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      background 150ms ease;
+  }
+
+  .tag .n {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    opacity: 0.7;
+  }
+
+  .tag:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .tag[aria-pressed='true'] {
+    background: var(--magenta);
+    border-color: var(--magenta);
+    color: var(--bg-inset);
+  }
+
+  .tag[aria-pressed='true'] .n {
+    opacity: 0.85;
+  }
+
+  .clear {
+    font: inherit;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: var(--space-1) var(--space-2);
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .clear:hover {
+    color: var(--cyan);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  /* post list */
   .posts {
     list-style: none;
     padding: 0;
@@ -123,9 +361,65 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
     font-size: 0.95rem;
   }
 
-  .posts time {
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-1);
+  }
+
+  .post-meta time {
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  .post-tags li {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+  }
+
+  .no-results {
+    padding: var(--space-6) var(--space-5);
+    text-align: center;
+    color: var(--text-muted);
+    border: 1px dashed var(--border-bright);
+    border-radius: var(--radius-lg);
+  }
+
+  .no-results button {
+    font: inherit;
+    color: var(--magenta);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-4);
+    padding: var(--space-7) var(--space-5);
+    border: 1px dashed var(--border-bright);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+  }
+
+  .empty p {
+    max-width: 42ch;
   }
 </style>
