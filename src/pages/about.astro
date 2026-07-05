@@ -56,7 +56,7 @@ const resume: { label: string; items: Chip[] }[] = [
   title="About — Luda Hex"
   description="About Yianna Paris, the security specialist behind Luda Hex."
 >
-  <section class="container intro">
+  <section class="container narrow intro">
     <div class="prose">
       <p class="eyebrow">// about</p>
       <h1>Hi, I'm Yianna</h1>
@@ -70,7 +70,7 @@ const resume: { label: string; items: Chip[] }[] = [
         They told me buffer overflows were dead, and then I discovered IoT and embedded
         software still have these issues. They also said the same about SQL injection,
         then we hooked up Agentic AI and LLMs to databases and reimagined the problem.
-        Telling me it's impossible or too difficult just makes me try harder. I am 
+        Telling me it's impossible or too difficult just makes me try harder. I am
         comfortable reading, analysing and quickly getting up to speed in almost any tech stack.
       </p>
       <p>
@@ -93,7 +93,7 @@ const resume: { label: string; items: Chip[] }[] = [
     />
   </section>
 
-  <section class="container">
+  <section class="container narrow">
     <dl class="resume">
       {
         resume.map((row) => (
@@ -122,6 +122,10 @@ const resume: { label: string; items: Chip[] }[] = [
         ))
       }
     </dl>
+
+    <a class="cv-link" href="/experience">
+      See my past &amp; present work, projects &amp; appearances →
+    </a>
   </section>
 </BaseLayout>
 
@@ -141,6 +145,12 @@ const resume: { label: string; items: Chip[] }[] = [
     margin-block: var(--space-2) var(--space-4);
   }
 
+  /* the eyebrow lives inside .prose here, so cancel the inherited paragraph
+     margin to match the top spacing of the blog and experience pages */
+  .intro .prose .eyebrow {
+    margin-block: 0;
+  }
+
   .find {
     color: var(--text-muted);
   }
@@ -155,9 +165,7 @@ const resume: { label: string; items: Chip[] }[] = [
     display: flex;
     flex-direction: column;
     gap: 0;
-    max-width: 820px;
     border-top: 1px solid var(--border);
-    margin-bottom: var(--space-8);
   }
 
   .row {
@@ -225,6 +233,27 @@ const resume: { label: string; items: Chip[] }[] = [
   .chip-link:hover {
     border-color: var(--cyan);
     color: var(--cyan);
+  }
+
+  /* link through to the full CV page */
+  .cv-link {
+    display: inline-block;
+    margin-block: var(--space-6) var(--space-8);
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--border-bright);
+    border-radius: var(--radius);
+    font-weight: 600;
+    color: var(--text);
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .cv-link:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: var(--glow-cyan);
   }
 
   @media (max-width: 700px) {
