@@ -22,7 +22,5 @@ export default defineConfig({
     '/web_recon_docs/domains/domains': '/docs/web-recon/domains/domains',
     '/web_recon_docs/domains/urls': '/docs/web-recon/domains/urls',
     '/web_recon_docs/domains/service_enumeration': '/docs/web-recon/domains/service-enumeration',
-    '/iot_docs': '/docs/iot',
-    '/iot_docs/radio_gaga': '/docs/iot/radio-gaga',
   },
 });

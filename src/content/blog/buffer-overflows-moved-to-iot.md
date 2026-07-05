@@ -21,6 +21,4 @@ These devices sit on networks people forget exist — cameras, sensors,
 gateways. A classic overflow on a device that never gets patched is a foothold
 that stays open for years.
 
-This is just the overview — I go deeper into connected devices, embedded
-software and the protocols they speak in my
-[IoT research documentation](/docs/iot).
+This is just the overview — I'll be adding more about this in future.
