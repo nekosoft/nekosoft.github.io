@@ -11,15 +11,16 @@ export const SECTIONS: Record<DocEntry['data']['section'], string> = {
 export async function getDocsNav() {
   const docs = await getCollection('docs', ({ data }) => !data.draft);
 
-  const sections = (Object.keys(SECTIONS) as DocEntry['data']['section'][]).map(
-    (section) => ({
+  const sections = (Object.keys(SECTIONS) as DocEntry['data']['section'][])
+    .map((section) => ({
       section,
       label: SECTIONS[section],
       entries: docs
         .filter((doc) => doc.data.section === section)
         .sort((a, b) => a.data.order - b.data.order),
-    }),
-  );
+    }))
+    // hide sections that have no published docs (e.g. IoT while unfinished)
+    .filter((s) => s.entries.length > 0);
 
   // flat list in reading order, for prev/next links
   const flat = sections.flatMap((s) => s.entries);
