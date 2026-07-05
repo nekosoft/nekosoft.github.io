@@ -2,12 +2,17 @@
 import Search from './Search.astro';
 
 const nav = [
+  { label: 'home', href: '/' },
   { label: 'docs', href: '/docs/web-recon' },
   { label: 'blog', href: '/blog' },
   { label: 'about', href: '/about' },
+  { label: 'experience', href: '/experience' },
 ];
 
 const path = Astro.url.pathname;
+// '/' would match every path with startsWith, so match it exactly
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
 ---
 
 <header>
@@ -24,7 +29,7 @@ const path = Astro.url.pathname;
             <li>
               <a
                 href={item.href}
-                aria-current={path.startsWith(item.href) ? 'page' : undefined}
+                aria-current={isActive(item.href) ? 'page' : undefined}
               >
                 {item.label}
               </a>
@@ -160,6 +165,34 @@ const path = Astro.url.pathname;
 
     nav ul {
       gap: var(--space-4);
+    }
+  }
+
+  /* on phones, drop the header social icons (still in the footer) and let
+     the nav wrap to its own row below the brand so it never overflows */
+  @media (max-width: 560px) {
+    .social {
+      display: none;
+    }
+
+    .bar {
+      flex-wrap: wrap;
+      height: auto;
+      padding-block: var(--space-2);
+      row-gap: var(--space-2);
+      justify-content: space-between;
+    }
+
+    nav {
+      order: 3;
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+
+    nav ul {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-2) var(--space-5);
     }
   }
 </style>
