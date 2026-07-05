@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About — Luda Hex"
+  description="About Yianna Paris, the security specialist behind Luda Hex."
+>
+  <section class="container about">
+    <div class="prose">
+      <p class="eyebrow">// about</p>
+      <h1>Hi, I'm Yianna</h1>
+      <p>
+        Yianna Paris is a Security Specialist, with a background in software
+        development, digital design (think animation, 3D modelling), web
+        hosting and running her own businesses. Her focus is breaking and
+        building secure systems. Her strength has been software but she has
+        always enjoyed diving deeper into hardware and devices. Her favourite
+        programming language is C, for no other reason than it was the first
+        language she was introduced to that was always called "terrible" —
+        and she wanted to learn all the technicalities of why.
+      </p>
+      <p>
+        She has a Bachelor of Computer Science and a Bachelor of Digital
+        Media Design, and is a conference speaker, trainer and consultant in
+        Offensive and Application Security. She works mainly with web, with
+        an increasing focus on embedded software and radio devices.
+      </p>
+      <p>
+        She's living in the Netherlands with her game dev husband and
+        beautiful little one.
+      </p>
+      <p>
+        Find me on
+        <a href="https://www.linkedin.com/in/salted-hash/">LinkedIn</a> or
+        <a href="https://github.com/nekosoft">GitHub</a>.
+      </p>
+    </div>
+    <img
+      class="mascot"
+      src="/images/skull_script_kitty.svg"
+      alt=""
+      width="200"
+      height="200"
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    display: flex;
+    gap: var(--space-7);
+    align-items: flex-start;
+    padding-block: var(--space-7);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-4);
+  }
+
+  .mascot {
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.25));
+  }
+
+  @media (max-width: 700px) {
+    .about {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+</style>
