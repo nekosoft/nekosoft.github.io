@@ -1,0 +1,91 @@
+<section class="cta-strip">
+  <div class="container inner">
+    <div>
+      <p class="eyebrow">// contact</p>
+      <h2>Got a system that needs breaking?</h2>
+      <p class="sub">
+        For consulting, training, or speaking — reach out and let's talk.
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://www.linkedin.com/in/salted-hash/">
+        Message me on LinkedIn
+      </a>
+      <a class="btn ghost" href="https://github.com/nekosoft">
+        Find me on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-strip {
+    border-block: 1px solid var(--border);
+    background:
+      radial-gradient(
+        ellipse 60% 120% at 85% 50%,
+        rgba(255, 79, 216, 0.08),
+        transparent
+      ),
+      var(--bg-inset);
+    padding-block: var(--space-7);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    font-weight: 500;
+    margin-block: var(--space-2);
+  }
+
+  .sub {
+    color: var(--text-muted);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition:
+      box-shadow 150ms ease,
+      transform 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .btn.primary {
+    background: var(--magenta);
+    color: var(--bg-inset);
+  }
+
+  .btn.primary:hover {
+    box-shadow: var(--glow-magenta);
+    transform: translateY(-1px);
+  }
+
+  .btn.ghost {
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+  }
+
+  .btn.ghost:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+</style>

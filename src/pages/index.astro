@@ -1,0 +1,256 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Card from '../components/Card.astro';
+import CardGrid from '../components/CardGrid.astro';
+import Sparkle from '../components/Sparkle.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const recentPosts = posts.slice(0, 3);
+---
+
+<BaseLayout title="Luda Hex — breaking and building secure systems">
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">// offensive security &amp; appsec consultancy</p>
+        <h1>
+          Breaking and building <span class="accent">secure systems</span>
+        </h1>
+        <p class="tagline">
+          <strong>Yianna Paris</strong> is a security specialist,
+          conference speaker and trainer. She focuses on adversarial thinking 
+          of web, LLM and agentic AI applications. Her research dives deep
+          into embedded and radio connected devices.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="https://www.linkedin.com/in/salted-hash/">
+            Work with me
+          </a>
+          <a class="btn ghost" href="/docs/web-recon">Read the docs</a>
+        </div>
+      </div>
+      <div class="hero-mascot">
+        <Sparkle top="8%" left="4%" size="12px" color="cyan" />
+        <Sparkle top="-4%" right="18%" size="18px" color="magenta" />
+        <Sparkle bottom="6%" right="0" size="10px" color="purple" />
+        <img
+          src="/images/skull_script_kitty.svg"
+          alt="Script Kitty, the Luda Hex mascot — a kawaii cat skull"
+          width="280"
+          height="280"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <p class="eyebrow">// services</p>
+    <h2>What I do</h2>
+    <CardGrid>
+      <Card glyph="[~]" title="Offensive &amp; Application Security">
+        Adversarial thinking, vulnerability research and helping
+        engineering teams build security into how they ship software.
+      </Card>
+      <Card glyph="&lt;/&gt;" title="Agentic AI &amp; LLM Security">
+        Securing systems that let models call tools and touch data —
+        prompt injection, tool abuse, and where the guardrails go wrong.
+      </Card>
+      <Card glyph="((•))" title="Embedded &amp; Radio">
+        Research into connected devices — IoT, embedded software,
+        software-defined radio and the protocols they whisper over.
+      </Card>
+      <Card glyph=">_" title="Training &amp; Speaking">
+        Conference talks and hands-on training that turn security from a
+        gate into a skill your team actually owns.
+      </Card>
+    </CardGrid>
+  </section>
+
+  <section class="container section">
+    <p class="eyebrow">// the grimoire</p>
+    <h2>Research &amp; documentation</h2>
+    <p class="section-sub">
+      Working notes from my research — methodology, process, and the
+      details most write-ups skip. Work in progress by design.
+    </p>
+    <CardGrid>
+      <Card href="/docs/web-recon" glyph="01" title="Web Reconnaissance">
+        A methodology for mapping attack surface: domains, URLs, service
+        enumeration, and automating the boring parts.
+      </Card>
+      <Card href="/blog" glyph="02" title="Blog">
+        Longer-form writing on security, engineering, and whatever is
+        currently bubbling in the cauldron.
+      </Card>
+    </CardGrid>
+    {
+      recentPosts.length > 0 && (
+        <ul class="recent">
+          {recentPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-GB', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <ContactCTA />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-8);
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-7);
+  }
+
+  .hero-copy {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  .accent {
+    color: var(--magenta);
+    text-shadow: 0 0 24px rgba(255, 79, 216, 0.35);
+  }
+
+  .tagline {
+    color: var(--text-muted);
+    max-width: 52ch;
+    font-size: 1.1rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius);
+    font-weight: 600;
+    transition:
+      box-shadow 150ms ease,
+      transform 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .btn.primary {
+    background: var(--magenta);
+    color: var(--bg-inset);
+  }
+
+  .btn.primary:hover {
+    box-shadow: var(--glow-magenta);
+    transform: translateY(-1px);
+  }
+
+  .btn.ghost {
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+  }
+
+  .btn.ghost:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+
+  .hero-mascot {
+    position: relative;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.25));
+  }
+
+  @media (max-width: 800px) {
+    .hero {
+      padding-block: var(--space-7);
+    }
+
+    .hero-inner {
+      flex-direction: column-reverse;
+      text-align: center;
+    }
+
+    .hero-copy {
+      align-items: center;
+    }
+
+    .hero-mascot img {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  .section {
+    padding-block: var(--space-7);
+  }
+
+  .section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-5);
+  }
+
+  .section-sub {
+    color: var(--text-muted);
+    max-width: 60ch;
+    margin-top: calc(-1 * var(--space-3));
+    margin-bottom: var(--space-5);
+  }
+
+  .recent {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .recent li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .recent time {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+import { docHref, type DocEntry } from '../utils/docsNav';
+
+interface Props {
+  prev?: DocEntry;
+  next?: DocEntry;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav class="pager" aria-label="Previous and next pages">
+  {
+    prev ? (
+      <a class="prev" href={docHref(prev)}>
+        <span class="dir">← Previous</span>
+        <span class="title">{prev.data.title}</span>
+      </a>
+    ) : (
+      <span />
+    )
+  }
+  {
+    next && (
+      <a class="next" href={docHref(next)}>
+        <span class="dir">Next →</span>
+        <span class="title">{next.data.title}</span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 48%;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  a:hover {
+    border-color: var(--magenta);
+    box-shadow: var(--glow-magenta);
+  }
+
+  .next {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .dir {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .title {
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  a:hover .title {
+    color: var(--magenta);
+  }
+</style>
