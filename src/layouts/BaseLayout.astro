@@ -41,6 +41,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // Open any off-site link in a new tab.
+      for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href]')) {
+        if (new URL(a.href, location.href).host !== location.host) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
+      }
+    </script>
   </body>
 </html>
 
