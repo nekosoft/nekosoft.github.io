@@ -1,0 +1,116 @@
+---
+import { getDocsNav, docHref } from '../utils/docsNav';
+
+interface Props {
+  currentHref: string;
+}
+
+const { currentHref } = Astro.props;
+const { sections } = await getDocsNav();
+---
+
+<aside>
+  <details class="sidebar-toggle">
+    <summary>On this site</summary>
+  </details>
+  <nav class="sidebar" aria-label="Documentation">
+    {
+      sections.map((section) => (
+        <section>
+          <h2>{section.label}</h2>
+          <ul>
+            {section.entries.map((doc) => {
+              const href = docHref(doc);
+              return (
+                <li>
+                  <a
+                    href={href}
+                    aria-current={href === currentHref ? 'page' : undefined}
+                  >
+                    {doc.data.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+  </nav>
+</aside>
+
+<style>
+  aside {
+    font-size: 0.92rem;
+  }
+
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .sidebar section + section {
+    margin-top: var(--space-5);
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    margin-bottom: var(--space-3);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  a {
+    display: block;
+    padding: var(--space-1) var(--space-3);
+    color: var(--text-muted);
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    line-height: 1.4;
+  }
+
+  a:hover {
+    color: var(--text);
+    background: rgba(167, 139, 250, 0.08);
+  }
+
+  a[aria-current='page'] {
+    color: var(--magenta);
+    border-left-color: var(--magenta);
+    background: rgba(255, 79, 216, 0.07);
+  }
+
+  @media (max-width: 900px) {
+    .sidebar-toggle {
+      display: block;
+    }
+
+    summary {
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      padding: var(--space-2) 0;
+    }
+
+    .sidebar {
+      display: none;
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-toggle[open] + .sidebar {
+      display: block;
+    }
+  }
+</style>

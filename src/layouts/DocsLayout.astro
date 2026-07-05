@@ -1,0 +1,114 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import PrevNext from '../components/PrevNext.astro';
+import { docHref, type DocEntry } from '../utils/docsNav';
+import { slugifyTag } from '../utils/tags';
+
+interface Props {
+  doc: DocEntry;
+  headings: MarkdownHeading[];
+  prev?: DocEntry;
+  next?: DocEntry;
+}
+
+const { doc, headings, prev, next } = Astro.props;
+---
+
+<BaseLayout
+  title={`${doc.data.title} — Luda Hex`}
+  description={doc.data.description}
+>
+  <div class="container layout">
+    <Sidebar currentHref={docHref(doc)} />
+    <article class="prose">
+      <h1>{doc.data.title}</h1>
+      {
+        doc.data.tags.length > 0 && (
+          <ul class="doc-tags" aria-label="Tags">
+            {doc.data.tags.map((tag) => (
+              <li>
+                <a href={`/tags/${slugifyTag(tag)}`}>#{tag}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <slot />
+      <PrevNext prev={prev} next={next} />
+    </article>
+    <TableOfContents headings={headings} />
+  </div>
+</BaseLayout>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 200px;
+    gap: var(--space-7);
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-6);
+    align-items: start;
+  }
+
+  .layout > :global(aside),
+  .layout > :global(.toc) {
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  @media (max-width: 1100px) {
+    .layout {
+      grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .layout > :global(.toc) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+
+    .layout > :global(aside) {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  /* .prose prefix beats the global .prose ul/li/a list styling */
+  .prose .doc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-5);
+  }
+
+  .prose .doc-tags li {
+    margin: 0;
+  }
+
+  .prose .doc-tags a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    text-decoration: none;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  .prose .doc-tags a:hover {
+    border-color: var(--cyan);
+    background: rgba(83, 232, 244, 0.08);
+  }
+</style>

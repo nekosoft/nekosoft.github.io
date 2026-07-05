@@ -1,0 +1,56 @@
+---
+interface Props {
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  size?: string;
+  color?: 'magenta' | 'cyan' | 'purple';
+}
+
+const {
+  top,
+  left,
+  right,
+  bottom,
+  size = '14px',
+  color = 'magenta',
+} = Astro.props;
+---
+
+<span
+  class:list={['sparkle', color]}
+  style={{ top, left, right, bottom, width: size, height: size }}
+  aria-hidden="true"></span>
+
+<style>
+  /* CSS-only four-point sparkle */
+  .sparkle {
+    position: absolute;
+    clip-path: polygon(
+      50% 0%,
+      62% 38%,
+      100% 50%,
+      62% 62%,
+      50% 100%,
+      38% 62%,
+      0% 50%,
+      38% 38%
+    );
+  }
+
+  .magenta {
+    background: var(--magenta);
+    filter: drop-shadow(0 0 4px rgba(255, 79, 216, 0.7));
+  }
+
+  .cyan {
+    background: var(--cyan);
+    filter: drop-shadow(0 0 4px rgba(83, 232, 244, 0.7));
+  }
+
+  .purple {
+    background: var(--purple);
+    filter: drop-shadow(0 0 4px rgba(167, 139, 250, 0.7));
+  }
+</style>

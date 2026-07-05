@@ -1,0 +1,370 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { slugifyTag } from '../utils/tags';
+
+const cv: { period: string; role: string; org: string }[] = [
+  { period: '2026 — now', role: 'Founder & Security Researcher', org: 'Luda Hex' },
+  { period: '2025 — now', role: 'Offensive & Software Security Specialist', org: 'Xebia' },
+  { period: '2024 — 2025', role: 'IT Security Lead', org: 'ANVA' },
+  { period: '2023 — 2024', role: 'Application & Offensive Security Consultant', org: 'Xebia' },
+  { period: '2020 — 2023', role: 'Security Engineer', org: 'SEEK' },
+];
+
+interface WorkItem {
+  name: string;
+  detail: string;
+  href?: string;
+  tag?: string;
+}
+
+const projects: WorkItem[] = [
+  {
+    name: 'smbscan',
+    detail: 'Contributor to this open-source tool for enumerating SMB file shares on an internal network.',
+    href: 'https://github.com/jeffhacks/smbscan',
+    tag: 'Open source',
+  },
+  {
+    name: 'OWASP Low-Code/No-Code Top 10',
+    detail:
+      'Contributor — added business-user descriptions and plain-language examples so citizen developers can act on the risks.',
+    href: 'https://owasp.org/www-project-top-10-low-code-no-code-security-risks',
+    tag: 'Open source',
+  },
+  {
+    name: 'Lely — secure robotics engineering',
+    detail:
+      'Secure development and engineering for agricultural robotics at Lely.',
+    tag: 'Consulting',
+  },
+  {
+    name: 'Agentic AI lifestyle assistants',
+    detail:
+      'Threat hunting, cloud security controls and penetration testing of LLM- and agent-powered consumer lifestyle assistants for an undisclosed client.',
+    tag: 'Consulting',
+  },
+];
+
+const talks: WorkItem[] = [
+  {
+    name: 'IoT Exploitation Masterclass: Hardware & RF Hacking',
+    detail: 'DEF CON Trainings 2026 · with Smriti Gaba',
+    href: 'https://training.defcon.org/products/iot-exploitation-masterclass-hardware-rf-hacking-smriti-gaba-yianna-paris-dctlv2026',
+  },
+  {
+    name: 'Recon workshop with Jason Haddix',
+    detail: 'Red Team Village, DEF CON',
+  },
+  {
+    name: 'Scripted Recon: Turning Data into Intelligence',
+    detail: 'Recon automation workshop',
+    href: 'https://0xcc.sh/sr.html',
+  },
+  {
+    name: 'Threat Hunting: More than blue, it’s a team sport',
+    detail: 'The Diana Initiative · 2023',
+    href: 'https://www.youtube.com/watch?v=hYM0hW9-GL4',
+  },
+  {
+    name: 'Building secure apps start with secure relationships',
+    detail: 'The Diana Initiative',
+    href: 'https://www.youtube.com/watch?v=yBsAj5Vs0BU',
+  },
+  {
+    name: 'Cracking the API: Challenges in IoT and Modern Applications',
+    detail: 'OWASP Netherlands · 2024',
+    href: 'https://owasp.org/www-chapter-netherlands/pastevents',
+  },
+];
+
+const writing: WorkItem[] = [
+  {
+    name: 'Hacker Origin Stories: Yianna Paris',
+    detail: 'Volkis · interview',
+    href: 'https://www.linkedin.com/pulse/hacker-origin-stories-yianna-paris-volkis',
+  },
+  {
+    name: 'Cyber Consulting Room — Episode 4',
+    detail: 'podcast',
+    href: 'https://podcast.cyberconsultingroom.com/2264569/13996936',
+  },
+  {
+    name: 'Governance in agile teams',
+    detail: 'ISACA NL Journal · 2023 · with Dave van Stein',
+    href: 'https://isaca.nl/people/yianna-paris/',
+  },
+  {
+    name: 'From Excel to Excellence: Revitalizing IT Risk Strategies',
+    detail: 'ISACA NL Journal · 2024 · with Dave van Stein',
+    href: 'https://isaca.nl/people/yianna-paris/',
+  },
+];
+
+const workGroups: { label: string; accent: string; items: WorkItem[] }[] = [
+  { label: 'Projects', accent: 'magenta', items: projects },
+  { label: 'Talks & training', accent: 'cyan', items: talks },
+  { label: 'Writing & press', accent: 'purple', items: writing },
+];
+---
+
+<BaseLayout
+  title="CV — Luda Hex"
+  description="Career, projects, talks and writing by Yianna Paris."
+>
+  <header class="container narrow head">
+    <p class="eyebrow">// experience</p>
+    <h1>Past and present work</h1>
+    <p class="lead">
+      Career, projects, talks and writing.
+      <a href="/about">More about me →</a>
+    </p>
+  </header>
+
+  <section class="container narrow career">
+    <h2>Career</h2>
+    <ol class="cv-list">
+      {
+        cv.map((job) => (
+          <li class="cv-row">
+            <span class="cv-period">{job.period}</span>
+            <span class="cv-role">
+              <strong>{job.role}</strong> · {job.org}
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="cv-earlier">
+      Before that: software development at SEEK, full-stack &amp; UX founder at
+      Yolko, and university teaching at RMIT and the University of Melbourne.
+    </p>
+  </section>
+
+  <section class="container narrow work">
+    <h2>Projects &amp; appearances</h2>
+    {
+      workGroups.map((group) => (
+        <div class="work-group">
+          <h3>{group.label}</h3>
+          <div class="work-grid">
+            {group.items.map((item) => {
+              const Tile = item.href ? 'a' : 'div';
+              return (
+                <Tile class:list={['work-tile', group.accent]} href={item.href}>
+                  <div class="tile-top">
+                    {item.tag && <span class="work-pill">{item.tag}</span>}
+                    {item.href && (
+                      <span class="tile-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    )}
+                  </div>
+                  <h4>{item.name}</h4>
+                  <p>{item.detail}</p>
+                </Tile>
+              );
+            })}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-top: var(--space-7);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-3);
+  }
+
+  .lead {
+    color: var(--text-muted);
+  }
+
+  .lead a {
+    white-space: nowrap;
+  }
+
+  .career {
+    padding-top: var(--space-6);
+  }
+
+  .work {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-8);
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 500;
+    margin-block: 0 var(--space-5);
+  }
+
+  /* career timeline */
+  .cv-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .cv-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cv-period {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+
+  .cv-role {
+    font-size: 0.98rem;
+    color: var(--text-muted);
+  }
+
+  .cv-role strong {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cv-earlier {
+    margin-top: var(--space-4);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* projects & appearances */
+  .work-group + .work-group {
+    margin-top: var(--space-6);
+  }
+
+  .work-group h3 {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    margin-bottom: var(--space-3);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .work-tile {
+    --a: var(--magenta);
+    --a2: var(--cyan);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: linear-gradient(155deg, var(--bg-raise), var(--bg-inset));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    overflow: hidden;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 150ms ease;
+  }
+
+  /* gradient accent bar along the top of each tile */
+  .work-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--a), var(--a2));
+  }
+
+  .work-tile.cyan {
+    --a: var(--cyan);
+    --a2: var(--purple);
+  }
+
+  .work-tile.purple {
+    --a: var(--purple);
+    --a2: var(--magenta);
+  }
+
+  a.work-tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--a);
+    box-shadow: 0 10px 32px -12px var(--a);
+  }
+
+  .tile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 18px;
+  }
+
+  .work-pill {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: var(--a);
+    border: 1px solid color-mix(in srgb, var(--a) 45%, transparent);
+    background: color-mix(in srgb, var(--a) 12%, transparent);
+  }
+
+  .tile-arrow {
+    margin-left: auto;
+    color: var(--a);
+    font-size: 0.9rem;
+    opacity: 0.65;
+  }
+
+  a.work-tile:hover .tile-arrow {
+    opacity: 1;
+  }
+
+  .work-tile h4 {
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  a.work-tile:hover h4 {
+    color: var(--a);
+  }
+
+  .work-tile p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 520px) {
+    .cv-row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

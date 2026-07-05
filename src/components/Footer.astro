@@ -1,0 +1,65 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="container inner">
+    <p class="who">
+      <span class="sigil">✦</span> Luda Hex — Yianna Paris, {year}
+    </p>
+    <p class="license">
+      Content licensed under
+      <a
+        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        rel="license"
+      >
+        CC BY-NC-SA 4.0
+      </a>
+    </p>
+    <ul class="links">
+      <li><a href="https://github.com/nekosoft">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/salted-hash/">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-8);
+    padding-block: var(--space-6);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    align-items: center;
+  }
+
+  .sigil {
+    color: var(--magenta);
+  }
+
+  .links {
+    display: flex;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .links a,
+  .license a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .links a:hover,
+  .license a:hover {
+    color: var(--cyan);
+  }
+</style>
