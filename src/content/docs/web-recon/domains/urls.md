@@ -1,8 +1,7 @@
 ---
 title: URLs and Hosted Resources
-type: docs
-prev: web_recon_docs/domains/domains
-next: web_recon_docs/domains/service_enumeration
+section: web-recon
+order: 5
 ---
 
 This section outlines a few things, I'm still unsure if they go together.
