@@ -1,10 +1,7 @@
 ---
-title: 1. An Approach to Web Reconnaissance
-type: docs
-prev: /
-next: web_recon_docs/domains/
-sidebar:
-  open: true
+title: An Approach to Web Reconnaissance
+section: web-recon
+order: 1
 ---
 
 Expand on:

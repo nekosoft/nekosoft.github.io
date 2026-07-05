@@ -1,8 +1,7 @@
 ---
 title: Web Reconnaissance Documentation
-next: 00_recon
-sidebar:
-  open: true
+section: web-recon
+order: 0
 ---
 
 This documentation will show you what I look out for when I do any kind of web reconnaissance. It could be for websites themselves, connected devices with hosted or remote administration panels, any kind of content and when looking at IP communications. I break down a bit of why each piece of information could be important, then we attempt to automate some of it.

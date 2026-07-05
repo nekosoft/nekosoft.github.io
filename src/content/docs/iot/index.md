@@ -1,7 +1,7 @@
 ---
 title: Internet of Things (IoT) Research
-sidebar:
-  open: true
+section: iot
+order: 0
 ---
 
 This documentation will:

@@ -1,6 +1,7 @@
 ---
-title: 2. High Level Overview on Web Reconnaissance Sources
-type: docs
+title: High Level Overview on Web Reconnaissance Sources
+section: web-recon
+order: 2
 ---
 
 This is an overview of potential terminology, technologies, networking concepts and more when it comes to web related reconnaissance. This section might get broken up into smaller sections in future.
