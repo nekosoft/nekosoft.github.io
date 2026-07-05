@@ -1,0 +1,72 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import PrevNext from '../components/PrevNext.astro';
+import { docHref, type DocEntry } from '../utils/docsNav';
+
+interface Props {
+  doc: DocEntry;
+  headings: MarkdownHeading[];
+  prev?: DocEntry;
+  next?: DocEntry;
+}
+
+const { doc, headings, prev, next } = Astro.props;
+---
+
+<BaseLayout
+  title={`${doc.data.title} — Luda Hex`}
+  description={doc.data.description}
+>
+  <div class="container layout">
+    <Sidebar currentHref={docHref(doc)} />
+    <article class="prose">
+      <h1>{doc.data.title}</h1>
+      <slot />
+      <PrevNext prev={prev} next={next} />
+    </article>
+    <TableOfContents headings={headings} />
+  </div>
+</BaseLayout>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 200px;
+    gap: var(--space-7);
+    padding-block: var(--space-6);
+    align-items: start;
+  }
+
+  .layout > :global(aside),
+  .layout > :global(.toc) {
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  @media (max-width: 1100px) {
+    .layout {
+      grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .layout > :global(.toc) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+
+    .layout > :global(aside) {
+      position: static;
+      max-height: none;
+    }
+  }
+</style>
