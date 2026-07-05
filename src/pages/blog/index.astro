@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Blog — Luda Hex"
+  description="Writing on security, engineering, and research by Yianna Paris."
+>
+  <section class="container blog">
+    <p class="eyebrow">// blog</p>
+    <h1>Writing</h1>
+
+    {
+      posts.length === 0 ? (
+        <div class="empty">
+          <img
+            src="/images/skull_script_kitty.svg"
+            alt=""
+            width="110"
+            height="110"
+          />
+          <p>
+            Nothing here yet — the cauldron is still bubbling. In the
+            meantime, the <a href="/docs/web-recon">research docs</a> are
+            where the action is.
+          </p>
+        </div>
+      ) : (
+        <ul class="posts">
+          {posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>
+                <h2>{post.data.title}</h2>
+                {post.data.description && <p>{post.data.description}</p>}
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('en-GB', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .blog {
+    padding-block: var(--space-7);
+    max-width: 800px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-6);
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-4);
+    padding: var(--space-7) var(--space-5);
+    border: 1px dashed var(--border-bright);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+  }
+
+  .empty p {
+    max-width: 42ch;
+  }
+
+  .posts {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .posts a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .posts a:hover {
+    border-color: var(--magenta);
+    box-shadow: var(--glow-magenta);
+  }
+
+  .posts h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .posts a:hover h2 {
+    color: var(--magenta);
+  }
+
+  .posts p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .posts time {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+</style>
