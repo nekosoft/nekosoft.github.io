@@ -1,0 +1,292 @@
+/* ==========================================================================
+   Luda Hex design system
+   Dark kawaii-cyberpunk: deep indigo ground, neon magenta/cyan/purple
+   accents, clean and minimal. One accent spent loudly (magenta on CTAs
+   and links); everything else stays quiet.
+   ========================================================================== */
+
+:root {
+  /* ground */
+  --bg: #13102b;
+  --bg-raise: #1e1b4e;
+  --bg-inset: #0d0b20;
+  --border: #35306b;
+  --border-bright: #524aa8;
+
+  /* ink */
+  --text: #eae7fb;
+  --text-muted: #a5a0cf;
+
+  /* neon */
+  --magenta: #ff4fd8;
+  --cyan: #53e8f4;
+  --purple: #a78bfa;
+
+  --glow-magenta: 0 0 18px rgba(255, 79, 216, 0.35);
+  --glow-cyan: 0 0 18px rgba(83, 232, 244, 0.3);
+
+  /* shape */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+
+  /* space scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* type */
+  --font-display: 'Unbounded Variable', 'Space Grotesk Variable', system-ui, sans-serif;
+  --font-sans: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
+
+  --content-width: 1100px;
+  --prose-width: 72ch;
+
+  color-scheme: dark;
+}
+
+/* --- reset ------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  background-color: var(--bg);
+  /* faint nebula glow at the top of the page — depth without noise */
+  background-image:
+    radial-gradient(ellipse 80% 40% at 70% -10%, rgba(167, 139, 250, 0.12), transparent),
+    radial-gradient(ellipse 60% 30% at 20% -5%, rgba(255, 79, 216, 0.07), transparent);
+  background-repeat: no-repeat;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--magenta);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+a:hover {
+  color: var(--cyan);
+}
+
+:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: rgba(255, 79, 216, 0.3);
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* --- shared primitives -------------------------------------------------- */
+
+.container {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+/* mono uppercase section label, e.g. "// services" */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- prose (markdown content) ------------------------------------------ */
+
+.prose {
+  max-width: var(--prose-width);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--text);
+  line-height: 1.25;
+  margin-block: 1.5em 0.6em;
+  font-weight: 600;
+}
+
+.prose h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 500;
+  margin-top: 0;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h3 {
+  font-size: 1.2rem;
+  color: var(--purple);
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin-block: 1em;
+}
+
+.prose li {
+  margin-block: 0.35em;
+}
+
+.prose a {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 79, 216, 0.4);
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--cyan);
+}
+
+.prose strong {
+  color: var(--text);
+}
+
+.prose blockquote {
+  margin-block: 1.2em;
+  padding: var(--space-3) var(--space-5);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--bg-inset);
+  color: var(--text-muted);
+}
+
+.prose code {
+  font-size: 0.88em;
+  color: var(--cyan);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.4em;
+}
+
+.prose pre {
+  margin-block: 1.2em;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.prose img {
+  margin-block: 1.2em;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-block: var(--space-6);
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin-block: 1.2em;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--bg-raise);
+  font-weight: 600;
+}
+
+/* --- motion ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
