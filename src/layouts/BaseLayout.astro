@@ -36,6 +36,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "9606e3977472488991af354bdaf320e6"}'
+    ></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
