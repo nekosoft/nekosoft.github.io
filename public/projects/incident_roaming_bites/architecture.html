@@ -65,25 +65,26 @@
           <b>Merchant browser</b>
           <small>Campaign prompts, assets and account session</small>
         </div>
-        <span class="service-arrow" aria-hidden="true">↓</span>
+        <span class="service-arrow service-entry-arrow" aria-hidden="true">→</span>
 
         <div class="aws-account-zone">
           <span class="zone-label">AWS ACCOUNT · ROAMING BITES PRODUCTION</span>
           <div class="primary-service-flow">
             <article class="service-card aws-service" data-phases="1 5 6"><span>AWS managed service</span><h3>Amazon Cognito</h3><p>Merchant sign-in, tokens, MFA and session-risk signals</p></article>
-            <i aria-hidden="true">↓</i>
+            <i aria-hidden="true">→</i>
             <article class="service-card app-service" data-phases="1 2 3 4 5 6"><span>Roaming Bites component</span><h3>Campaign Assistant API</h3><p>Campaign requests, tenant checks and context assembly</p></article>
-            <i aria-hidden="true">↓</i>
+            <i aria-hidden="true">→</i>
             <article class="service-card app-service" data-phases="1 2 3 4 5 6"><span>Roaming Bites component</span><h3>Agent orchestrator</h3><p>Tool policy, job state and ECS task creation</p></article>
-            <i aria-hidden="true">↓</i>
+            <i aria-hidden="true">→</i>
             <article class="service-card aws-service important-service" data-phases="1 2 3 4 5 6"><span>AWS managed service</span><h3>Amazon ECS on EC2</h3><p>Five-minute tool workspace running the campaign job</p></article>
           </div>
 
           <div class="supporting-services" aria-label="Supporting AWS services">
-            <article class="service-card aws-service" data-phases="1 2 3"><span>AWS managed service</span><h3>Amazon Bedrock</h3><p>LLM inference requested by the application</p><small>Called by the orchestrator</small></article>
+            <div class="supporting-label"><b>Supporting services</b><span>These enable or authorize the core path; they are not another sequence.</span></div>
             <article class="service-card aws-service" data-phases="3 4 6"><span>AWS managed service</span><h3>AWS IAM</h3><p>Orchestrator, task, execution and EC2 node roles</p><small>Authorizes AWS actions</small></article>
-            <article class="service-card aws-service" data-phases="2 4"><span>AWS managed service</span><h3>Amazon S3</h3><p>Approved tenant-scoped campaign artifacts</p><small>Read and written by scoped roles</small></article>
             <article class="service-card app-service" data-phases="2 4 5 6"><span>Roaming Bites component</span><h3>Connector broker</h3><p>Keeps provider tokens away from the workspace</p><small>Uses the merchant's Google grant</small></article>
+            <article class="service-card aws-service" data-phases="1 2 3"><span>AWS managed service</span><h3>Amazon Bedrock</h3><p>LLM inference requested by the application</p><small>Called by the orchestrator</small></article>
+            <article class="service-card aws-service" data-phases="2 4"><span>AWS managed service</span><h3>Amazon S3</h3><p>Approved tenant-scoped campaign artifacts</p><small>Read and written by scoped roles</small></article>
           </div>
 
           <div class="telemetry-zone">
@@ -98,7 +99,7 @@
           </div>
         </div>
 
-        <span class="service-arrow" aria-hidden="true">↓</span>
+        <span class="service-arrow service-external-arrow" aria-hidden="true">↓</span>
         <div class="external-zone">
           <span class="service-type external-type">External services</span>
           <article data-phases="2 4 5 6"><b>Google Drive</b><small>OAuth storage, public sharing and submission retrieval</small></article>
@@ -127,7 +128,7 @@
             <span><i class="legend-dot abused"></i> Legitimate capability abused</span>
             <span><i class="legend-dot observed"></i> Observed, compromise unproven</span>
           </div>
-          <span class="map-hint">Arrow = observed flow · Select any card for details</span>
+          <span class="map-hint">Read left → right · Wrapped rows continue below · Select a card</span>
         </div>
         <div id="attackDiagram" class="attack-path-surface" data-phase="1" aria-label="Phase 1 attack path"></div>
         <div class="diagram-scroll legacy-diagram" hidden aria-hidden="true">
