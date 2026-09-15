@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Facilitator learning guide for the Roaming Bites incident tabletop">
+  <title>Roaming Bites — Facilitator learning guide</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="facilitator.css">
+</head>
+<body class="guide-page">
+  <header class="topbar guide-topbar">
+    <a class="brand" href="index.html?facilitator=1#briefing"><span class="brand-mark" aria-hidden="true">▰</span><span><strong>Roaming Bites</strong><small>Facilitator guide</small></span></a>
+    <div class="case-meta"><span class="status-dot"></span><span>RB-2026-0912</span><span class="utc">Learning map</span></div>
+    <a class="back-link" href="index.html?facilitator=1#briefing">← Incident console</a>
+  </header>
+
+  <main class="guide-main">
+    <header class="guide-hero">
+      <p class="eyebrow">Six-phase tabletop · groups of four</p>
+      <h1>What participants should learn</h1>
+      <p>The incident begins with weak identity controls, but the useful discussion is about what a valid identity can cause through data, tools, cloud roles and connected services.</p>
+    </header>
+
+    <section id="ir-introduction" class="ir-intro-slide" aria-labelledby="irIntroTitle">
+      <header>
+        <div><p class="eyebrow">Opening conversation</p><h2 id="irIntroTitle">Incident response crosses the engineering lifecycle</h2></div>
+        <p>Runtime is where incidents are often noticed—not necessarily where they began.</p>
+      </header>
+      <div class="engineering-pipeline" aria-label="Incident response across the engineering lifecycle">
+        <article><span>01</span><b>Intent &amp; design</b><small>Unsafe assumptions or sensitive-data use</small></article><i>→</i>
+        <article><span>02</span><b>Build &amp; test</b><small>Compromised code, dependency or CI identity</small></article><i>→</i>
+        <article><span>03</span><b>Deploy &amp; change</b><small>Unauthorised change—or a critical deployment blocked</small></article><i>→</i>
+        <article class="runtime"><span>04</span><b>Runtime</b><small>Server access, abuse, outage or data exposure</small></article><i>→</i>
+        <article><span>05</span><b>Recover &amp; learn</b><small>Restore safely and change the system</small></article>
+      </div>
+      <div class="ir-band"><b>Incident response</b><span>Recognise → coordinate → investigate → contain → recover → learn</span></div>
+      <div class="plan-essentials">
+        <article><span>⌁</span><b>Triggers &amp; severity</b><small>What starts the process?</small></article>
+        <article><span>◎</span><b>Roles &amp; authority</b><small>Who leads, decides and can stop change?</small></article>
+        <article><span>◖</span><b>Communications</b><small>Internal, customer, legal and public paths</small></article>
+        <article><span>⌕</span><b>Evidence &amp; time</b><small>Sources, preservation and one timeline</small></article>
+        <article><span>⊘</span><b>Containment options</b><small>Account, workload, data and service actions</small></article>
+        <article><span>✓</span><b>Recovery gates</b><small>What proves it is safe to resume?</small></article>
+      </div>
+      <footer><b>Ask the room:</b><span>When does an engineering problem become an incident?</span><span>Who can pause a deployment or service?</span><span>What evidence is needed to resume safely?</span></footer>
+    </section>
+
+    <section class="learning-grid" aria-label="Learning outcomes">
+      <article class="learning-card"><span>01</span><h2>Follow authority</h2><p>Trace merchant identity into application authorization, agent tools, AWS roles and external OAuth grants.</p></article>
+      <article class="learning-card"><span>02</span><h2>Place the data</h2><p>Separate model context, application data, workspace files, logs and connected-service content.</p></article>
+      <article class="learning-card"><span>03</span><h2>Bound the agent</h2><p>Reason about combined actions, not just whether each individual tool is legitimate.</p></article>
+      <article class="learning-card"><span>04</span><h2>Prove recovery</h2><p>Turn containment into testable queries and explicit conditions for restoring service.</p></article>
+    </section>
+
+    <section class="guide-section two-column-guide">
+      <article class="guide-panel"><p class="eyebrow">Participant screen</p><h2>Story context → system path → evidence</h2><p>Every phase begins with a short, plain-language situation update: why the team has been called and what they need to establish next. It deliberately withholds the cause, technical conclusion and impact. A highlighted system path then connects the situation to the evidence. Each evidence tab defines what kind of system is being viewed, describes the activity and gives a small “look for” prompt without supplying the conclusion.</p></article>
+      <article class="guide-panel"><p class="eyebrow">Facilitator screen</p><h2>The same story can fill the room</h2><p>In facilitator mode, a newly unlocked phase opens the story fullscreen for narration. Replay it at any time from <b>↺ Story</b> in the sticky top bar or <b>Replay fullscreen</b> in the banner. The content is identical and does not create another game step.</p></article>
+    </section>
+
+    <section class="guide-section two-column-guide">
+      <article class="guide-panel"><p class="eyebrow">Preparation · no extra round</p><h2>Four organisational teams in the room</h2><p>Teams choose four representatives once and leave two organisational groups out. Do not explain where a representative helps. Any participant may record decisions; these are recognisable incident stakeholders, not abstract security capabilities.</p><p>The live board reveals only encountered People, Data, Evidence and Authority markers. It is not a score and it never changes the shared phase timing.</p></article>
+      <article class="guide-panel"><p class="eyebrow">Facilitator key</p><h2>Hidden team reveals</h2><ul><li>Phase 1 — Security Operations</li><li>Phase 2 — Product Engineering</li><li>Phase 3 — Platform / SRE</li><li>Phase 4 — Communications &amp; PR</li><li>Phase 5 — Identity &amp; Cloud Security</li></ul><p>ML &amp; Data Operations has no dedicated reveal after the customer-data phase was removed, but can still contribute to evidence and containment discussions. After each decision, the UI keeps the relevant team contribution or capability gap visible.</p></article>
+    </section>
+
+    <section class="guide-section">
+      <div class="section-heading"><p class="eyebrow">One shared operating picture</p><h2>Four questions responders keep updating</h2></div>
+      <div class="table-wrap">
+        <table class="concept-table lens-table">
+          <thead><tr><th>View</th><th>Question it answers</th><th>Examples in this incident</th></tr></thead>
+          <tbody>
+            <tr><td>People</td><td>Who is affected, who must respond, and who needs support or communication?</td><td>Compromised merchant, phishing recipients and Communications &amp; PR ownership.</td></tr>
+            <tr><td>Data</td><td>What information was accessed, exposed, moved, retained or put at risk?</td><td>Nikto output, phishing assets, shadow-file access and a captured credential submission.</td></tr>
+            <tr><td>Evidence</td><td>What records support the incident story, and what remains uncertain?</td><td>Authentication and application audit, CloudTrail, CloudWatch, DNS, flow, GuardDuty and Drive records.</td></tr>
+            <tr><td>Authority</td><td>Which identity, permission, grant or earlier decision allowed each action?</td><td>Merchant session, task and node roles, Drive OAuth grant, public folder permission and cached queue authorization.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="aws-note"><b>Keep claims bounded:</b> one observation can update several lanes. Reading <code>/etc/shadow</code> concerns Data, Evidence and Authority. A merchant report changes People and provides evidence of public impact. Record what is known, what is inferred and what remains missing.</p>
+      <div class="two-column-guide operating-picture-guide">
+        <article class="guide-panel"><p class="eyebrow">What it is based on</p><h3>A lightweight common operating picture</h3><p>The dashboard combines familiar incident-command and SRE practices: one shared timeline, service condition, scope, evidence, working theories, unknowns, decisions and owners. The People, Data, Evidence and Authority lanes are a Roaming Bites teaching lens that helps mixed engineering teams notice business impact, information exposure, proof and permission paths without pretending they are four separate incidents.</p></article>
+        <article class="guide-panel"><p class="eyebrow">What can be reused</p><h3>Keep the structure; replace the content</h3><p>For another incident, retain the timestamp, service state, known/inferred/unknown assessment, signal timeline and decision record. Replace the scenario metrics, systems, evidence sources and lane markers. Nominate one person to keep it current, timestamp material changes and link every confirmed claim back to its original evidence.</p></article>
+      </div>
+    </section>
+
+    <section class="guide-section">
+      <div class="section-heading"><p class="eyebrow">Facilitation map</p><h2>One learning moment per phase</h2></div>
+      <div class="phase-guide">
+        <article><div class="phase-number">1</div><div><h3>A campaign breaks the baseline</h3><p><b>What happened:</b> Cognito accepted a valid password from a new device and country. The same session then created an unusual number of assets containing account-verification language. None of those events proves compromise alone; their combination justifies investigation.</p><p><b>Engineering lens:</b> authentication, transaction authorization and detection are different controls. A software team should emit stable merchant, session, device and campaign identifiers so identity and product events can be joined. An AI engineer should treat generated intent and bulk generation volume as application telemetry, not rely on the model to identify abuse.</p><p><b>Business lens:</b> challenging every new login creates merchant friction, while doing nothing lets one stolen password use trusted brand and publishing features. The decision is which actions are valuable enough to require step-up authentication.</p><p class="prompt"><b>Ask:</b> Which signal could be innocent on its own? What does the combination justify, and what does it still not prove?</p><p class="resource-links"><a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-adaptive-authentication.html" target="_blank" rel="noreferrer">Cognito threat protection ↗</a></p></div></article>
+        <article><div class="phase-number">2</div><div><h3>Customer data enters the workspace</h3><p><b>What happened:</b> the merchant selects a legitimate audience and the audience service calculates 184 merchant-scoped matches. The model receives only a general description—customers inactive for 30 days—and an approximate count, which can shape the copy without identifying recipients. The preview job nevertheless reuses <code>campaign_bundle_v2</code>, whose default inputs include an audience-member export. The audience service creates the CSV and the workspace broker stages it automatically.</p><p><b>Engineering lens:</b> asset creation and recipient selection are separate operations. Actual recipients are only needed when an approved campaign is sent. Every individual authorization returned <code>ALLOW</code>, but the chain only checked account state, tenant match, template input and staging permission. It did not carry the preview purpose through to a rule asking whether member-level data was necessary. Define separate, allowlisted input contracts for preview and delivery jobs, and propagate purpose as an authorization attribute.</p><p><b>Business lens:</b> unnecessary customer-level data increases privacy, contractual, notification and merchant-trust exposure. The Drive connection existed, but <code>content_loaded=false</code> and its earlier last-access time do not align with this run; the application audit identifies the internal services involved in the CSV path.</p><p class="prompt"><b>Ask:</b> At which authorization hop could the preview purpose have stopped a member export? Which service should own that decision, and what should be logged?</p><p class="resource-links"><a href="https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentic-ai-lens.html" target="_blank" rel="noreferrer">AWS Agentic AI Lens ↗</a><a href="https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html" target="_blank" rel="noreferrer">Amazon Verified Permissions ↗</a></p></div></article>
+        <article><div class="phase-number">3</div><div><h3>When a URL becomes a tool</h3><p><b>What happened:</b> a merchant-controlled GitHub Raw URL is downloaded and executed with Python. GitHub is legitimate; the unsafe property is the application composing retrieval and process execution without verifying the object or asking for approval.</p><p><b>Engineering lens:</b> the model can propose actions but should not be the authorization boundary. Policy needs to evaluate the complete chain, bind approval to exact arguments and prevent untrusted bytes becoming executable. The technical outcome is remote execution of attacker-selected code in the workspace.</p><p><b>Business lens:</b> a campaign-creation feature has become general-purpose compute. That expands abuse, cost, legal and brand risk far beyond the product promise merchants believe they bought.</p><p class="prompt"><b>Ask:</b> Which component owns the decision to turn retrieved bytes into a process, and what exact event would it deny?</p><p class="resource-links"><a href="https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html" target="_blank" rel="noreferrer">OWASP AI Agent Security ↗</a></p></div></article>
+        <article><div class="phase-number">4</div><div><h3>The five-minute workspace</h3><p><b>What happened:</b> the root-running ECS task installs Nikto and nmap, scans itself, reads <code>/etc/shadow</code>, contacts suspicious domains and reaches IMDS. It uploads the Nikto result and site archive to Drive, then makes the folder readable to anyone with its link. The local disk disappears, but the public SaaS state remains.</p><p><b>Engineering lens:</b> separate the task role, execution role, orchestrator role and EC2 node role. Run as non-root, remove package managers and unnecessary capabilities, isolate IMDS, constrain egress and export runtime evidence before task deletion. Treat connector sharing as a high-impact operation: default to private, restrict allowed permission types and log the actor, file, inherited permissions and link state. Root was supplied at startup; the evidence does not show a lower-privileged process gaining additional privilege.</p><p><b>Business lens:</b> the blast radius now includes public exposure in a merchant-owned SaaS account. Revoking the application session does not retract an already-public Drive link, and the scan may reveal details useful for further attacks.</p><p class="prompt"><b>Ask:</b> Which event proves persistence, which proves public exposure, and which controls must contain each one?</p><p class="resource-links"><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/security-tasks-containers.html" target="_blank" rel="noreferrer">ECS container security ↗</a><a href="https://developers.google.com/workspace/drive/api/guides/manage-sharing" target="_blank" rel="noreferrer">Google Drive sharing permissions ↗</a></p></div></article>
+        <article><div class="phase-number">5</div><div><h3>Public fallout</h3><p><b>What happened:</b> artifacts restored from Drive are served through LocalTunnel. A second merchant submits an email address and password. The page writes that submission into the public Drive folder, and an anonymous link user downloads the file. The production frontend itself has not been modified.</p><p><b>Engineering lens:</b> correlate the HTTP submission ID with the Drive object creation, inherited folder permission and anonymous download. The POST proves collection; the upload proves storage; the anonymous download proves external retrieval. Prevent sensitive form handling in preview infrastructure, prohibit public sharing by default and alert on public-permission changes or anonymous reads.</p><p><b>Business lens:</b> confirmed credential theft changes merchant care, privacy/legal assessment and public wording. Internal Communications needs verified facts, a spokesperson, an affected-user action and a next-update time—not an improvised technical conclusion on Reddit.</p><p class="prompt"><b>Ask:</b> What is confirmed, which people need immediate support, and what can be communicated without overstating wider compromise? Keep containment and recovery choices for Phase 5.</p><p class="resource-links"><a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noreferrer">NIST SP 800-61 Rev. 3 ↗</a><a href="https://docs.aws.amazon.com/whitepapers/latest/aws-security-incident-response-guide/welcome.html" target="_blank" rel="noreferrer">AWS incident response guide ↗</a></p></div></article>
+        <article><div class="phase-number">6</div><div><h3>The session is gone. The job isn't.</h3><p><b>What happened:</b> account suspension stops the interactive merchant session, but a job authorised earlier still starts. Its service role and the independent Google OAuth grant let new work continue after the apparent containment point.</p><p><b>Engineering lens:</b> a user token, refresh token, queued allow decision, STS session and OAuth grant are different authorities. Recheck account and policy state when delayed work executes, make queues cancellable, revoke connectors independently and define validation queries before recovery.</p><p><b>Business lens:</b> restoring too early risks another public incident; pausing globally disrupts legitimate merchant revenue. Recovery needs an owner, a measurable safety gate and an explicit decision about acceptable residual risk.</p><p class="prompt"><b>Ask:</b> Which authorities survived, how is each revoked, and what evidence would justify reopening the service?</p><p class="resource-links"><a href="https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminUserGlobalSignOut.html" target="_blank" rel="noreferrer">Cognito global sign-out ↗</a><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html" target="_blank" rel="noreferrer">Temporary AWS credentials ↗</a></p></div></article>
+      </div>
+    </section>
+
+    <section class="guide-section">
+      <div class="section-heading"><p class="eyebrow">AWS concept map</p><h2>Connect the evidence to the platform</h2></div>
+      <div class="table-wrap">
+        <table class="concept-table">
+          <thead><tr><th>Scenario evidence</th><th>Concept to teach</th><th>AWS connection</th></tr></thead>
+          <tbody>
+            <tr><td>User URL → retrieve → process start</td><td>Prompt or input controls do not replace deterministic authorization around tools.</td><td><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-injection.html" target="_blank" rel="noreferrer">Bedrock prompt-injection security ↗</a><br><a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-security-best-practices.html" target="_blank" rel="noreferrer">AgentCore runtime security practices ↗</a></td></tr>
+            <tr><td>Task role, execution role, orchestrator role and EC2 node role</td><td>Different identities exist for application code, ECS infrastructure, orchestration and the host.</td><td><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/security-ecs-iam-role-overview.html" target="_blank" rel="noreferrer">IAM roles for Amazon ECS ↗</a><br><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank" rel="noreferrer">IAM security best practices ↗</a></td></tr>
+            <tr><td><code>RunTask</code> and service-role events</td><td>CloudTrail records AWS API activity, not shell commands inside the container. Data events may require explicit configuration.</td><td><a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html" target="_blank" rel="noreferrer">CloudTrail data events ↗</a></td></tr>
+            <tr><td>Application-emitted process and file events</td><td>Runtime evidence must be deliberately produced, retained and correlated before ephemeral storage disappears.</td><td><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html" target="_blank" rel="noreferrer">CloudWatch Logs Insights ↗</a></td></tr>
+            <tr><td>DNS queries, accepted flows and blocked destinations</td><td>DNS, connection metadata and application-layer retrieval answer different questions.</td><td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html" target="_blank" rel="noreferrer">Route 53 Resolver query logs ↗</a><br><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html" target="_blank" rel="noreferrer">VPC Flow Logs ↗</a></td></tr>
+            <tr><td>Phishing-domain finding attributed to the EC2 node</td><td>A finding needs resource-to-task-to-merchant correlation before responders know the affected workload.</td><td><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-ec2.html" target="_blank" rel="noreferrer">GuardDuty EC2 finding types ↗</a></td></tr>
+            <tr><td>Drive folder changed to anyone-with-link, followed by anonymous download</td><td>Connector permissions can create durable public exposure outside AWS. Upload, sharing and retrieval are separate evidence points.</td><td><a href="https://developers.google.com/workspace/drive/api/guides/manage-sharing" target="_blank" rel="noreferrer">Google Drive sharing permissions ↗</a><br><a href="https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/identity-and-access-management.html" target="_blank" rel="noreferrer">AWS SaaS Lens · identity and access ↗</a></td></tr>
+            <tr><td>HTTP 200 from <code>169.254.169.254</code></td><td>Reachability is evidence of an isolation failure; it is not proof that credentials were returned or used.</td><td><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ec2-metadata.html" target="_blank" rel="noreferrer">ECS task and host metadata ↗</a></td></tr>
+            <tr><td>Access token, refresh token, STS credentials, Drive grant and queued authorization</td><td>Each authority has an independent lifetime and revocation path. A cached allow decision is not a credential, and temporary credentials can still cause durable harm.</td><td><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html" target="_blank" rel="noreferrer">Temporary AWS credentials ↗</a><br><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html" target="_blank" rel="noreferrer">IAM access keys ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="aws-note"><b>Architecture note:</b> Roaming Bites uses a custom application and ECS workspace that invokes an Amazon Bedrock model. It is not presented as a managed Bedrock Agent or AgentCore deployment; those links are useful comparison material for agent-runtime controls.</p>
+    </section>
+
+    <section class="guide-section two-column-guide">
+      <article class="guide-panel"><p class="eyebrow">Evidence discipline</p><h2>Keep these distinctions visible</h2><ul><li>A legitimate GitHub host does not make the retrieved object trusted.</li><li>A DNS request does not prove a response payload or exfiltration.</li><li>A Drive upload proves storage; public permission proves exposure; anonymous download proves retrieval.</li><li>Root inside a container is not automatically root on the EC2 host.</li><li>IMDS reachability does not prove credential use.</li><li>An ephemeral disk does not make actions, external state or harm ephemeral.</li></ul></article>
+      <article class="guide-panel"><p class="eyebrow">Debrief pivots</p><h2>If discussion stalls</h2><ul><li>Ask participants to draw the identity chain beside the data chain.</li><li>Ask who owns each control: product, application, platform, IAM, detection or incident response.</li><li>Ask for one event that would make the next phase easier to investigate.</li><li>Ask whether a control limits one merchant, one workspace or the whole service.</li><li>Ask for a query and a pass/fail recovery condition, not “monitor closely.”</li></ul></article>
+    </section>
+
+    <section class="guide-section two-column-guide">
+      <article class="guide-panel answer-deck-panel"><p class="eyebrow">Technical answer sheet</p><h2>Reveal the meaning after teams commit</h2><p>Use the separate HTML deck to explain important fields in CloudTrail, GuardDuty, IAM policy, runtime, network, Drive and queued-job evidence. It opens in a new tab and does not alter game state.</p><a class="primary-link" href="technical-answer-sheet.html" target="_blank" rel="noreferrer">Open technical answer deck ↗</a></article>
+      <article class="guide-panel"><p class="eyebrow">Recommended placement</p><h2>Keep it out of the participant path</h2><p>Prepare it from this guide, then reveal only relevant slides after a phase decision. A second link lives in the facilitator-only debrief. The normal game sidebar deliberately does not expose the answers.</p></article>
+    </section>
+
+    <section class="guide-section finish-panel">
+      <p class="eyebrow">Desired closing insight</p>
+      <h2>The compromised password is the entry point, not the full explanation.</h2>
+      <p>The engineering question is how identity, data, tools and cloud permissions were composed into enough authority to create persistent, public harm.</p>
+      <a class="primary-link" href="index.html?facilitator=1#briefing">Open the tabletop</a>
+    </section>
+  </main>
+</body>
+</html>

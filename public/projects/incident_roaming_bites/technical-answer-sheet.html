@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roaming Bites — Technical Evidence Answer Deck</title>
+  <meta name="description" content="Facilitator-only technical walkthrough of the Roaming Bites incident evidence.">
+  <link rel="stylesheet" href="technical-answer-sheet.css">
+</head>
+<body>
+  <header class="deck-bar">
+    <a class="brand" href="facilitator.html" aria-label="Back to facilitator guide">
+      <span class="brand-mark" aria-hidden="true">RB</span>
+      <span><b>Roaming Bites</b><small>Technical answer deck</small></span>
+    </a>
+    <div class="deck-meta">
+      <span class="facilitator-pill">Facilitator only</span>
+      <button id="menuButton" class="icon-button" type="button" aria-expanded="false" aria-controls="slideMenu">Slides</button>
+      <button id="fullscreenButton" class="icon-button" type="button">Full screen</button>
+    </div>
+    <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+  </header>
+
+  <aside id="slideMenu" class="slide-menu" aria-label="Slide list" hidden>
+    <div class="menu-head"><b>Answer deck</b><button id="closeMenu" type="button" aria-label="Close slide list">×</button></div>
+    <nav id="slideLinks"></nav>
+  </aside>
+
+  <main id="deck" class="deck" aria-live="polite">
+    <section class="slide title-slide active" data-title="How to use this deck">
+      <div class="hero-copy">
+        <p class="kicker">Facilitator reveal · not participant evidence</p>
+        <h1>Read the logs.<br><em>Bound the claim.</em></h1>
+        <p class="lede">A technical answer sheet for checking whether teams found the important clues—and whether they separated observation, inference and uncertainty.</p>
+        <div class="use-grid">
+          <article><span>1</span><b>Let teams commit</b><p>Do not reveal interpretations while a phase decision is still open.</p></article>
+          <article><span>2</span><b>Reveal selectively</b><p>Use the slide for evidence the room actually discussed; skip the rest.</p></article>
+          <article><span>3</span><b>Ask for a claim</b><p>“What does this prove, and what would you need to prove more?”</p></article>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="receipt"><span>evidence</span><b>09:26:03</b><i></i><i></i><i></i><strong>PROVE ≠ ASSUME</strong></div>
+        <div class="magnifier">⌕</div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="A repeatable reading method">
+      <div class="slide-heading"><span class="phase-chip neutral">Method</span><p>Use on every record</p><h2>Seven questions before making a claim</h2></div>
+      <div class="question-grid">
+        <article><span>01</span><b>Source</b><p>Which system produced the record? CloudTrail, application audit and runtime telemetry see different things.</p></article>
+        <article><span>02</span><b>Time</b><p>Event time, ingestion time and enrichment time may differ. Correlation needs a defensible window.</p></article>
+        <article><span>03</span><b>Actor</b><p>Which human, session, service role, task, node or provider grant performed the action?</p></article>
+        <article><span>04</span><b>Action</b><p>Was this a request, an allowed decision, an API call, a process start or a completed result?</p></article>
+        <article><span>05</span><b>Resource</b><p>Which merchant, workspace, task, file, domain or role was affected?</p></article>
+        <article><span>06</span><b>Outcome</b><p>Success, allowed, HTTP 200 and accepted flow each mean something different.</p></article>
+        <article><span>07</span><b>Join key</b><p>Which ID links records without relying only on close timestamps?</p></article>
+      </div>
+      <div class="claim-strip"><b>Good responder language:</b> “This source establishes <em>X</em>. It is consistent with <em>Y</em>. It does not yet establish <em>Z</em>.”</div>
+    </section>
+
+    <section class="slide" data-title="Phase 1 — Correlated alert">
+      <div class="slide-heading"><span class="phase-chip p1">Phase 1</span><p>RB Detect · correlation corr_91d7</p><h2>Weak alone; useful together</h2></div>
+      <div class="evidence-layout">
+        <div class="mock-window">
+          <div class="window-bar"><b>RB Detect</b><span>Last 60 minutes</span></div>
+          <table class="mini-table">
+            <thead><tr><th>Time</th><th>Signal</th><th>Important value</th></tr></thead>
+            <tbody>
+              <tr class="focus"><td>09:17:12</td><td>Correlation</td><td><mark>62/100 · LOW</mark></td></tr>
+              <tr><td>09:15:58</td><td>Credential-form heuristic</td><td><mark>4 of 14</mark> drafts</td></tr>
+              <tr><td>09:14:03</td><td>Asset burst</td><td><mark>14 in 8 min</mark>; median 2/day</td></tr>
+              <tr><td>09:07:51</td><td>Login context</td><td><mark>First-seen</mark> IP, device, country</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callouts">
+          <article><span>1</span><div><b>62/100 explains the response</b><p>The score only crossed the alert threshold of 60, so an analyst ticket—not automatic suspension—was proportionate.</p></div></article>
+          <article><span>2</span><div><b>Volume has a personal baseline</b><p>“14 assets” matters because this merchant normally creates two per day and had never exceeded four.</p></div></article>
+          <article><span>3</span><div><b>Copy supplies abuse context</b><p>Email/password fields and “sign in to claim” language make the burst more concerning than a normal campaign batch.</p></div></article>
+          <article class="limit"><span>!</span><div><b>Bound the claim</b><p>This supports investigation. It does not prove account takeover, publication or credential theft.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 1 — CloudTrail RunTask">
+      <div class="slide-heading"><span class="phase-chip p1">Phase 1</span><p>AWS CloudTrail · control plane</p><h2>Who started which workspace?</h2></div>
+      <div class="code-layout">
+        <pre class="annotated-code"><code><span data-n="1">"eventTime": "2026-09-12T09:09:58Z",</span>
+<span data-n="2">"eventSource": "ecs.amazonaws.com",</span>
+<span data-n="3">"eventName": "RunTask",</span>
+<span data-n="4">"userIdentity": {"type": "AssumedRole",</span>
+<span data-n="5">  "arn": "...assumed-role/rb-campaign-orchestrator-prod/run-2bd41"},</span>
+<span data-n="6">"requestParameters": {</span>
+<span data-n="7">  "cluster": "rb-campaign-prod",</span>
+<span data-n="8">  "taskDefinition": "rb-campaign-workspace:42",</span>
+<span data-n="9">  "tags": [{"merchant_id":"merchant_1047"},</span>
+<span data-n="10">           {"workspace_id":"ws_74ac1"}]},</span>
+<span data-n="11">"responseElements": {"failures": []},</span>
+<span data-n="12">"sourceIPAddress": "10.42.7.19"</span></code></pre>
+        <div class="numbered-notes">
+          <article><span>2–3</span><p><b>Service and operation:</b> an ECS control-plane request to start a task—not evidence of commands inside it.</p></article>
+          <article><span>4–5</span><p><b>Caller:</b> temporary credentials for the orchestrator role made the AWS API call. The merchant is not the CloudTrail principal.</p></article>
+          <article><span>7–10</span><p><b>Target and join keys:</b> task definition plus merchant/workspace tags connect AWS activity to application records.</p></article>
+          <article><span>11</span><p><b>API outcome:</b> no reported placement failure. Confirm the resulting task ARN/state elsewhere.</p></article>
+          <article class="limit"><span>!</span><p><b>Does not show:</b> `apt-get`, Python, file reads or `nmap`. Those require runtime telemetry.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 2 — Why the CSV was staged">
+      <div class="slide-heading"><span class="phase-chip p2">Phase 2</span><p>Job manifest + data-access audit · ctx_2201</p><h2>A preview job inherited delivery data</h2></div>
+      <div class="split-destinations">
+        <article class="destination model"><span class="destination-icon">AI</span><h3>Model context</h3><code>brand_profile</code><code>5 campaign summaries</code><code>inactive 30 days · approximate count 184</code><p>No customer identifier or row-level file is listed here.</p></article>
+        <div class="not-equal">≠</div>
+        <article class="destination workspace"><span class="destination-icon">/</span><h3>Workspace files</h3><code>brand/logo.png</code><code>brief/campaign.json</code><code>audience/audience_184.csv</code><p>184 rows: customer hash, last order time and city.</p></article>
+      </div>
+      <div class="three-facts">
+        <article><b><code>job_mode: asset_preview</code></b><p>The job creates assets; it is not delivering a campaign to individual customers.</p></article>
+        <article><b><code>included_by: campaign_bundle_v2.default_inputs</code></b><p>The reused delivery-oriented bundle automatically requested the row export.</p></article>
+        <article><b><code>tenant_filter: merchant_id=merchant_1047</code></b><p>Tenant scoping worked, but it does not show that the preview workspace needed the rows.</p></article>
+      </div>
+      <div class="claim-strip"><b>Follow the authority:</b> the merchant session may create a preview → the campaign API may create a tenant-scoped segment → the packager may export its members → the broker may stage the resulting restricted file. Each policy allowed its local action, but no recorded decision tested whether an <code>asset_preview</code> needed member rows. Drive is available, but <code>content_loaded=false</code> and its last file activity predates the run; the application audit identifies the internal services in the CSV path.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 3 — Agent action chain">
+      <div class="slide-heading"><span class="phase-chip p3">Phase 3</span><p>Agent trace + retrieval gateway + policy</p><h2>Three allowed steps create one unsafe path</h2></div>
+      <div class="chain">
+        <article><span>1</span><b>User-controlled URL</b><code>raw.githubusercontent.com/…/render-campaign.py</code><small>Known host ≠ trusted object</small></article>
+        <i>→</i>
+        <article><span>2</span><b>Retrieve and write</b><code>200 · text/plain · /work/render-campaign.py</code><small>Only type and size inspected</small></article>
+        <i>→</i>
+        <article class="danger"><span>3</span><b>Start process</b><code>python /work/render-campaign.py</code><small>No signature or human approval</small></article>
+      </div>
+      <div class="policy-grid">
+        <article><b><code>classification: campaign_helper</code></b><p>A label explains why policy allowed it; a model classification is not a security boundary.</p></article>
+        <article><b><code>human_approval: false</code></b><p>No person approved the exact bytes, hash, destination and command.</p></article>
+        <article><b><code>content_signature_required: false</code></b><p>The logged SHA-256 supports later correlation, but was not checked against an allowlist before execution.</p></article>
+        <article><b>Two local allows</b><p>`web.retrieve` and `process.start` were judged independently. No rule evaluated their data dependency.</p></article>
+      </div>
+      <div class="claim-strip"><b>Control point:</b> authorize the composed URL → bytes → executable process path. Blocking all of GitHub is both too broad and easy to bypass.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — Runtime telemetry">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>Application-emitted events in CloudWatch Logs</p><h2>The task was ephemeral; the telemetry cannot be</h2></div>
+      <div class="evidence-layout">
+        <div class="mock-window terminal-window">
+          <div class="window-bar"><b>/aws/ecs/rb-campaign-runtime</b><span>workspace ws_8bd20</span></div>
+          <pre><code>09:26:01 process.start  uid=<mark>0</mark>  python render-campaign.py
+09:26:44 process.start  uid=0  apt-get install -y nmap nikto
+09:27:17 process.start  uid=0  nmap -sV 127.0.0.1
+09:27:28 file.open      uid=0  <mark>/etc/shadow · allowed</mark>
+09:28:41 process.start  uid=0  nikto -h 127.0.0.1:3000 -o nikto-results.json
+09:28:58 file.write     uid=0  <mark>/work/nikto-results.json · 18 KB</mark></code></pre>
+        </div>
+        <div class="callouts">
+          <article><span>1</span><div><b><code>uid=0</code> means container root</b><p>The process began with root authority. No lower-to-higher transition is shown, so privilege escalation is not proven.</p></div></article>
+          <article><span>2</span><div><b>Tool installation expands capability</b><p>A writable runtime and package manager turned campaign rendering into a general-purpose testing environment.</p></div></article>
+          <article><span>3</span><div><b><code>/etc/shadow · allowed</code></b><p>Proves the file open was permitted. It does not show useful hashes, cracking or credentials used elsewhere.</p></div></article>
+          <article class="limit"><span>!</span><div><b>Source matters</b><p>These are application/runtime records shipped to CloudWatch Logs—not CloudTrail events.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — Network triangulation">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>Resolver + Flow Logs + GuardDuty + enrichment</p><h2>Each source answers a different question</h2></div>
+      <div class="source-stack">
+        <article><span class="source-icon dns">DNS</span><div><b>Resolver query log</b><code>promo-assets-cdn.example</code></div><p>The workload asked to resolve the name. It does not show response content.</p></article>
+        <article><span class="source-icon flow">VPC</span><div><b>VPC Flow Log</b><code>10.42.2.14 → external IP · 443 · ACCEPT</code></div><p>A network flow was permitted. It does not identify the application payload.</p></article>
+        <article><span class="source-icon gd">GD</span><div><b>GuardDuty finding</b><code>Trojan:EC2/PhishingDomainRequest!DNS</code></div><p>A threat-intelligence match attributes the query to the EC2 node.</p></article>
+        <article><span class="source-icon intel">TI</span><div><b>VirusTotal / urlscan enrichment</b><code>phishing · PictoPop Partner Access</code></div><p>Independent context raises confidence; it is not the source of the GuardDuty finding.</p></article>
+      </div>
+      <div class="join-banner"><b>The key engineering join:</b><span>EC2 instance</span>→<span>private IP / ENI</span>→<span>ECS task</span>→<span>workspace tag</span>→<span>merchant session</span></div>
+      <div class="claim-strip"><b>Careful conclusion:</b> the affected task contacted infrastructure associated with phishing. Timing is consistent with the retrieved helper initiating it; process-level causation and data returned over those callback connections remain unproven.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — GuardDuty fields">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>GuardDuty finding anatomy</p><h2>The finding names the node—not the merchant</h2></div>
+      <div class="code-layout">
+        <pre class="annotated-code"><code><span data-n="1">"type": "Trojan:EC2/PhishingDomainRequest!DNS",</span>
+<span data-n="2">"severity": 8,</span>
+<span data-n="3">"resourceType": "Instance",</span>
+<span data-n="4">"instanceId": "i-0c84f271a4b91e620",</span>
+<span data-n="5">"privateIpAddress": "10.42.2.14",</span>
+<span data-n="6">"iamInstanceProfile": "rb-ecs-node-prod",</span>
+<span data-n="7">"resourceRole": "ACTOR",</span>
+<span data-n="8">"actionType": "DNS_REQUEST",</span>
+<span data-n="9">"domain": "promo-assets-cdn.example",</span>
+<span data-n="10">"protocol": "UDP",</span>
+<span data-n="11">"blocked": false,</span>
+<span data-n="12">"eventFirstSeen": "2026-09-12T09:26:03Z",</span>
+<span data-n="13">"count": 1</span></code></pre>
+        <div class="numbered-notes">
+          <article><span>1–2</span><p><b>Finding type and score:</b> threat category plus prioritization; neither is a verdict about every action by the resource.</p></article>
+          <article><span>3–6</span><p><b>Resource:</b> GuardDuty sees the EC2 container host and its instance profile. Correlate to the task before naming a tenant.</p></article>
+          <article><span>7–9</span><p><b>Observed action:</b> the resource acted as the DNS requester for the named domain.</p></article>
+          <article><span>11</span><p><b>Not blocked:</b> this detector observed the request; it did not enforce DNS denial.</p></article>
+          <article><span>12–13</span><p><b>Scope:</b> one observed occurrence at this timestamp. Search surrounding DNS and network records.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — IMDS evidence">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>EC2 Instance Metadata Service</p><h2>HTTP 200 proves reachability—not credential theft</h2></div>
+      <div class="status-visual">
+        <div class="container-card"><span>Workspace task</span><b>10.42.x.x</b><small>process running as uid 0</small></div>
+        <div class="request-arrow"><code>GET 169.254.169.254/…</code><strong>200</strong></div>
+        <div class="metadata-card"><span>EC2 host metadata</span><b>IMDS</b><small>node boundary unexpectedly reachable</small></div>
+      </div>
+      <div class="proof-grid">
+        <article class="yes"><h3>Evidence supports</h3><ul><li>Requests reached metadata paths</li><li>HTTP success status was observed</li><li>The isolation design needs review</li><li>Potential node-role exposure must be investigated</li></ul></article>
+        <article class="no"><h3>Evidence does not support</h3><ul><li>Which response body was returned</li><li>That node-role credentials were obtained</li><li>That credentials were used in an AWS API call</li><li>Host-root or lateral movement</li></ul></article>
+      </div>
+      <div class="claim-strip"><b>Next evidence:</b> preserve response telemetry if safe, search CloudTrail for unusual calls by the node role, review IMDSv2/hop-limit controls, and compare task and host activity.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — IAM roles">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>Identity and permission boundaries</p><h2>Four roles; four different jobs</h2></div>
+      <div class="role-table-wrap">
+        <table class="role-table">
+          <thead><tr><th>Role</th><th>Who uses it</th><th>Representative permissions</th><th>Investigation question</th></tr></thead>
+          <tbody>
+            <tr><td><b>Orchestrator</b><code>rb-campaign-orchestrator-prod</code></td><td>Campaign service</td><td><code>ecs:RunTask</code><code>iam:PassRole</code></td><td>Can it pass only the exact task and execution roles?</td></tr>
+            <tr><td><b>Execution role</b><code>rb-campaign-execution-prod</code></td><td>ECS agent</td><td><code>ecr:Get…</code><code>logs:CreateLogStream</code></td><td>Is application code able to assume or read this role?</td></tr>
+            <tr><td><b>Task role</b><code>rb-campaign-task-prod</code></td><td>Code in the task</td><td><code>bedrock:InvokeModel</code><code>logs:PutLogEvents</code></td><td>Are resources, actions and conditions scoped to this workload?</td></tr>
+            <tr class="risk-row"><td><b>Node role</b><code>rb-ecs-node-prod</code></td><td>EC2 container host</td><td>ECS host operations</td><td>Can a task reach its metadata credentials?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="policy-explain"><code>iam:PassRole</code><span>does not mean “assume the role.” It lets the orchestrator tell ECS which approved role to attach to a task. Scope it by role ARN and service conditions.</span></div>
+      <div class="claim-strip"><b>Least privilege is relational:</b> inspect actions, resources, conditions, trust policies and which principal can attach or assume each role—not just the role name.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — IAM policy lines">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>Task-role policy statement</p><h2>Read action and resource together</h2></div>
+      <div class="code-layout">
+        <pre class="annotated-code"><code><span data-n="1">"Effect": "Allow",</span>
+<span data-n="2">"Action": [</span>
+<span data-n="3">  "bedrock:InvokeModel",</span>
+<span data-n="4">  "s3:GetObject", "s3:PutObject",</span>
+<span data-n="5">  "logs:CreateLogStream", "logs:PutLogEvents"</span>
+<span data-n="6">],</span>
+<span data-n="7">"Resource": [</span>
+<span data-n="8">  "arn:aws:bedrock:*::foundation-model/*",</span>
+<span data-n="9">  "arn:aws:s3:::rb-campaign-artifacts-prod/merchant_1047/*",</span>
+<span data-n="10">  "arn:aws:logs:us-east-1:123456789012:log-group:/ecs/rb-campaign-workspace:*"</span>
+<span data-n="11">]</span></code></pre>
+        <div class="numbered-notes">
+          <article><span>1</span><p><b>Effect:</b> matching requests are permitted. An explicit deny elsewhere would still win.</p></article>
+          <article><span>2–5</span><p><b>Actions:</b> the application may invoke a model, read/write artifacts and emit logs. This statement does not grant ECS task creation.</p></article>
+          <article><span>8</span><p><b>Broad model resource:</b> every listed foundation model in every region is wider than one approved model/version.</p></article>
+          <article><span>9</span><p><b>Tenant-scoped prefix:</b> S3 is narrowed to merchant_1047. Ask whether policies are generated per tenant and cannot be confused.</p></article>
+          <article><span>10</span><p><b>Region/account/log scope:</b> log writes are restricted more tightly than the Bedrock resource.</p></article>
+        </div>
+      </div>
+      <div class="claim-strip"><b>Missing from this excerpt:</b> conditions, trust policy, permissions boundary, SCPs and bucket policy. An effective-permission review needs all applicable policy layers.</div>
+    </section>
+
+    <section class="slide" data-title="Phase 4 — Drive persistence and sharing">
+      <div class="slide-heading"><span class="phase-chip p4">Phase 4</span><p>Google Workspace Drive audit</p><h2>Persistence becomes a public access path</h2></div>
+      <div class="timeline-visual">
+        <article><time>09:28:17</time><b>Upload</b><p><code>nikto-results.json</code></p></article><i>→</i>
+        <article><time>09:28:20</time><b>Upload</b><p><code>promotion-assets.zip</code></p></article><i>→</i>
+        <article class="provider"><time>09:28:24</time><b>Change sharing</b><p>Anyone with link · viewer</p></article><i>→</i>
+        <article><time>09:34:06</time><b>Restore</b><p>New workspace downloads archive</p></article>
+      </div>
+      <div class="policy-grid">
+        <article><b>Provider audit is external evidence</b><p>It survives deletion of the ephemeral workspace and can join uploads/downloads by actor, file and time.</p></article>
+        <article><b><code>drive.file</code> is narrower—not harmless</b><p>The grant can still access files created or opened through the application.</p></article>
+        <article><b>Sharing is a separate action</b><p>An upload proves storage. The permission change makes the folder and inherited files readable to anyone holding the link.</p></article>
+        <article><b>No token theft required</b><p>The connector exercises the OAuth grant; an anonymous reader later needs only the public link.</p></article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 5 — Public impact">
+      <div class="slide-heading"><span class="phase-chip p5">Phase 5</span><p>Runtime + HTTP + Drive + recipient report</p><h2>Prove collection and retrieval one event at a time</h2></div>
+      <div class="impact-grid">
+        <article><span class="impact-icon">⌘</span><b>Local web server</b><p>Campaign files are served from the workspace.</p><small>Proves local hosting</small></article>
+        <article><span class="impact-icon">↗</span><b>LocalTunnel</b><p>An outbound connection exposes the local port publicly.</p><small>No inbound security-group rule required</small></article>
+        <article><span class="impact-icon">▣</span><b>Phishing page</b><p>Page imitates PictoPop and asks for email/password.</p><small>Proves public deceptive content</small></article>
+        <article><span class="impact-icon">⇥</span><b>Form POST</b><p><code>sub_4c81</code> contains email and password fields.</p><small>Proves collection</small></article>
+        <article><span class="impact-icon">◆</span><b>Drive upload</b><p>The submission is written into the public folder.</p><small>Proves storage and exposure</small></article>
+        <article><span class="impact-icon">↓</span><b>Anonymous download</b><p>A link user retrieves the submission from an external IP.</p><small>Proves exfiltration</small></article>
+      </div>
+      <div class="proof-grid">
+        <article class="yes"><h3>Confirmed chain</h3><p><code>POST /collect</code> → <code>submission_id=sub_4c81</code> → Drive object upload → inherited public permission → anonymous download.</p></article>
+        <article class="no"><h3>Still avoid claiming</h3><p>That the production frontend was modified, that other merchants submitted credentials, or that the captured credential was used elsewhere.</p></article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 6 — Authorization after logout">
+      <div class="slide-heading"><span class="phase-chip p6">Phase 6</span><p>Application job record + CloudTrail</p><h2>The later task is not a second login</h2></div>
+      <div class="code-layout">
+        <pre class="annotated-code"><code><span data-n="1">"job_id": "job_91c2",</span>
+<span data-n="2">"created_at": "2026-09-12T09:49:42Z",</span>
+<span data-n="3">"created_by_session": "ses_8f21c",</span>
+<span data-n="4">"scheduled_for": "2026-09-12T10:08:00Z",</span>
+<span data-n="5">"started_at": "2026-09-12T10:08:14Z",</span>
+<span data-n="6">"authorization": {</span>
+<span data-n="7">  "evaluated_at": "enqueue",</span>
+<span data-n="8">  "merchant_state_at_execution": "not_checked"</span>
+<span data-n="9">}</span>
+
+<span data-n="10">10:05:12  TerminateSession ses_8f21c SUCCESS</span>
+<span data-n="11">10:08:14  CloudTrail RunTask by orchestrator role</span></code></pre>
+        <div class="numbered-notes">
+          <article><span>2–3</span><p><b>Provenance:</b> the job was accepted while the known session was valid. The session ID joins queue and identity records.</p></article>
+          <article><span>4–5</span><p><b>Schedule and start:</b> the task began 14 seconds after its scheduled time.</p></article>
+          <article><span>7–8</span><p><b>Design gap:</b> authorization was evaluated at enqueue; merchant suspension was not checked at execution.</p></article>
+          <article><span>10–11</span><p><b>Sequence:</b> the session ended before the service role started the task.</p></article>
+          <article class="limit"><span>!</span><p><b>Conclusion:</b> continuing pre-authorized work, not evidence of a fresh attacker login after containment.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Phase 6 — Credential lifetimes">
+      <div class="slide-heading"><span class="phase-chip p6">Phase 6</span><p>Authority inventory</p><h2>Containment must follow every authority</h2></div>
+      <div class="authority-grid">
+        <article><span class="authority-kind human">Human</span><b>Cognito access token</b><strong>60 min</strong><p>Short-lived bearer authority. Terminate session and prevent refresh.</p></article>
+        <article><span class="authority-kind human">Human</span><b>Cognito refresh token</b><strong>30 days</strong><p>Renewable session authority. Revoke the session family.</p></article>
+        <article><span class="authority-kind aws">AWS</span><b>Task-role STS credentials</b><strong>Temporary</strong><p>Stopping one task does not stop a newly authorized task receiving fresh credentials.</p></article>
+        <article><span class="authority-kind aws">AWS</span><b>Node-role credentials</b><strong>Temporary</strong><p>Possible exposure through IMDS; acquisition and use are unproven.</p></article>
+        <article class="survived"><span class="authority-kind oauth">OAuth</span><b>Google Drive grant</b><strong>Renewable</strong><p>Independent provider authority survived account suspension.</p></article>
+        <article class="survived"><span class="authority-kind decision">Permission</span><b>Public Drive folder</b><strong>Durable</strong><p>Anonymous read access remains until the anyone-with-link permission is removed, even if OAuth is revoked.</p></article>
+        <article class="survived"><span class="authority-kind decision">Decision</span><b>Queued authorization</b><strong>No expiry</strong><p>Not a credential: a cached policy result that must be invalidated or re-evaluated.</p></article>
+      </div>
+      <div class="claim-strip"><b>Temporal does not mean low impact:</b> short-lived credentials can create durable files, jobs, public pages and grants before they expire.</div>
+    </section>
+
+    <section class="slide" data-title="Final answer key">
+      <div class="slide-heading"><span class="phase-chip neutral">Debrief</span><p>Evidence confidence</p><h2>What the incident record can—and cannot—say</h2></div>
+      <div class="answer-columns">
+        <article class="observed"><h3><span>✓</span> Observed</h3><ul><li>Valid password-backed merchant session</li><li>GitHub Raw object downloaded and executed</li><li>Root-running task, Nikto scan and shadow-file access</li><li>Drive folder made link-readable</li><li>Credential submission stored and anonymously downloaded</li><li>Queued task started after session termination</li></ul></article>
+        <article class="inferred"><h3><span>≈</span> Reasonable inference</h3><ul><li>The retrieved helper caused the near-immediate callbacks</li><li>The public page was part of the attacker’s phishing objective</li><li>The password was stolen or reused before the first observed login</li></ul><p>State these as hypotheses and name the supporting correlation.</p></article>
+        <article class="unproven"><h3><span>?</span> Not proven</h3><ul><li>Reconnaissance before login</li><li>Privilege escalation or host compromise</li><li>AWS credentials returned or used</li><li>Use of the stolen merchant credential elsewhere</li><li>Additional victim submissions</li><li>Production frontend compromise</li></ul></article>
+      </div>
+      <div class="closing-question"><b>Best final prompt</b><p>“Which single additional event, field or correlation would most change your confidence—and which team should own producing it next time?”</p></div>
+    </section>
+
+    <section class="slide" data-title="Placement and facilitation">
+      <div class="slide-heading"><span class="phase-chip neutral">UX placement</span><p>Keep answers out of the play path</p><h2>One deck, two deliberate entry points</h2></div>
+      <div class="placement-map">
+        <article><span>Before play</span><b>Facilitator guide</b><p>A prominent “Open technical answer deck” button lets the facilitator prepare or keep it in a separate tab.</p></article>
+        <i>→</i>
+        <article><span>During play</span><b>No participant link</b><p>The normal sidebar stays focused on roles, phases, architecture and the team’s operating picture.</p></article>
+        <i>→</i>
+        <article><span>After commitment</span><b>Facilitator debrief</b><p>A second link appears in the facilitator-only debrief, where interpretations can be revealed selectively.</p></article>
+      </div>
+      <div class="facilitation-tips">
+        <article><b>Do not present every slide</b><p>Pick the evidence that generated disagreement or an overconfident claim.</p></article>
+        <article><b>Keep one display separate</b><p>Open in a new tab so the shared game state, decisions and summary remain untouched.</p></article>
+        <article><b>Let teams self-correct first</b><p>Ask for source, actor, result and limitation before revealing the annotations.</p></article>
+      </div>
+      <a class="back-link" href="facilitator.html">Return to facilitator guide</a>
+    </section>
+  </main>
+
+  <footer class="deck-controls">
+    <button id="prevButton" type="button" aria-label="Previous slide">← Previous</button>
+    <div class="counter"><span id="currentNumber">1</span><i>/</i><span id="totalNumber">16</span></div>
+    <button id="nextButton" type="button" aria-label="Next slide">Next →</button>
+  </footer>
+
+  <script src="technical-answer-sheet.js"></script>
+</body>
+</html>

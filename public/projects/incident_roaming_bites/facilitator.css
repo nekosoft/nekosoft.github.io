@@ -1,0 +1,53 @@
+.guide-page { background: #f7f4ee; }
+.guide-topbar .back-link { color: #fff; text-decoration: none; border: 1px solid #4b5870; border-radius: 9px; padding: 9px 12px; font-size: 13px; }
+.guide-main { width: min(1240px, calc(100vw - 40px)); padding: 42px 0 80px; }
+.guide-hero { max-width: 900px; margin-bottom: 30px; }
+.guide-hero h1 { margin: 6px 0 12px; font-size: clamp(38px, 5vw, 62px); line-height: 1; letter-spacing: -.045em; }
+.guide-hero > p:last-child { color: var(--muted); font-size: 17px; line-height: 1.6; }
+.ir-intro-slide { min-height:680px; margin:0 0 30px; padding:30px; display:flex; flex-direction:column; justify-content:space-between; gap:24px; overflow:hidden; border:1px solid #d8dfe3; border-radius:22px; background:radial-gradient(circle at 90% 5%,rgba(243,111,99,.15),transparent 28%),linear-gradient(145deg,#fff 0%,#f3f8f6 100%); box-shadow:var(--shadow); }
+.ir-intro-slide>header { display:flex; align-items:flex-end; justify-content:space-between; gap:28px; }.ir-intro-slide>header h2 { max-width:760px; margin:4px 0 0; font-size:clamp(30px,4vw,48px); line-height:1.04; letter-spacing:-.035em; }.ir-intro-slide>header>p { max-width:330px; margin:0; color:var(--muted); font-size:15px; line-height:1.5; }
+.engineering-pipeline { display:grid; grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr 24px 1fr; gap:7px; align-items:stretch; }.engineering-pipeline article { min-width:0; min-height:125px; padding:16px; border:1px solid #d9dfe5; border-radius:14px; background:#fff; }.engineering-pipeline article.runtime { border-color:#e48372; background:#fff0eb; box-shadow:inset 0 -4px 0 #efaa9d; }.engineering-pipeline article span,.engineering-pipeline article b,.engineering-pipeline article small { display:block; }.engineering-pipeline article span { color:var(--coral-dark); font-size:10px; font-weight:900; letter-spacing:.1em; }.engineering-pipeline article b { margin:17px 0 7px; color:var(--ink); font-size:15px; }.engineering-pipeline article small { color:var(--muted); font-size:11px; line-height:1.4; }.engineering-pipeline>i { align-self:center; color:#a6afbb; font-size:22px; font-style:normal; text-align:center; }
+.ir-band { display:flex; align-items:center; gap:20px; padding:14px 18px; border-radius:12px; background:var(--navy); color:white; }.ir-band b { color:#ffb3a5; text-transform:uppercase; letter-spacing:.09em; font-size:11px; }.ir-band span { font-size:14px; font-weight:750; letter-spacing:.015em; }
+.plan-essentials { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }.plan-essentials article { display:grid; grid-template-columns:32px 1fr; gap:2px 10px; align-items:center; min-height:74px; padding:12px; border:1px solid #d8e2df; border-radius:12px; background:rgba(255,255,255,.82); }.plan-essentials article>span { grid-row:1/3; display:grid; place-items:center; width:32px; height:32px; border-radius:9px; background:#dff1ec; color:#226d65; font-weight:900; }.plan-essentials b { font-size:12px; }.plan-essentials small { color:var(--muted); font-size:10px; line-height:1.35; }
+.ir-intro-slide>footer { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding-top:17px; border-top:1px solid #d7dfdf; }.ir-intro-slide>footer b { margin-right:4px; color:var(--coral-dark); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }.ir-intro-slide>footer span { padding:7px 9px; border-radius:100px; background:#fff; color:#4d596a; font-size:11px; }
+.learning-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.learning-card { background: #fff; border: 1px solid var(--line); border-radius: 15px; padding: 20px; box-shadow: var(--shadow); }
+.learning-card > span { color: var(--coral-dark); font-size: 12px; font-weight: 850; letter-spacing: .09em; }
+.learning-card h2 { margin: 18px 0 7px; font-size: 20px; }
+.learning-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.guide-section { margin-top: 42px; }
+.section-heading { margin-bottom: 16px; }
+.section-heading h2 { margin: 5px 0 0; font-size: 30px; }
+.phase-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.phase-guide article { display: grid; grid-template-columns: 46px 1fr; gap: 14px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.phase-number { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #ffe7dc; color: var(--coral-dark); font-weight: 850; }
+.phase-guide h3 { margin: 2px 0 10px; font-size: 18px; }
+.phase-guide p { margin: 6px 0; color: #465269; font-size: 13px; line-height: 1.5; }
+.phase-guide .prompt { margin-top: 12px; color: var(--ink); }
+.resource-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px !important; }.resource-links a { padding: 6px 8px; border-radius: 7px; background: #edf4f2; color: #216f67; font-size: 10px; font-weight: 800; text-decoration: none; }.resource-links a:hover { background: #dcece8; }.lens-table td:first-child { width: 16%; }.lens-table td:nth-child(2) { width: 39%; }
+.table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 15px; box-shadow: var(--shadow); }
+.concept-table { width: 100%; border-collapse: collapse; min-width: 850px; }
+.concept-table th, .concept-table td { padding: 14px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.5; }
+.concept-table th { background: #f2f4f7; color: #4c586c; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.concept-table tr:last-child td { border-bottom: 0; }
+.concept-table td:first-child { width: 25%; font-weight: 750; color: var(--ink); }
+.concept-table td:nth-child(2) { width: 40%; color: #465269; }
+.concept-table a { color: #216f67; font-weight: 750; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.aws-note { color: var(--muted); font-size: 13px; line-height: 1.55; margin: 13px 3px 0; }
+.two-column-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.guide-panel, .finish-panel { background: #fff; border: 1px solid var(--line); border-radius: 15px; padding: 22px; box-shadow: var(--shadow); }
+.guide-panel h2, .finish-panel h2 { margin: 7px 0 12px; }
+.guide-panel ul { margin: 0; padding-left: 20px; }
+.guide-panel li { color: #465269; font-size: 13px; line-height: 1.5; margin: 7px 0; }
+.finish-panel { border-left: 5px solid var(--coral); }
+.finish-panel p:not(.eyebrow) { color: var(--muted); line-height: 1.6; max-width: 850px; }
+.primary-link { display: inline-block; margin-top: 12px; background: var(--navy); color: #fff; text-decoration: none; border-radius: 9px; padding: 11px 15px; font-size: 13px; font-weight: 800; }
+@media (max-width: 950px) { .learning-grid { grid-template-columns: 1fr 1fr; }.phase-guide, .two-column-guide { grid-template-columns: 1fr; }.guide-main { width: min(100% - 24px, 1240px); }.ir-intro-slide { min-height:0; }.ir-intro-slide>header { align-items:flex-start; flex-direction:column; }.engineering-pipeline { grid-template-columns:1fr; }.engineering-pipeline>i { transform:rotate(90deg); }.plan-essentials { grid-template-columns:1fr 1fr; } }
+@media (max-width: 600px) { .guide-topbar { grid-template-columns: 1fr auto; }.guide-topbar .case-meta { display: none; }.guide-topbar .back-link { font-size: 11px; padding: 8px; }.learning-grid,.plan-essentials { grid-template-columns: 1fr; }.guide-main { padding-top: 28px; }.guide-hero > p:last-child { font-size: 15px; }.ir-intro-slide { padding:20px; }.ir-band { align-items:flex-start; flex-direction:column; gap:6px; } }
+@media print { .guide-topbar, .primary-link { display: none; }.guide-main { width: 100%; padding: 0; }.learning-card, .phase-guide article, .guide-panel, .finish-panel, .table-wrap { box-shadow: none; page-break-inside: avoid; }.ir-intro-slide { min-height:95vh; break-after:page; box-shadow:none; } }
+.phase-guide > article:nth-child(2) { display:none; }
+.phase-guide > article:nth-child(n+3) .phase-number { font-size:0; }
+.phase-guide > article:nth-child(3) .phase-number::after { content:"2"; font-size:28px; }
+.phase-guide > article:nth-child(4) .phase-number::after { content:"3"; font-size:28px; }
+.phase-guide > article:nth-child(5) .phase-number::after { content:"4"; font-size:28px; }
+.phase-guide > article:nth-child(6) .phase-number::after { content:"5"; font-size:28px; }
