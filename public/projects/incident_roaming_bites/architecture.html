@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Roaming Bites AWS service architecture and interactive incident attack path">
+  <title>Roaming Bites — AWS architecture and attack path</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="architecture.css">
+</head>
+<body class="map-page">
+  <header class="topbar map-topbar">
+    <a class="brand" href="index.html#briefing">
+      <span class="brand-mark" aria-hidden="true">▰</span>
+      <span><strong>Roaming Bites</strong><small>AWS architecture</small></span>
+    </a>
+    <div class="case-meta"><span class="status-dot"></span><span>SEV-2 · RB-2026-0912</span><span class="utc">Architecture view</span></div>
+    <a class="back-link" href="index.html#briefing">← Evidence console</a>
+  </header>
+
+  <div class="shell map-shell">
+    <aside class="sidebar" aria-label="Scenario navigation">
+      <div class="case-label">The promotion that wasn't</div>
+      <nav>
+        <a class="nav-item" href="index.html#briefing"><span>00</span> Briefing</a>
+        <a class="nav-item" href="index.html#team"><span>★</span> Choose response team</a>
+        <a id="architectureSituationNav" class="nav-item hidden" href="index.html#situation"><span>◫</span> Live Dashboard</a>
+        <a id="architectureAttackPathNav" class="nav-item nav-subitem active hidden" href="architecture.html" aria-current="page"><span>↳</span> Attack-path map</a>
+        <a class="nav-item hidden" data-architecture-phase="1" href="index.html#phase1"><span>01</span> Behaviour alert</a>
+        <a class="nav-item hidden" data-architecture-phase="3" href="index.html#phase3"><span>02</span> URL becomes a tool</a>
+        <a class="nav-item hidden" data-architecture-phase="4" href="index.html#phase4"><span>03</span> Five-minute workspace</a>
+        <a class="nav-item hidden" data-architecture-phase="5" href="index.html#phase5"><span>04</span> Public fallout</a>
+        <a class="nav-item hidden" data-architecture-phase="6" href="index.html#phase6"><span>05</span> Containment gap</a>
+        <a id="architectureSummaryNav" class="nav-item hidden" href="index.html#summary"><span>✓</span> Incident summary</a>
+        <a class="nav-item" href="facilitator.html"><span>?</span> Facilitator guide</a>
+      </nav>
+    </aside>
+
+    <main class="architecture-main">
+    <header class="map-intro">
+      <div>
+        <p class="eyebrow">AWS service architecture + incident path</p>
+        <h1>See what runs where—and why</h1>
+        <p>The service map names the AWS building blocks and their purpose. The attack-path map below shows how the compromised merchant session moves across those boundaries.</p>
+      </div>
+      <div class="phase-filter" role="group" aria-label="Filter architecture and attack path by phase">
+        <button type="button" class="active hidden" data-phase-filter="1" aria-pressed="true">Phase 1</button>
+        <button type="button" class="hidden" data-phase-filter="3" aria-pressed="false">Phase 2</button>
+        <button type="button" class="hidden" data-phase-filter="4" aria-pressed="false">Phase 3</button>
+        <button type="button" class="hidden" data-phase-filter="5" aria-pressed="false">Phase 4</button>
+        <button type="button" class="hidden" data-phase-filter="6" aria-pressed="false">Phase 5</button>
+        <button type="button" class="hidden" data-phase-filter="all" aria-pressed="false">All phases</button>
+      </div>
+    </header>
+
+    <section class="service-map-shell" aria-labelledby="serviceMapTitle">
+      <header class="service-map-heading">
+        <div><p class="eyebrow">Architecture at a glance</p><h2 id="serviceMapTitle">AWS services in use</h2></div>
+        <p><b>AWS managed service</b> labels distinguish cloud services from Roaming Bites application components and external providers.</p>
+      </header>
+
+      <div class="service-map" role="img" aria-label="A merchant authenticates with Amazon Cognito, uses the Campaign Assistant and agent orchestrator, which invokes Amazon Bedrock and starts an Amazon ECS workspace on EC2. IAM provides roles, S3 stores approved campaign artifacts, a connector broker accesses Google Drive, and AWS security services collect evidence.">
+        <div class="service-actor" data-phases="1 2 3 4 5 6">
+          <span class="service-type external-type">User boundary</span>
+          <b>Merchant browser</b>
+          <small>Campaign prompts, assets and account session</small>
+        </div>
+        <span class="service-arrow" aria-hidden="true">↓</span>
+
+        <div class="aws-account-zone">
+          <span class="zone-label">AWS ACCOUNT · ROAMING BITES PRODUCTION</span>
+          <div class="primary-service-flow">
+            <article class="service-card aws-service" data-phases="1 5 6"><span>AWS managed service</span><h3>Amazon Cognito</h3><p>Merchant sign-in, tokens, MFA and session-risk signals</p></article>
+            <i aria-hidden="true">↓</i>
+            <article class="service-card app-service" data-phases="1 2 3 4 5 6"><span>Roaming Bites component</span><h3>Campaign Assistant API</h3><p>Campaign requests, tenant checks and context assembly</p></article>
+            <i aria-hidden="true">↓</i>
+            <article class="service-card app-service" data-phases="1 2 3 4 5 6"><span>Roaming Bites component</span><h3>Agent orchestrator</h3><p>Tool policy, job state and ECS task creation</p></article>
+            <i aria-hidden="true">↓</i>
+            <article class="service-card aws-service important-service" data-phases="1 2 3 4 5 6"><span>AWS managed service</span><h3>Amazon ECS on EC2</h3><p>Five-minute tool workspace running the campaign job</p></article>
+          </div>
+
+          <div class="supporting-services" aria-label="Supporting AWS services">
+            <article class="service-card aws-service" data-phases="1 2 3"><span>AWS managed service</span><h3>Amazon Bedrock</h3><p>LLM inference requested by the application</p><small>Called by the orchestrator</small></article>
+            <article class="service-card aws-service" data-phases="3 4 6"><span>AWS managed service</span><h3>AWS IAM</h3><p>Orchestrator, task, execution and EC2 node roles</p><small>Authorizes AWS actions</small></article>
+            <article class="service-card aws-service" data-phases="2 4"><span>AWS managed service</span><h3>Amazon S3</h3><p>Approved tenant-scoped campaign artifacts</p><small>Read and written by scoped roles</small></article>
+            <article class="service-card app-service" data-phases="2 4 5 6"><span>Roaming Bites component</span><h3>Connector broker</h3><p>Keeps provider tokens away from the workspace</p><small>Uses the merchant's Google grant</small></article>
+          </div>
+
+          <div class="telemetry-zone">
+            <div class="telemetry-heading"><b>Security telemetry</b><span>These services observe different parts of the path; none contains the whole story.</span></div>
+            <div class="telemetry-services">
+              <article data-phases="1 6"><b>AWS CloudTrail</b><span>AWS API calls such as <code>RunTask</code></span></article>
+              <article data-phases="2 3 4 5"><b>Amazon CloudWatch Logs</b><span>Application and instrumented runtime events</span></article>
+              <article data-phases="4 5 6"><b>Route 53 Resolver logs</b><span>DNS queries and DNS Firewall decisions</span></article>
+              <article data-phases="4 5"><b>VPC Flow Logs</b><span>Accepted and rejected network-flow metadata</span></article>
+              <article data-phases="4"><b>Amazon GuardDuty</b><span>Malicious-domain and runtime findings</span></article>
+            </div>
+          </div>
+        </div>
+
+        <span class="service-arrow" aria-hidden="true">↓</span>
+        <div class="external-zone">
+          <span class="service-type external-type">External services</span>
+          <article data-phases="2 4 5 6"><b>Google Drive</b><small>OAuth storage, public sharing and submission retrieval</small></article>
+          <article data-phases="3 4"><b>GitHub Raw</b><small>Public file delivery</small></article>
+          <article data-phases="4 6"><b>Callback domains</b><small>Attacker-controlled HTTPS</small></article>
+          <article data-phases="5 6"><b>LocalTunnel</b><small>Public relay to the workspace</small></article>
+        </div>
+      </div>
+      <p class="service-map-note"><b>Scope of this map:</b> the evidence identifies the Campaign Assistant as an application and shows the AWS services it calls, but it never identifies how its web tier or business database are hosted. Those parts are therefore shown as logical Roaming Bites components rather than being labelled as API Gateway, Lambda, CloudFront, DynamoDB or another guessed implementation. This does not mean a web host or database is absent—only that participants do not need an invented service choice to investigate this incident.</p>
+    </section>
+
+    <div class="path-heading">
+      <div><p class="eyebrow">Interactive incident path</p><h2>Follow the compromise across trust boundaries</h2><p>Choose a phase, then select a node to inspect its runtime, service identity, permissions and evidence. The architecture above highlights the same phase.</p></div>
+    </div>
+
+    <section class="phase-context" aria-live="polite">
+      <span id="phaseContextNumber">Phase 1</span>
+      <div><h3 id="phaseContextTitle">Valid account access</h3><p id="phaseContextSummary">A stolen password creates a valid merchant session and reaches the normal campaign workspace.</p></div>
+    </section>
+
+    <div class="map-layout">
+      <section class="diagram-shell" aria-label="Interactive attack path diagram">
+        <div class="diagram-toolbar">
+          <div class="map-legend">
+            <span><i class="legend-dot compromised"></i> Compromised or malicious</span>
+            <span><i class="legend-dot abused"></i> Legitimate capability abused</span>
+            <span><i class="legend-dot observed"></i> Observed, compromise unproven</span>
+          </div>
+          <span class="map-hint">Arrow = observed flow · Select any card for details</span>
+        </div>
+        <div id="attackDiagram" class="attack-path-surface" data-phase="1" aria-label="Phase 1 attack path"></div>
+        <div class="diagram-scroll legacy-diagram" hidden aria-hidden="true">
+          <svg id="legacyAttackDiagram" class="attack-diagram" viewBox="0 0 1400 760" role="img" aria-labelledby="diagramTitle diagramDesc" data-phase="all">
+            <title id="diagramTitle">Roaming Bites compromised merchant attack path</title>
+            <desc id="diagramDesc">A left-to-right attack path begins with a stolen merchant password, reaches the Campaign Assistant and agent workspace, then branches cleanly to GitHub, malicious callbacks, Google Drive, instance metadata and LocalTunnel.</desc>
+            <defs>
+              <marker id="arrow-p1" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z"></path></marker>
+              <marker id="arrow-p2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z"></path></marker>
+              <marker id="arrow-p3" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z"></path></marker>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity=".12"></feDropShadow></filter>
+            </defs>
+
+            <rect class="boundary identity-boundary" x="24" y="104" width="206" height="520" rx="22"></rect>
+            <text class="boundary-label" x="42" y="132">MERCHANT IDENTITY</text>
+
+            <rect class="boundary app-boundary" x="250" y="104" width="350" height="584" rx="24"></rect>
+            <text class="boundary-label" x="270" y="132">ROAMING BITES APPLICATION</text>
+
+            <rect class="boundary aws-boundary" x="620" y="104" width="320" height="584" rx="24"></rect>
+            <text class="boundary-label" x="640" y="132">AWS WORKLOAD VPC</text>
+
+            <rect class="boundary external-boundary" x="960" y="64" width="416" height="664" rx="24"></rect>
+            <text class="boundary-label" x="980" y="92">EXTERNAL SERVICES &amp; RECIPIENTS</text>
+
+            <g class="attack-lines" aria-hidden="true">
+              <path class="attack p1" data-phases="1" d="M126 250 L126 334" marker-end="url(#arrow-p1)"></path><text class="step-label p1" data-phases="1" x="139" y="295">1 · valid login</text>
+              <path class="attack p1" data-phases="1 2 3" d="M230 378 L292 378" marker-end="url(#arrow-p1)"></path><text class="step-label p1" data-phases="1 2 3" x="243" y="362">2</text>
+              <path class="attack p1" data-phases="1 2 3" d="M392 422 L392 452 C392 473 408 483 430 483" marker-end="url(#arrow-p1)"></path><text class="step-label p1" data-phases="1 2 3" x="404" y="447">3</text>
+              <path class="attack p1" data-phases="1 2 3 4 6" d="M596 483 L628 483 Q650 483 650 452 L650 373 Q650 349 678 349" marker-end="url(#arrow-p1)"></path><text class="step-label p1" data-phases="1 2 3 4 6" x="612" y="466">4 · start task</text>
+
+              <path class="attack p2 two-way" data-phases="3 4" d="M888 334 L904 334 L904 196 Q904 166 998 166" marker-start="url(#arrow-p2)" marker-end="url(#arrow-p2)"></path><text class="step-label p2" data-phases="3 4" x="916" y="188">5–6 · retrieve + code</text>
+              <path class="attack p2" data-phases="4" d="M888 360 L1020 360 Q1050 360 1050 294 L1178 294" marker-end="url(#arrow-p2)"></path><text class="step-label p2" data-phases="4" x="920" y="346">7 · callbacks</text>
+              <path class="attack p2" data-phases="4" d="M783 400 L783 462" marker-end="url(#arrow-p2)"></path><text class="step-label p2" data-phases="4" x="797" y="438">8 · metadata</text>
+              <path class="reference-line" data-phases="4" d="M783 540 L783 568"></path><text class="reference-label" data-phases="4" x="797" y="560">hosted by</text>
+
+              <path class="attack p2 two-way" data-phases="4 5 6" d="M696 400 L696 590 Q696 626 660 626 L480 626 Q448 626 448 590" marker-start="url(#arrow-p2)" marker-end="url(#arrow-p2)"></path><text class="step-label p2" data-phases="4 5 6" x="500" y="614">9–10 · save + restore</text>
+              <path class="attack p2" data-phases="4 5 6" d="M448 590 L448 646 L980 646 Q1000 646 1000 620" marker-end="url(#arrow-p2)"></path><text class="step-label p2" data-phases="4 5 6" x="744" y="636">Drive connector</text>
+
+              <path class="attack p3" data-phases="5" d="M888 384 L920 384 L920 432 L998 432" marker-end="url(#arrow-p3)"></path><text class="step-label p3" data-phases="5" x="926" y="420">11 · tunnel</text>
+              <path class="attack p3" data-phases="5" d="M1188 432 L1200 432" marker-end="url(#arrow-p3)"></path><text class="step-label p3" data-phases="5" x="1174" y="414">12</text>
+            </g>
+
+            <g class="node compromised" data-node="attacker" data-phases="1" role="button" tabindex="0" aria-label="Attacker, select for details" transform="translate(50 160)">
+              <rect width="174" height="90" rx="18"></rect><circle cx="28" cy="27" r="16"></circle><text class="node-icon" x="28" y="32">?</text><text class="node-title" x="52" y="27">Attacker</text><text class="node-sub" x="18" y="58">Stolen password</text><text class="node-sub" x="18" y="76">Unknown device</text>
+            </g>
+            <g class="node compromised" data-node="merchant" data-phases="1 2 3 4 5 6" role="button" tabindex="0" aria-label="Merchant account, select for details" transform="translate(50 334)">
+              <rect width="180" height="88" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">ID</text><text class="node-title" x="50" y="21">Merchant</text><text class="node-title" x="50" y="39">account</text><text class="node-sub" x="18" y="72">Ember &amp; Olive session</text>
+            </g>
+            <g class="node compromised" data-node="targets" data-phases="5" role="button" tabindex="0" aria-label="Target merchants, select for details" transform="translate(1200 393)">
+              <rect width="176" height="88" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">2+</text><text class="node-title" x="50" y="21">Other</text><text class="node-title" x="50" y="39">merchants</text><text class="node-sub" x="18" y="72">Receive phishing link</text>
+            </g>
+
+            <g class="node observed" data-node="webapp" data-phases="1 2 3 4 5 6" role="button" tabindex="0" aria-label="Campaign Assistant web application, select for details" transform="translate(292 334)">
+              <rect width="200" height="88" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">AI</text><text class="node-title" x="50" y="21">Campaign</text><text class="node-title" x="50" y="39">Assistant</text><text class="node-sub" x="18" y="72">Custom app in AWS</text>
+            </g>
+            <g class="node abused" data-node="orchestrator" data-phases="1 2 3 4 5 6" role="button" tabindex="0" aria-label="Agent orchestrator, select for details" transform="translate(430 444)">
+              <rect width="166" height="78" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">↻</text><text class="node-title" x="50" y="27">Orchestrator</text><text class="node-sub" x="18" y="58">Custom service + IAM role</text>
+            </g>
+            <g class="node observed" data-node="connector" data-phases="2 4 5 6" role="button" tabindex="0" aria-label="Connector broker, select for details" transform="translate(276 551)">
+              <rect width="220" height="78" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">◆</text><text class="node-title" x="50" y="27">Connector broker</text><text class="node-sub" x="18" y="58">Uses merchant OAuth grant</text>
+            </g>
+
+            <g class="node compromised selected" data-node="workspace" data-phases="1 2 3 4 5 6" role="button" tabindex="0" aria-label="Amazon ECS ephemeral workspace, select for details" transform="translate(678 300)">
+              <rect width="210" height="100" rx="18"></rect><circle cx="28" cy="27" r="16"></circle><text class="node-icon" x="28" y="32">$</text><text class="node-title" x="52" y="28">Amazon ECS task</text><text class="node-sub" x="18" y="62">Agent workspace · uid 0</text><text class="node-sub" x="18" y="82">5-minute task on EC2</text>
+            </g>
+            <g class="node compromised" data-node="imds" data-phases="4" role="button" tabindex="0" aria-label="Instance metadata service, select for details" transform="translate(678 462)">
+              <rect width="210" height="78" rx="17"></rect><circle cx="27" cy="25" r="15"></circle><text class="node-icon" x="27" y="30">IAM</text><text class="node-title" x="50" y="27">Amazon EC2 IMDS</text><text class="node-sub" x="18" y="58">Node role metadata reachable</text>
+            </g>
+            <g class="node observed" data-node="ecsnode" data-phases="1 3 4 5 6" role="button" tabindex="0" aria-label="ECS EC2 node, select for details" transform="translate(673 568)">
+              <rect width="210" height="70" rx="17"></rect><circle cx="27" cy="24" r="15"></circle><text class="node-icon" x="27" y="29">EC2</text><text class="node-title" x="51" y="26">Amazon EC2 node</text><text class="node-sub" x="18" y="53">ECS host · finding resource</text>
+            </g>
+
+            <g class="node abused" data-node="github" data-phases="3 4" role="button" tabindex="0" aria-label="GitHub Raw, select for details" transform="translate(998 130)">
+              <rect width="210" height="72" rx="17"></rect><circle cx="27" cy="24" r="15"></circle><text class="node-icon" x="27" y="29">GH</text><text class="node-title" x="51" y="26">GitHub Raw</text><text class="node-sub" x="18" y="54">Legitimate delivery host</text>
+            </g>
+            <g class="node compromised" data-node="callbacks" data-phases="4" role="button" tabindex="0" aria-label="Malicious callback domains, select for details" transform="translate(1178 251)">
+              <rect width="190" height="108" rx="17"></rect><circle cx="27" cy="24" r="15"></circle><text class="node-icon" x="27" y="29">!</text><text class="node-title" x="51" y="21">Callback</text><text class="node-title" x="51" y="39">domains</text><text class="node-sub" x="18" y="72">Phishing reputation</text><text class="node-sub" x="18" y="92">HTTPS egress</text>
+            </g>
+            <g class="node abused" data-node="drive" data-phases="2 4 5 6" role="button" tabindex="0" aria-label="Google Drive, select for details" transform="translate(998 578)">
+              <rect width="210" height="84" rx="17"></rect><circle cx="27" cy="24" r="15"></circle><text class="node-icon" x="27" y="29">D</text><text class="node-title" x="51" y="26">Google Drive</text><text class="node-sub" x="18" y="55">Persistent artifacts</text><text class="node-sub" x="18" y="73">Existing OAuth grant</text>
+            </g>
+            <g class="node abused" data-node="tunnel" data-phases="5" role="button" tabindex="0" aria-label="LocalTunnel, select for details" transform="translate(998 390)">
+              <rect width="190" height="84" rx="17"></rect><circle cx="27" cy="24" r="15"></circle><text class="node-icon" x="27" y="29">↗</text><text class="node-title" x="51" y="26">LocalTunnel</text><text class="node-sub" x="18" y="55">Public HTTPS relay</text><text class="node-sub" x="18" y="73">Fake login preview</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <aside id="nodeDetail" class="node-detail" aria-live="polite">
+        <div class="detail-top"><span id="detailStatus" class="status-chip compromised">Compromised</span><span id="detailPhase">Phases 1–3</span></div>
+        <h2 id="detailTitle">Ephemeral workspace</h2>
+        <p id="detailSummary">A five-minute ECS task used by the Campaign Assistant to create and process campaign assets.</p>
+        <dl class="node-facts">
+          <dt>Service / provider</dt><dd id="detailService"></dd>
+          <dt>What's running</dt><dd id="detailRuntime"></dd>
+          <dt>Identity / permissions</dt><dd id="detailPermission"></dd>
+          <dt>Evidence and meaning</dt><dd id="detailEvidence"></dd>
+          <dt>Trust crossing</dt><dd id="detailBoundary"></dd>
+        </dl>
+        <div class="detail-question"><small>Engineering question</small><p id="detailQuestion"></p></div>
+      </aside>
+    </div>
+
+    <footer class="trust-key">
+      <b>Dashed areas are trust boundaries.</b>
+      <span>Crossing one should involve explicit authentication, authorization, validation or network policy. A boundary is not evidence that an effective control exists.</span>
+    </footer>
+    </main>
+  </div>
+  <script src="architecture.js"></script>
+</body>
+</html>
