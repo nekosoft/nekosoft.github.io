@@ -95,7 +95,12 @@ function nodeButton(id) {
   return `<button type="button" class="path-node-button ${data.status}" data-node="${id}"><span class="path-boundary">${boundary[id]}</span><span class="path-node-main"><span class="path-node-icon" aria-hidden="true">${icon}</span><b>${title}</b></span><small>${summary}</small></button>`;
 }
 function renderTrack(path) {
-  return `<div class="branch-label">${path.label}</div><div class="path-track">${path.nodes.map((id, index) => `${index ? '<span class="path-arrow" aria-hidden="true">↓<small>crosses</small></span>' : ''}${nodeButton(id)}`).join('')}</div>`;
+  const rows = [];
+  for (let start = 0; start < path.nodes.length; start += 3) {
+    const nodes = path.nodes.slice(start, start + 3);
+    rows.push(`<div class="path-row">${nodes.map((id, index) => `${index ? '<span class="path-arrow" aria-hidden="true">→<small>crosses</small></span>' : ''}${nodeButton(id)}`).join('')}</div>`);
+  }
+  return `<div class="branch-label">${path.label}</div><div class="path-track">${rows.map((row, index) => `${index ? '<div class="path-turn" aria-hidden="true"><span>↙</span><small>continue from left below</small></div>' : ''}${row}`).join('')}</div>`;
 }
 function renderPhase(phase) {
   const all = phase === 'all';
