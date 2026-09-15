@@ -26,7 +26,7 @@ The site can also be opened directly from `index.html`, although a local web ser
 
 ## Facilitation
 
-- Use the five-minute timer for evidence review.
+- Use the ten-minute timer for evidence review.
 - Allow another five minutes for discussion.
 - After briefing, each group opens a dedicated team-selection step and chooses four organisational representatives from six collectible-style cards. The UI does not reveal where a representative helps until the relevant decision is committed.
 - The board is an operating picture, not a score. Evidence-driven markers appear when phases open; decision and role markers appear after commitment.

@@ -534,7 +534,7 @@ document.getElementById('resetScenario').addEventListener('click', () => {
   localStorage.removeItem(storageKey); location.href = location.pathname;
 });
 
-let remaining = 300; let timerId = null;
+let remaining = 600; let timerId = null;
 const timerDisplay = document.getElementById('timerDisplay'); const timerToggle = document.getElementById('timerToggle');
 function drawTimer() {
   const minutes = Math.floor(remaining / 60).toString().padStart(2, '0'); const seconds = (remaining % 60).toString().padStart(2, '0');
@@ -548,7 +548,7 @@ timerToggle.addEventListener('click', () => {
     if (remaining === 0) { clearInterval(timerId); timerId = null; timerToggle.textContent = 'Start'; showToast('Review time is up'); }
   }, 1000);
 });
-document.getElementById('timerReset').addEventListener('click', () => { remaining = 300; drawTimer(); });
+document.getElementById('timerReset').addEventListener('click', () => { remaining = 600; drawTimer(); });
 const dialog = document.getElementById('imageDialog');
 document.querySelectorAll('[data-zoomable]').forEach(image => image.addEventListener('click', () => {
   document.getElementById('dialogImage').src = image.src; document.getElementById('dialogImage').alt = image.alt; dialog.showModal();
