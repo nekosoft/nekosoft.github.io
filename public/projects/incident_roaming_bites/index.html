@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Roaming Bites incident-response tabletop evidence console">
+  <title>Roaming Bites — Incident Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#briefing" data-route="briefing" aria-label="Roaming Bites incident briefing">
+      <span class="brand-mark" aria-hidden="true">▰</span>
+      <span><strong>Roaming Bites</strong><small>Incident console</small></span>
+    </a>
+    <div class="case-meta">
+      <span class="status-dot"></span>
+      <span>SEV-2 · RB-2026-0912</span>
+      <span class="utc">12 Sep 2026 · UTC</span>
+    </div>
+    <div class="timer" aria-live="polite">
+      <button id="replayStory" class="icon-button replay-story facilitator-only hidden" type="button" aria-label="Replay the current phase story">↺ Story</button>
+      <span id="timerDisplay">05:00</span>
+      <button id="timerToggle" class="icon-button" type="button">Start</button>
+      <button id="timerReset" class="icon-button muted" type="button">Reset</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" aria-label="Scenario navigation">
+      <div class="case-label">The promotion that wasn't</div>
+      <nav>
+        <button class="nav-item active" data-route="briefing"><span>00</span> Briefing</button>
+        <button class="nav-item" data-route="team"><span>★</span> Choose response team</button>
+        <button id="situationNav" class="nav-item hidden" data-route="situation"><span>◫</span> Live Dashboard</button>
+        <a id="attackPathNav" class="nav-item nav-subitem hidden" href="architecture.html"><span>↳</span> Attack-path map</a>
+        <button class="nav-item" data-route="phase1"><span>01</span> Behaviour alert</button>
+        <button class="nav-item" data-route="phase3"><span>02</span> URL becomes a tool</button>
+        <button class="nav-item" data-route="phase4"><span>03</span> Five-minute workspace</button>
+        <button class="nav-item" data-route="phase5"><span>04</span> Public fallout</button>
+        <button class="nav-item" data-route="phase6"><span>05</span> Containment gap</button>
+        <button id="summaryNav" class="nav-item hidden" data-route="summary"><span>✓</span> Incident summary</button>
+        <a class="nav-item facilitator-only" href="facilitator.html"><span>?</span> Facilitator guide</a>
+        <button class="nav-item facilitator-only" data-route="debrief"><span>✓</span> Facilitator debrief</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="facilitatorToggle" class="text-button" type="button">Facilitator mode</button>
+        <button id="resetScenario" class="text-button danger" type="button">Reset decisions</button>
+      </div>
+    </aside>
+
+    <main id="mainContent">
+      <section id="incidentBoard" class="incident-board hidden" aria-label="Team incident board">
+        <div id="teamChips" class="team-chips" aria-label="Selected response roles"></div>
+        <div class="board-head">
+          <div>
+            <p class="eyebrow">Live incident board</p>
+            <h2>Your operating picture</h2>
+          </div>
+          <div class="service-state"><span>Service</span><strong id="serviceStatus">Operational</strong></div>
+        </div>
+        <div class="board-grid">
+          <article class="board-lane people"><header><span aria-hidden="true">●</span><b>People</b></header><p class="lane-help">Affected people, responders, support and communications.</p><div id="boardPeople" class="board-markers"><em>No affected people revealed</em></div></article>
+          <article class="board-lane data"><header><span aria-hidden="true">◆</span><b>Data</b></header><p class="lane-help">Information accessed, moved, exposed, retained or at risk.</p><div id="boardData" class="board-markers"><em>No data exposure revealed</em></div></article>
+          <article class="board-lane evidence"><header><span aria-hidden="true">⌕</span><b>Evidence</b></header><p class="lane-help">Logs and artifacts, plus what they prove or leave uncertain.</p><div id="boardEvidence" class="board-markers"><em>No evidence recorded</em></div></article>
+          <article class="board-lane authority"><header><span aria-hidden="true">⚿</span><b>Authority</b></header><p class="lane-help">Sessions, roles, grants and decisions that allow actions.</p><div id="boardAuthority" class="board-markers"><em>No authority path revealed</em></div></article>
+        </div>
+        <p class="board-note">Markers are an evolving operating picture—not a score. Facts appear as phases open; contributions and organisational gaps appear after decisions and remain for the debrief.</p>
+      </section>
+
+      <section id="briefing" class="route active-route">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">Incident-response tabletop</p>
+            <h1>A promotion has started behaving like infrastructure.</h1>
+            <p class="lede">Your team is responding for Roaming Bites, an AI-assisted platform used by food trucks and restaurants to create campaigns, images and promotional pages.</p>
+          </div>
+          <div class="hero-badge"><strong>6</strong><span>phases</span><small>8–12 min each</small></div>
+        </div>
+
+        <div class="brief-grid">
+          <article class="panel">
+            <p class="eyebrow">Your operating rule</p>
+            <h2>Separate signal from story</h2>
+            <div class="triad">
+              <div><strong>Known</strong><span>Supported directly by evidence</span></div>
+              <div><strong>Assumed</strong><span>Plausible, but not established</span></div>
+              <div><strong>Missing</strong><span>Evidence you would request next</span></div>
+            </div>
+          </article>
+          <article class="panel role-rules">
+            <p class="eyebrow">Groups of four</p>
+            <h2>Build a cross-functional team</h2>
+            <p>Choose four organisational representatives from six. Any participant can record the decision. The two groups left out create capability gaps, but never hide core evidence or add time.</p>
+            <div class="mini-rule"><span>4</span><b>roles chosen once</b><small>Effects reveal only after decisions</small></div>
+          </article>
+        </div>
+
+        <article class="panel architecture">
+          <p class="eyebrow">What engineers know before the incident</p>
+          <h2>Campaign Assistant — simplified path</h2>
+          <div class="flow" aria-label="Merchant request flows through Campaign Assistant, orchestrator and workspace to connected services">
+            <div class="flow-node"><b>Merchant</b><span>Prompt + assets</span></div><i>→</i>
+            <div class="flow-node"><b>Campaign Assistant</b><span>Web application</span></div><i>→</i>
+            <div class="flow-node"><b>Orchestrator</b><span>Starts task</span></div><i>→</i>
+            <div class="flow-node accent"><b>Workspace</b><span>5-minute container</span></div><i>→</i>
+            <div class="flow-node"><b>Services</b><span>Drive · web · AWS</span></div>
+          </div>
+          <p class="note">Merchants are told that the assistant creates campaign assets and previews. The underlying execution model is not shown in the product interface.</p>
+        </article>
+
+        <button class="primary next-route" data-route="team" type="button">Choose your response team →</button>
+      </section>
+
+      <section id="team" class="route">
+        <header class="phase-header team-page-header">
+          <div><p class="eyebrow">Setup step · groups of four</p><h1>Build your incident team</h1><p>Choose four organisational representatives. You will not know when each team becomes important until the incident unfolds.</p></div>
+          <div class="team-page-art" aria-hidden="true"><span>✦</span><b>RB</b><small>response crew</small></div>
+        </header>
+
+        <article class="panel crew-builder" id="crewBuilder">
+          <div class="crew-heading">
+            <div><p class="eyebrow">Six cards · four seats</p><h2>Who is in the incident room?</h2><p class="note">Every card represents a real organisational group. Their strengths are visible; their phase-specific contribution stays hidden.</p></div>
+            <div class="crew-counter"><strong id="roleCount">0</strong><span>/ 4 selected</span></div>
+          </div>
+          <div class="role-picker" role="group" aria-label="Choose four incident response representatives">
+            <button class="role-card role-identity" type="button" data-role="identity">
+              <span class="card-top"><span class="card-type">Cloud defence</span><i>Choose</i></span><span class="role-art identity-art" aria-hidden="true"><span>⚿</span><small>✦　✦</small></span>
+              <span class="card-name">Identity &amp; Cloud Security</span><span class="card-person">IAM or cloud-security engineer</span>
+              <span class="card-stats"><span><em>Brings</em>Authority maps and access controls</span><span><em>Signature question</em>“What still has permission?”</span></span>
+            </button>
+            <button class="role-card role-ai" type="button" data-role="ai">
+              <span class="card-top"><span class="card-type">Product</span><i>Choose</i></span><span class="role-art ai-art" aria-hidden="true"><span>✦</span><small>⌁　✦　⌁</small></span>
+              <span class="card-name">Product Engineering</span><span class="card-person">Engineer owning the assistant and tools</span>
+              <span class="card-stats"><span><em>Brings</em>Code paths and product guardrails</span><span><em>Signature question</em>“What should the app allow?”</span></span>
+            </button>
+            <button class="role-card role-cloud" type="button" data-role="cloud">
+              <span class="card-top"><span class="card-type">Reliability</span><i>Choose</i></span><span class="role-art cloud-art" aria-hidden="true"><span>☁</span><small>·　☁　·</small></span>
+              <span class="card-name">Platform / SRE</span><span class="card-person">Engineer running workloads and networks</span>
+              <span class="card-stats"><span><em>Brings</em>Runtime containment and service context</span><span><em>Signature question</em>“What can we stop safely?”</span></span>
+            </button>
+            <button class="role-card role-detection" type="button" data-role="detection">
+              <span class="card-top"><span class="card-type">Response</span><i>Choose</i></span><span class="role-art detection-art" aria-hidden="true"><span>⌕</span><small>⌁　◎　⌁</small></span>
+              <span class="card-name">Security Operations</span><span class="card-person">Incident responder or detection analyst</span>
+              <span class="card-stats"><span><em>Brings</em>Telemetry correlation and evidence</span><span><em>Signature question</em>“What can we prove?”</span></span>
+            </button>
+            <button class="role-card role-data" type="button" data-role="data">
+              <span class="card-top"><span class="card-type">ML systems</span><i>Choose</i></span><span class="role-art data-art" aria-hidden="true"><span>◆</span><small>•　◆　•</small></span>
+              <span class="card-name">ML &amp; Data Operations</span><span class="card-person">ML Ops or data-platform engineer</span>
+              <span class="card-stats"><span><em>Brings</em>Context lineage and data boundaries</span><span><em>Signature question</em>“Where did the data go?”</span></span>
+            </button>
+            <button class="role-card role-comms" type="button" data-role="comms">
+              <span class="card-top"><span class="card-type">Trust</span><i>Choose</i></span><span class="role-art comms-art" aria-hidden="true"><span>◖</span><small>♡　✦　♡</small></span>
+              <span class="card-name">Communications &amp; PR</span><span class="card-person">PR or merchant-communications lead</span>
+              <span class="card-stats"><span><em>Brings</em>Clear updates and merchant care</span><span><em>Signature question</em>“What can we say now?”</span></span>
+            </button>
+          </div>
+          <div class="crew-actions">
+            <p id="crewStatus">Choose exactly four representatives. Their hidden incident effects will be revealed later.</p>
+            <button id="lockCrew" class="primary" type="button" disabled>Lock team</button>
+          </div>
+        </article>
+        <div class="setup-nav"><button class="text-button" data-route="briefing" type="button">← Back to briefing</button><button id="openPhase1" class="primary" data-route="phase1" type="button" disabled>Lock four roles to begin</button></div>
+      </section>
+
+      <section id="situation" class="route situation-route">
+        <header class="situation-heading">
+          <div><p class="eyebrow">Shared operating view</p><h1>Operating picture</h1><p>A current, shared view of the incident using only information revealed so far.</p></div>
+          <div class="situation-clock"><span>INCIDENT TIME · UTC</span><strong id="situationTime">—</strong></div>
+        </header>
+
+        <details class="operating-picture-about">
+          <summary>What is this view?</summary>
+          <p>This is a lightweight common operating picture for the response team—not a score and not a replacement for the original evidence. It brings together service condition, important signals, confirmed facts, working theories and unanswered questions so different teams can make decisions from the same current understanding.</p>
+        </details>
+
+        <section class="siem-overview" aria-label="Current incident situation dashboard">
+          <div class="siem-statusbar">
+            <div><span class="live-pulse"></span><b>RB Incident Monitor</b><small>RB-2026-0912</small></div>
+            <div class="siem-stage"><span id="situationPhase">Awaiting Phase 1</span><strong id="situationStage">No active incident</strong></div>
+            <div class="siem-severity"><span>Severity</span><strong id="situationSeverity">—</strong></div>
+            <div class="siem-service"><span>Service</span><strong id="situationService">Operational</strong></div>
+          </div>
+          <div id="situationMetrics" class="situation-metrics" aria-label="Current incident metrics"></div>
+          <div class="situation-grid">
+            <article class="signal-panel">
+              <header><div><span class="panel-icon">⌁</span><div><b>Signal timeline</b><small>Cumulative · newest first</small></div></div><span id="signalCount" class="count-pill">0 signals</span></header>
+              <div id="situationSignals" class="signal-feed"><p class="empty-state">Signals appear when Phase 1 opens.</p></div>
+            </article>
+            <article class="scope-panel">
+              <header><div><span class="panel-icon">⌕</span><div><b>Current assessment</b><small>Known · inferred · unknown</small></div></div></header>
+              <dl class="assessment-list">
+                <dt><span class="assessment-dot known"></span>Known</dt><dd id="situationKnown">No incident evidence revealed.</dd>
+                <dt><span class="assessment-dot inferred"></span>Working theory</dt><dd id="situationInferred">No working theory yet.</dd>
+                <dt><span class="assessment-dot unknown"></span>Still unknown</dt><dd id="situationUnknown">Open Phase 1 to begin.</dd>
+              </dl>
+            </article>
+          </div>
+          <footer class="situation-footer">
+            <span id="situationFooter">Dashboard waiting for Phase 1.</span>
+            <div class="situation-actions"><a class="dashboard-map-link" href="architecture.html">View discovered attack path</a><button id="reviewCurrentPhase" class="primary" type="button" disabled>Open Phase 1 evidence →</button></div>
+          </footer>
+        </section>
+      </section>
+
+      <section id="phase1" class="route">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 1 · 09:18 UTC</p><h1>A campaign breaks the baseline</h1><p>Several weak signals have produced one low-severity monitoring ticket.</p></div>
+          <span class="severity low">Low</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 1 evidence">
+          <button class="evidence-tab active" data-target="p1-siem">SIEM alert</button>
+          <button class="evidence-tab" data-target="p1-chat">Campaign chat</button>
+          <button class="evidence-tab" data-target="p1-cloudtrail">CloudTrail</button>
+          <button class="evidence-tab" data-target="p1-auth">Authentication</button>
+          <button class="evidence-tab" data-target="p1-asset">Campaign asset</button>
+        </div>
+
+        <div id="p1-siem" class="evidence-view active">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>Search · Last 60 minutes</span><span class="live">● Live</span></div>
+            <div class="query">correlation_id="corr_91d7" | expand contributing_signals</div>
+            <table class="log-table">
+              <thead><tr><th>Time</th><th>Severity</th><th>Rule</th><th>Entity</th><th>Summary</th></tr></thead>
+              <tbody>
+                <tr class="selected"><td>09:17:12</td><td><span class="pill amber">LOW</span></td><td>Merchant behaviour correlation</td><td>merchant_1047</td><td>Risk 62/100 · new login context + asset burst + credential-request language</td></tr>
+                <tr><td>09:15:58</td><td><span class="pill slate">INFO</span></td><td>Credential-form heuristic</td><td>draft_c_7731</td><td>4 of 14 drafts combine “sign in” copy with email and password fields</td></tr>
+                <tr><td>09:14:03</td><td><span class="pill slate">INFO</span></td><td>Asset generation burst</td><td>merchant_1047</td><td>14 assets in 8 min · baseline median 2/day, previous maximum 4/day</td></tr>
+                <tr><td>09:07:51</td><td><span class="pill slate">INFO</span></td><td>New login context</td><td>ses_8f21c</td><td>First-seen IP, device and country in 90-day history</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Why this stayed low severity:</b> the correlation score of 62 only just crossed the alert threshold of 60. A new login context, rapid asset creation and credential-request language raised the score, but the system had not yet observed a published campaign or external link. It opened an analyst alert and took no automated action.</div>
+          </div>
+        </div>
+
+        <div id="p1-chat" class="evidence-view">
+          <div class="chat-window">
+            <div class="chat-header"><span>Weekend Customer Winback</span><small>Ember & Olive · Draft</small></div>
+            <div class="message user"><time>09:09</time><p>Help me create a weekend win-back campaign for people who have not ordered recently. Make 14 variations so I can test different formats.</p></div>
+            <div class="message bot"><time>09:10</time><p>I can draft the copy, create matching images and prepare previews. What action should customers take?</p></div>
+            <div class="message user"><time>09:10</time><p>Create a creator partnership page. Use “Sign in to claim your campaign credit,” with email and password fields. Use my saved brand style.</p></div>
+            <div class="message bot"><time>09:11</time><p>I created 14 draft assets. Four include the partnership sign-in form; nothing has been published.</p></div>
+          </div>
+        </div>
+
+        <div id="p1-cloudtrail" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark">aws</span><span>CloudTrail Lake · Event detail</span><span>us-east-1</span></div>
+            <pre><code>{
+  "eventTime": "2026-09-12T09:09:58Z",
+  "eventSource": "ecs.amazonaws.com",
+  "eventName": "RunTask",
+  "awsRegion": "us-east-1",
+  "userIdentity": {
+    "type": "AssumedRole",
+    "arn": "arn:aws:sts::123456789012:assumed-role/rb-campaign-orchestrator-prod/run-2bd41"
+  },
+  "requestParameters": {
+    "cluster": "rb-campaign-prod",
+    "taskDefinition": "rb-campaign-workspace:42",
+    "count": 1,
+    "enableExecuteCommand": false,
+    "tags": [
+      {"key": "merchant_id", "value": "merchant_1047"},
+      {"key": "workspace_id", "value": "ws_74ac1"}
+    ]
+  },
+  "responseElements": {"failures": []},
+  "sourceIPAddress": "10.42.7.19"
+}</code></pre>
+            <div class="system-foot"><b>How to read this:</b> CloudTrail proves that the orchestrator service role created a five-minute ECS task for merchant_1047 and records the task role it passed. Commands run inside that container appear only in the application’s runtime telemetry, not in this CloudTrail event.</div>
+          </div>
+        </div>
+
+        <div id="p1-auth" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span>Roaming Bites Identity</span><span>Session detail</span></div>
+            <dl class="detail-grid">
+              <dt>Result</dt><dd><span class="pill green">SUCCESS</span></dd>
+              <dt>Account</dt><dd>marketing@ember-olive.example</dd>
+              <dt>Time</dt><dd>2026-09-12 09:07:51 UTC</dd>
+              <dt>Method</dt><dd>Password</dd>
+              <dt>Session risk</dt><dd><span class="pill amber">LOW</span> · 28/100</dd>
+              <dt>Source</dt><dd>203.0.113.77 · Warsaw, Poland</dd>
+              <dt>Device</dt><dd>Chrome 150 · Windows · first seen</dd>
+              <dt>90-day baseline</dt><dd>Netherlands only · 3 known devices</dd>
+              <dt>Previous login</dt><dd>11 Sep · 16:42 UTC · Utrecht, Netherlands</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div id="p1-asset" class="evidence-view image-evidence">
+          <img src="assets/phase-3-phishing-page.png" alt="Draft campaign page imitating a social platform and requesting an account email and password" data-zoomable>
+          <p>Generated draft preview · not published. The page asks visitors to “Sign in to claim your campaign credit” using an email address and password, matching the campaign request.</p>
+        </div>
+
+        <div class="decision-card" data-phase="1">
+          <p class="eyebrow">Commit to an action</p><h2>What deserves investigation now?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p1" value="Contact the merchant and preserve the session"><span><b>Contact the merchant</b><small><strong>What happens:</strong> Call a verified merchant contact and preserve the session and campaign records. <strong>Trade-off:</strong> Activity continues while you wait for confirmation.</small></span></label>
+            <label><input type="radio" name="p1" value="Review every data source assembled for this session"><span><b>Review the data path</b><small><strong>What happens:</strong> Engineers trace what reached the model, application services and workspace. <strong>Trade-off:</strong> This improves scope but does not interrupt the session.</small></span></label>
+            <label><input type="radio" name="p1" value="Challenge the new device before further campaign actions"><span><b>Challenge the session</b><small><strong>What happens:</strong> Pause further campaign actions until the user signs in again. <strong>Trade-off:</strong> This may disrupt a legitimate merchant and change active evidence.</small></span></label>
+            <label><input type="radio" name="p1" value="Treat the behavior as legitimate and continue monitoring"><span><b>Continue monitoring</b><small><strong>What happens:</strong> Leave the account unchanged and collect more identity and campaign events. <strong>Trade-off:</strong> You gain evidence while accepting continued activity.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed and next evidence request<textarea data-notes="p1" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase3" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="retired-data-phase" class="hidden" aria-hidden="true">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 2 · 09:20 UTC</p><h1>Customer data enters the workspace</h1><p>Engineering has reconstructed how an asset-preview job assembled its inputs.</p></div>
+          <span class="severity low">Low</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 2 evidence">
+          <button class="evidence-tab active" data-target="p2-context">Context manifest</button>
+          <button class="evidence-tab" data-target="p2-access">Data-access audit</button>
+          <button class="evidence-tab" data-target="p2-authority">Authorization chain</button>
+          <button class="evidence-tab" data-target="p2-classes">Data classes</button>
+          <button class="evidence-tab" data-target="p2-connector">Connector state</button>
+        </div>
+
+        <div id="p2-context" class="evidence-view active">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="system-title">Context Assembly</span><span>Run manifest · ctx_2201</span><span>merchant_1047</span></div>
+            <pre><code>{
+  "purpose": "weekend_customer_winback",
+  "job_mode": "asset_preview",
+  "pipeline_template": "campaign_bundle_v2",
+  "model_context": [
+    "brand_profile: tone, colours, logo_ref",
+    "campaign_history: summaries of last 5 campaigns",
+    "audience_brief: customers inactive for 30 days, approximate_count=184"
+  ],
+  "workspace_files": [
+    "brand/logo.png",
+    "brief/campaign.json",
+    "audience/audience_184.csv"
+  ],
+  "audience_export": {
+    "rows": 184,
+    "columns": ["pseudonymous_customer_id", "last_order_at", "city"],
+    "sample": [
+      ["cust_41a9", "2026-07-18T19:42:11Z", "Utrecht"],
+      ["cust_78c2", "2026-07-21T12:08:04Z", "Amersfoort"]
+    ],
+    "tenant_filter": "merchant_id=merchant_1047",
+    "included_by": "campaign_bundle_v2.default_inputs",
+    "original_consumer": "campaign-delivery-worker",
+    "staged_by": "workspace-broker",
+    "direct_identifiers": false
+  },
+  "google_drive": {
+    "connector_available": true,
+    "content_loaded": false,
+    "last_file_access": "2026-09-11T16:18:00Z"
+  }
+}</code></pre>
+            <div class="system-foot"><b>Record scope:</b> this manifest describes <code>ctx_2201</code>. The data-access audit and authorization log use the same context ID. Connector state is recorded against <code>merchant_1047</code>; the data register is not tied to an individual run.</div>
+          </div>
+        </div>
+
+        <div id="p2-access" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Data Audit</span><span>Application + workspace access</span><span class="live">● Complete</span></div>
+            <div class="query">context_id="ctx_2201" | sort timestamp asc</div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Actor</th><th>Operation</th><th>Resource</th><th>Fields / result</th></tr></thead>
+              <tbody>
+                <tr><td>09:09:59</td><td>campaign-api</td><td>read</td><td>brand_profile</td><td>tone, colours, logo reference</td></tr>
+                <tr><td>09:10:00</td><td>context-service</td><td>summarize</td><td>campaign_history</td><td>5 campaign summaries</td></tr>
+                <tr><td>09:10:01</td><td>audience-service</td><td>create_segment</td><td>orders</td><td>184 matches · merchant_id=merchant_1047</td></tr>
+                <tr class="selected"><td>09:10:02</td><td>campaign-packager</td><td>resolve_input</td><td>audience_member_export</td><td>campaign_bundle_v2.default_inputs</td></tr>
+                <tr class="selected"><td>09:10:02</td><td>audience-service</td><td>export_members</td><td>segment:lapsed_30d</td><td>184 rows · customer hash, last order, city</td></tr>
+                <tr class="selected"><td>09:10:03</td><td>workspace-broker</td><td>stage_input</td><td>audience_184.csv</td><td>/work/input · source=campaign bundle</td></tr>
+                <tr><td>09:10:04</td><td>connector-broker</td><td>list_capability</td><td>google_drive</td><td>available · no file content read</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Record scope:</b> these application events are ordered by time for <code>ctx_2201</code>. They identify the acting component, operation, resource and result. Compare them with the job manifest and data register before deciding why the file was present or whether it was required.</div>
+          </div>
+        </div>
+
+        <div id="p2-authority" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span class="system-title">RB Authorization Decisions</span><span>Trace · authz_7c21</span><span class="live">● Complete</span></div>
+            <div class="query">correlation_id="ctx_2201" | project time, principal, action, resource, evaluated_context, decision</div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Principal / credential</th><th>Action</th><th>Resource</th><th>Evaluated context</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr><td>09:09:58</td><td>merchant_1047<br><small>session ses_8f21c</small></td><td><code>campaign:CreatePreview</code></td><td>campaign/cmp_7712</td><td>account=active · role=merchant_admin</td><td><span class="pill green">ALLOW</span><br><small>merchant-campaign-policy/v4</small></td></tr>
+                <tr><td>09:10:01</td><td>campaign-api<br><small>workload token · 10m</small></td><td><code>segment:Create</code></td><td>merchant_1047/lapsed_30d</td><td>on_behalf_of=merchant_1047 · tenant_match=true</td><td><span class="pill green">ALLOW</span><br><small>audience-service-policy/v6</small></td></tr>
+                <tr><td>09:10:02</td><td>campaign-packager<br><small>workload token · 10m</small></td><td><code>segment:ExportMembers</code></td><td>segment/lapsed_30d</td><td>tenant_match=true · input=audience_member_export · template=campaign_bundle_v2</td><td><span class="pill green">ALLOW</span><br><small>audience-service-policy/v6</small></td></tr>
+                <tr><td>09:10:03</td><td>workspace-broker<br><small>job token · 5m</small></td><td><code>workspace:StageInput</code></td><td>ctx_2201/audience_184.csv</td><td>job=cmp_7712 · destination=/work/input · classification=RESTRICTED</td><td><span class="pill green">ALLOW</span><br><small>workspace-input-policy/v3</small></td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Record scope:</b> this log records four authorization decisions associated with <code>ctx_2201</code>. Each row shows the principal, credential type, requested action, resource, evaluated attributes, policy version and result.</div>
+          </div>
+        </div>
+
+        <div id="p2-classes" class="evidence-view">
+          <article class="panel">
+            <p class="eyebrow">Roaming Bites data handling register</p>
+            <h2>Relevant data classes</h2>
+            <table class="log-table data-table">
+              <thead><tr><th>Data</th><th>Classification</th><th>Intended consumer</th><th>Retention</th></tr></thead>
+              <tbody>
+                <tr><td>Published logo and colours</td><td><span class="pill green">PUBLIC</span></td><td>Model + workspace</td><td>Merchant lifetime</td></tr>
+                <tr><td>Campaign history</td><td><span class="pill slate">INTERNAL</span></td><td>Context service + model summary</td><td>12 months</td></tr>
+                <tr class="selected"><td>Customer cohort attributes</td><td><span class="pill amber">RESTRICTED</span></td><td>Audience service + delivery worker</td><td>Campaign + 7 days</td></tr>
+                <tr><td>Drive OAuth credential</td><td><span class="pill red">SECRET</span></td><td>Connector broker only</td><td>Until merchant revokes</td></tr>
+                <tr><td>Workspace runtime events</td><td><span class="pill slate">SECURITY</span></td><td>Operations + incident response</td><td>30 days</td></tr>
+              </tbody>
+            </table>
+            <p class="note">The register records the organisation's declared classification, intended consumers and retention. Compare it with the job manifest and audit events; the register is not proof of what ran.</p>
+          </article>
+        </div>
+
+        <div id="p2-connector" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span>Connector Administration</span><span>Google Drive · merchant_1047</span></div>
+            <dl class="detail-grid">
+              <dt>Status</dt><dd><span class="pill green">AVAILABLE</span></dd>
+              <dt>OAuth owner</dt><dd>marketing@ember-olive.example</dd>
+              <dt>Scope</dt><dd><code>drive.file</code></dd>
+              <dt>Credential storage</dt><dd>Connector broker · encrypted secret</dd>
+              <dt>Workspace exposure</dt><dd>Provider token not injected</dd>
+              <dt>Content access</dt><dd>Only after an explicit connector tool call</dd>
+              <dt>Reauthentication</dt><dd>Not required for file upload or download</dd>
+              <dt>Last file access</dt><dd>11 Sep 2026 · 16:18 UTC</dd>
+            </dl>
+            <p class="note"><b>Record scope:</b> this administration view describes the Drive connection and its most recent recorded use. Correlate its timestamps and content-access fields with the other evidence before attributing a file or action to the connector.</p>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="2">
+          <p class="eyebrow">Data-boundary decision</p><h2>Where should individual customer records be available?</h2>
+          <p class="decision-context"><b>Current behaviour:</b> the model receives a general description of the intended audience and an approximate count. The surrounding preview workspace also receives a file containing 184 individual customer records because the preview job reuses a delivery template. Choose how previews should work without placing that customer file in the agent workspace.</p>
+          <div class="choices">
+            <label><input type="radio" name="p2" value="Separate asset preview from customer selection; provide only an audience description and aggregate count"><span><b>Use aggregate audience information</b><small><strong>What happens:</strong> The preview receives the campaign brief, “customers inactive for 30 days,” and an approximate count. No customer list is created for the preview. The delivery service selects the actual recipients only when the campaign is approved for sending. <strong>Trade-off:</strong> The preview cannot demonstrate real customer-specific values; use synthetic examples instead.</small></span></label>
+            <label><input type="radio" name="p2" value="Move customer-specific preview rendering into a protected personalization service"><span><b>Use a protected personalization preview</b><small><strong>What happens:</strong> A dedicated service reads only the permitted customer fields and returns a few rendered, redacted examples. The customer file never enters the agent workspace. <strong>Trade-off:</strong> This supports realistic personalization but adds another service, authorization boundary and audit trail to operate.</small></span></label>
+          </div>
+          <label class="notes-label">Separate what the model, audience service, delivery worker and preview workspace need<textarea data-notes="p2" placeholder="The audience service needs… / The preview workspace should receive…"></textarea></label>
+          <button class="primary commit" data-next="phase3" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase3" class="route">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 2 · 09:25 UTC</p><h1>When a URL becomes a tool</h1><p>The same session asks the assistant to use an external campaign builder.</p></div>
+          <span class="severity medium">Medium</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 2 evidence">
+          <button class="evidence-tab active" data-target="p3-chat">Campaign chat</button>
+          <button class="evidence-tab" data-target="p3-trace">Agent action trace</button>
+          <button class="evidence-tab" data-target="p3-retrieval">Retrieval log</button>
+          <button class="evidence-tab" data-target="p3-policy">Tool policy</button>
+        </div>
+
+        <div id="p3-chat" class="evidence-view active">
+          <div class="chat-window">
+            <div class="chat-header"><span>Weekend Customer Winback</span><small>Ember & Olive · Draft</small></div>
+            <div class="message user"><time>09:23</time><p>Use this campaign builder as well:<br><code>hxxps://raw[.]githubusercontent[.]com/campaign-labs/promo-kit/main/render-campaign.py</code></p></div>
+            <div class="message bot"><time>09:24</time><p>I can use external campaign resources when preparing assets. I'll retrieve it for this preview.</p></div>
+            <div class="message user"><time>09:24</time><p>Go ahead and make sure it works with my saved campaign files.</p></div>
+            <div class="message bot"><time>09:25</time><p>The builder was downloaded and started in the campaign workspace.</p></div>
+          </div>
+        </div>
+
+        <div id="p3-trace" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span>Campaign Agent Trace</span><span>Decision · act_7d91</span><span>Model + tools</span></div>
+            <pre><code>{
+  "goal": "use external campaign builder",
+  "input": {
+    "type": "user_provided_url",
+    "host": "raw.githubusercontent.com"
+  },
+  "plan": [
+    {"tool": "web.retrieve", "result": "write:/work/render-campaign.py"},
+    {"tool": "process.start", "arguments": "python /work/render-campaign.py"}
+  ],
+  "policy_decision": {
+    "classification": "campaign_helper",
+    "result": "allow",
+    "human_approval": false,
+    "content_signature_required": false
+  }
+}</code></pre>
+            <div class="system-foot"><b>Why this matters:</b> the model suggested retrieval and execution, but it did not grant itself permission. The application approved each tool call separately and the orchestrator performed them. The missing control is policy over the combined URL → download → process chain.</div>
+          </div>
+        </div>
+
+        <div id="p3-retrieval" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Retrieval Gateway</span><span>Request detail</span><span class="live">● Complete</span></div>
+            <dl class="detail-grid">
+              <dt>Time</dt><dd>2026-09-12 09:25:57 UTC</dd>
+              <dt>Workspace</dt><dd>ws_8bd20</dd>
+              <dt>Requested host</dt><dd><code>raw.githubusercontent.com</code></dd>
+              <dt>HTTP result</dt><dd>200 · 4.8 KB · <code>text/plain</code></dd>
+              <dt>Destination</dt><dd><code>/work/render-campaign.py</code></dd>
+              <dt>SHA-256</dt><dd><code>9a6d…45c1</code></dd>
+              <dt>Reputation</dt><dd><span class="pill green">KNOWN SERVICE</span></dd>
+              <dt>Content inspection</dt><dd>File type and size only</dd>
+              <dt>Execution decision</dt><dd>Not evaluated by retrieval gateway</dd>
+            </dl>
+            <div class="system-foot"><b>Interpretation:</b> GitHub Raw is a legitimate public hosting service, so blocking GitHub by reputation alone would miss the issue. The risky decision was allowing a merchant-supplied object to move directly from a public URL into an executable process without verification or approval.</div>
+          </div>
+        </div>
+
+        <div id="p3-policy" class="evidence-view">
+          <article class="panel">
+            <p class="eyebrow">Campaign workspace capability policy</p>
+            <h2>Effective controls for this run</h2>
+            <table class="log-table data-table">
+              <thead><tr><th>Capability</th><th>Effective rule</th><th>Approval</th><th>Telemetry</th></tr></thead>
+              <tbody>
+                <tr><td><code>web.retrieve</code></td><td>Any HTTPS destination</td><td>None</td><td>URL, status, bytes</td></tr>
+                <tr class="selected"><td><code>process.start</code></td><td>Any workspace file</td><td>None</td><td>Command + uid</td></tr>
+                <tr><td><code>package.install</code></td><td>Allowed</td><td>None</td><td>Command only</td></tr>
+                <tr><td><code>connector.drive</code></td><td>Merchant grant</td><td>None</td><td>Provider audit</td></tr>
+                <tr><td>Outbound network</td><td>Any destination</td><td>None</td><td>DNS + flow logs</td></tr>
+              </tbody>
+            </table>
+            <p class="note"><b>Combined-path gap:</b> downloading a public file and running Python can both support campaign creation. Here, the output of the first tool became the input to the second. The policy approved the calls individually and never assessed that resulting user-controlled URL → executable process path.</p>
+          </article>
+        </div>
+
+        <div class="decision-card" data-phase="3">
+          <p class="eyebrow">Agent-boundary decision</p><h2>Where do you break this action chain?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p3" value="Block execution of all externally retrieved files"><span><b>Block external execution</b><small><strong>What happens:</strong> Downloaded content may be read as data but cannot become a process. <strong>Trade-off:</strong> Campaign helpers that genuinely depend on scripts stop working.</small></span></label>
+            <label><input type="radio" name="p3" value="Use a mediated retrieval service with inspection and immutable hashes"><span><b>Mediate retrieval</b><small><strong>What happens:</strong> A gateway downloads, inspects and records a digest before the workspace receives the object. <strong>Trade-off:</strong> Retrieval is slower and inspection cannot prove arbitrary code is safe.</small></span></label>
+            <label><input type="radio" name="p3" value="Require merchant approval for external code execution"><span><b>Require approval</b><small><strong>What happens:</strong> Execution pauses while the origin, exact command and requested access are shown for approval. <strong>Trade-off:</strong> A hurried or compromised merchant may still approve it.</small></span></label>
+            <label><input type="radio" name="p3" value="Allow one instrumented run to collect stronger evidence"><span><b>Instrument one run</b><small><strong>What happens:</strong> Reproduce the action without customer data or production credentials, retaining disk, runtime and network telemetry. <strong>Trade-off:</strong> It provides stronger evidence but still requires careful isolation.</small></span></label>
+          </div>
+          <label class="notes-label">State the control owner and the event you would detect<textarea data-notes="p3" placeholder="The application should… / Alert when…"></textarea></label>
+          <button class="primary commit" data-next="phase4" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase4" class="route">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 3 · 09:36 UTC</p><h1>The five-minute workspace</h1><p>A second workspace ran under the same merchant session. Its disk is already gone.</p></div>
+          <span class="severity medium">Medium</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 3 evidence">
+          <button class="evidence-tab active" data-target="p4-guardduty">GuardDuty + intel</button>
+          <button class="evidence-tab" data-target="p4-cloudwatch">CloudWatch</button>
+          <button class="evidence-tab" data-target="p4-network">SIEM network</button>
+          <button class="evidence-tab" data-target="p4-drive">Drive audit</button>
+          <button class="evidence-tab" data-target="p4-iam">IAM access</button>
+        </div>
+
+        <div id="p4-guardduty" class="evidence-view active">
+          <div class="intel-layout">
+            <div class="system-window guardduty-window">
+              <div class="system-bar"><span class="aws-mark">aws</span><span>Amazon GuardDuty · Finding details</span><span class="pill red">HIGH · 8.0</span></div>
+              <div class="finding-title"><span class="finding-icon">!</span><div><small>Trojan:EC2/PhishingDomainRequest!DNS</small><h2>EC2 instance queried a domain involved in phishing</h2></div></div>
+              <dl class="detail-grid compact">
+                <dt>First observed</dt><dd>2026-09-12 09:26:03 UTC</dd>
+                <dt>Resource</dt><dd>Instance · i-0c84f271a4b91e620</dd>
+                <dt>Resource role</dt><dd>ACTOR</dd>
+                <dt>DNS domain</dt><dd><code>promo-assets-cdn.example</code></dd>
+                <dt>Protocol</dt><dd>UDP · request not blocked</dd>
+                <dt>Finding count</dt><dd>1</dd>
+              </dl>
+              <details class="raw-finding"><summary>View finding JSON</summary><pre><code>{
+  "type": "Trojan:EC2/PhishingDomainRequest!DNS",
+  "severity": 8,
+  "resource": {
+    "resourceType": "Instance",
+    "instanceDetails": {
+      "instanceId": "i-0c84f271a4b91e620",
+      "privateIpAddress": "10.42.2.14",
+      "iamInstanceProfile": {
+        "arn": "arn:aws:iam::123456789012:instance-profile/rb-ecs-node-prod"
+      }
+    }
+  },
+  "service": {
+    "resourceRole": "ACTOR",
+    "action": {
+      "actionType": "DNS_REQUEST",
+      "dnsRequestAction": {
+        "domain": "promo-assets-cdn.example",
+        "protocol": "UDP",
+        "blocked": false
+      }
+    },
+    "eventFirstSeen": "2026-09-12T09:26:03Z",
+    "count": 1
+  }
+}</code></pre></details>
+            </div>
+
+            <div class="threat-stack">
+              <article class="threat-card">
+                <div class="threat-head"><span class="vt-mark">VT</span><div><b>VirusTotal enrichment</b><small>Cached result · 09:32 UTC</small></div></div>
+                <div class="score-row"><strong>7</strong><span>malicious</span><strong>3</strong><span>suspicious</span><strong>65</strong><span>undetected</span></div>
+                <dl><dt>Categories</dt><dd>phishing · newly observed</dd><dt>First submitted</dt><dd>3 days ago</dd><dt>Related domain</dt><dd>campaign-metrics-sync.example</dd><dt>Assessment</dt><dd><span class="pill red">HIGH RISK</span></dd></dl>
+              </article>
+              <article class="threat-card">
+                <div class="threat-head"><span class="urlscan-mark">url</span><div><b>urlscan enrichment</b><small>Existing scans only · 09:32 UTC</small></div></div>
+                <dl><dt>Results</dt><dd>3 existing scans</dd><dt>Page title</dt><dd>PictoPop Partner Access</dd><dt>Observed paths</dt><dd>/login · /partner · /collect</dd><dt>Brand signal</dt><dd>PictoPop</dd></dl>
+              </article>
+              <article class="correlation-card">
+                <b>Available correlation</b>
+                <span>EC2 node: i-0c84f271a4b91e620</span>
+                <span>Task ENI: 10.42.18.7</span>
+                <span>Task: 2f94bcf0d883</span>
+                <span>Tag: workspace_id=ws_8bd20</span>
+              </article>
+            </div>
+          </div>
+          <div class="callback-chain" aria-label="Observed sequence from GitHub Raw download to suspicious outbound callbacks">
+            <div><small>09:25:57 · Egress</small><b>raw.githubusercontent.com</b><span>GET render-campaign.py · 200</span></div><i>→</i>
+            <div><small>09:26:01 · Runtime</small><b>python render-campaign.py</b><span>uid=0 · exit not recorded</span></div><i>→</i>
+            <div><small>09:26:03–07 · DNS + flow</small><b>Outbound callbacks</b><span>promo-assets-cdn.example<br>campaign-metrics-sync.example</span></div>
+          </div>
+          <p class="evidence-caution"><b>What this establishes:</b> GitHub Raw delivered a file, the file was invoked, and the workspace then reached two suspicious domains. Timing supports a relationship but does not prove which code initiated each request, what responses contained, or whether AWS credentials were obtained.</p>
+        </div>
+
+        <div id="p4-cloudwatch" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark">aws</span><span>CloudWatch Logs Insights</span><span>Log group: /ecs/rb-campaign-workspace</span></div>
+            <div class="query">fields @timestamp, event_type, uid, detail | filter workspace_id = "ws_8bd20"</div>
+            <table class="log-table dense">
+              <thead><tr><th>@timestamp</th><th>event_type</th><th>uid</th><th>detail</th></tr></thead>
+              <tbody>
+                <tr><td>09:25:57.604</td><td>web.retrieve</td><td>0</td><td>raw.githubusercontent.com/.../render-campaign.py · 200</td></tr>
+                <tr class="selected"><td>09:26:01.228</td><td>process.start</td><td>0</td><td>python /work/render-campaign.py</td></tr>
+                <tr><td>09:26:08.114</td><td>process.start</td><td>0</td><td>apt-get update</td></tr>
+                <tr><td>09:26:19.702</td><td>process.start</td><td>0</td><td>apt-get install -y nmap nikto</td></tr>
+                <tr><td>09:27:02.009</td><td>process.start</td><td>0</td><td>nmap [arguments not retained]</td></tr>
+                <tr class="selected"><td>09:27:28.331</td><td>file.open</td><td>0</td><td>/etc/shadow · allowed</td></tr>
+                <tr><td>09:28:41.105</td><td>process.start</td><td>0</td><td>nikto -h http://127.0.0.1:3000 -o /work/nikto-results.json</td></tr>
+                <tr class="selected"><td>09:28:58.774</td><td>file.write</td><td>0</td><td>/work/nikto-results.json · 18 KB</td></tr>
+                <tr><td>09:29:07.412</td><td>file.write</td><td>0</td><td>/work/promotion-assets.zip · includes site files</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Source and limit:</b> the Campaign Assistant emitted these command and process events from inside the workspace and sent them to CloudWatch Logs. CloudTrail would show AWS control-plane calls such as RunTask, but not shell commands such as apt-get, nmap or reading /etc/shadow.</div>
+          </div>
+        </div>
+
+        <div id="p4-network" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>VPC Flow + Resolver + egress proxy</span><span class="live">● Live</span></div>
+            <div class="query">workspace_id="ws_8bd20" | sort timestamp asc</div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Source</th><th>Destination</th><th>Port</th><th>Source log</th><th>Result</th></tr></thead>
+              <tbody>
+                <tr><td>09:25:57</td><td>10.42.18.7</td><td>raw.githubusercontent.com</td><td>443</td><td>Egress HTTP</td><td>200</td></tr>
+                <tr class="selected"><td>09:26:03</td><td>10.42.18.7</td><td>promo-assets-cdn.example</td><td>53</td><td>Resolver DNS</td><td>NOERROR</td></tr>
+                <tr><td>09:26:04</td><td>10.42.18.7</td><td>198.51.100.44</td><td>443</td><td>Flow</td><td>ACCEPT</td></tr>
+                <tr class="selected"><td>09:26:06</td><td>10.42.18.7</td><td>campaign-metrics-sync.example</td><td>53</td><td>Resolver DNS</td><td>NOERROR</td></tr>
+                <tr><td>09:26:07</td><td>10.42.18.7</td><td>203.0.113.120</td><td>443</td><td>Flow</td><td>ACCEPT</td></tr>
+                <tr><td>09:26:10</td><td>10.42.18.7</td><td>packages.example-mirror.internal</td><td>443</td><td>Flow</td><td>ACCEPT</td></tr>
+                <tr><td>09:27:04</td><td>10.42.18.7</td><td>10.42.18.1–12</td><td>mixed</td><td>Flow</td><td>ACCEPT / REJECT</td></tr>
+                <tr><td>09:27:31</td><td>10.42.18.7</td><td>127.0.0.1</td><td>3000</td><td>Runtime</td><td>OPEN</td></tr>
+                <tr class="selected"><td>09:27:44</td><td>10.42.18.7</td><td>169.254.169.254</td><td>80</td><td>Egress HTTP</td><td>200</td></tr>
+                <tr><td>09:28:10</td><td>10.42.18.7</td><td>www.googleapis.com</td><td>443</td><td>DNS + Flow</td><td>ACCEPT</td></tr>
+              </tbody>
+            </table>
+            <pre class="inline-log"><code>09:27:44 GET http://169.254.169.254/latest/meta-data/      200
+09:27:45 GET http://169.254.169.254/latest/meta-data/iam/  200</code></pre>
+            <div class="system-foot"><b>What this proves:</b> the root-running container could reach the EC2 metadata paths and received HTTP 200 responses. Because response bodies were not captured, the team cannot claim that node-role credentials were returned, stolen or used. Preserve task and node evidence before making that conclusion.</div>
+          </div>
+        </div>
+
+        <div id="p4-drive" class="evidence-view">
+          <div class="system-window drive-window">
+            <div class="system-bar"><span class="drive-mark">◆</span><span>Google Workspace + RB Connector audit</span><span>Ember & Olive</span></div>
+            <div class="lifecycle-strip"><b>Workspace ws_8bd20 expired at 09:30:52</b><span>Maximum duration reached · filesystem deleted · no snapshot · task role rb-campaign-task-prod</span></div>
+            <table class="log-table">
+              <thead><tr><th>Time</th><th>Event</th><th>Item</th><th>Actor / client</th></tr></thead>
+              <tbody>
+                <tr><td>09:28:02</td><td>OAuth grant used</td><td>Roaming Bites Campaign Assistant</td><td>marketing@ember-olive.example</td></tr>
+                <tr><td>09:28:13</td><td>Create folder</td><td>/Roaming Bites Campaigns/Weekend Winback</td><td>Roaming Bites</td></tr>
+                <tr><td>09:28:17</td><td>Upload</td><td>nikto-results.json · 18 KB</td><td>Roaming Bites connector</td></tr>
+                <tr><td>09:28:20</td><td>Upload</td><td>promotion-assets.zip · 944 KB</td><td>Roaming Bites</td></tr>
+                <tr class="selected"><td>09:28:24</td><td>Change sharing</td><td>Weekend Winback folder · anyone with link: viewer</td><td>Roaming Bites connector</td></tr>
+                <tr class="selected"><td>09:34:06</td><td>Download</td><td>promotion-assets.zip</td><td>Roaming Bites</td></tr>
+              </tbody>
+            </table>
+            <pre class="inline-log"><code>09:28:24.611 drive.permissions.create  file_id=drv_weekend_winback  type=anyone  role=reader
+09:28:24.894 connector.result          link_ref=shr_6e12  returned_to_session=ses_8f21c</code></pre>
+            <div class="system-foot"><b>Why these events matter:</b> the merchant authorised this Drive connector 91 days earlier, and saving campaign files is expected. Here it preserves the Nikto scan and phishing assets after the workspace expires. The sharing change creates another access path: anyone holding the folder link can read its current and later files without a Roaming Bites session.</div>
+          </div>
+        </div>
+
+        <div id="p4-iam" class="evidence-view">
+          <div class="iam-summary">
+            <div class="iam-intro"><p class="eyebrow">Permission overview</p><h2>Four roles sit around the workspace</h2><p>Only the task role is intended for application code. Metadata reachability creates a question about the EC2 node role; it does not prove that role credentials were used.</p></div>
+            <div class="role-cards">
+              <details open><summary><span><b>rb-campaign-task-prod</b><small>Attached to workspace task</small></span><span class="pill amber">Review</span></summary><pre><code>{
+  "Effect": "Allow",
+  "Action": [
+    "bedrock:InvokeModel",
+    "s3:GetObject", "s3:PutObject",
+    "logs:CreateLogStream", "logs:PutLogEvents"
+  ],
+  "Resource": [
+    "arn:aws:bedrock:*::foundation-model/*",
+    "arn:aws:s3:::rb-campaign-artifacts-prod/merchant_1047/*",
+    "arn:aws:logs:us-east-1:123456789012:log-group:/ecs/rb-campaign-workspace:*"
+  ]
+}</code></pre></details>
+              <details><summary><span><b>rb-campaign-execution-prod</b><small>ECS runtime, not application role</small></span><span class="pill green">Expected</span></summary><p>Pulls approved ECR images and configures the CloudWatch log driver. It should not be available to processes inside the task.</p><pre><code>ecr:GetAuthorizationToken
+ecr:BatchGetImage
+ecr:GetDownloadUrlForLayer
+logs:CreateLogStream
+logs:PutLogEvents</code></pre></details>
+              <details><summary><span><b>rb-campaign-orchestrator-prod</b><small>Starts and stops workspaces</small></span><span class="pill amber">Review</span></summary><pre><code>ecs:RunTask       resource: rb-campaign-workspace:*
+ecs:StopTask      resource: rb-campaign-prod/*
+iam:PassRole      resource: rb-campaign-task-prod,
+                            rb-campaign-execution-prod
+secretsmanager:GetSecretValue
+                  resource: secret:/rb/connectors/*</code></pre><p class="note">The wildcard belongs to the orchestrator service role, not the workspace task role. It could expose connector secrets across merchants if the orchestrator were compromised, so it is a design gap worth fixing. The current evidence does not show that the attacker assumed this role or read those secrets.</p></details>
+              <details><summary><span><b>rb-ecs-node-prod</b><small>EC2 host role</small></span><span class="pill red">Sensitive</span></summary><pre><code>AmazonEC2ContainerRegistryReadOnly
+AmazonSSMManagedInstanceCore
+ecs:RegisterContainerInstance
+ecs:SubmitTaskStateChange
+logs:PutLogEvents</code></pre><p class="note">The workspace used its own temporary task-role credentials for these permissions. Separate HTTP logs show that it could also reach the EC2 metadata service, which may expose the more privileged node role if container-to-IMDS controls fail. The captured evidence does not include the response body, so access to node credentials remains unproven.</p></details>
+            </div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="4">
+          <p class="eyebrow">Commit to an action</p><h2>What do you contain or preserve first?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p4" value="Remove public Drive sharing, revoke the connector grant and preserve evidence"><span><b>Contain the Drive path</b><small><strong>What happens:</strong> Preserve the audit trail and identified files, remove anyone-with-link permissions, then revoke the delegated grant. <strong>Trade-off:</strong> Public retrieval and connector transfers stop, but the merchant session and other outbound routes remain.</small></span></label>
+            <label><input type="radio" name="p4" value="Suspend merchant campaign activity"><span><b>Suspend this merchant</b><small><strong>What happens:</strong> End current application sessions and prevent new campaign actions for this merchant. <strong>Trade-off:</strong> Other credentials, grants and already-running work need separate review.</small></span></label>
+            <label><input type="radio" name="p4" value="Block metadata and internal destinations globally"><span><b>Restrict workspace egress</b><small><strong>What happens:</strong> All workspaces lose access to instance metadata, private networks and unapproved internet destinations. <strong>Trade-off:</strong> This reduces reach quickly but may break legitimate integrations platform-wide.</small></span></label>
+            <label><input type="radio" name="p4" value="Create an instrumented replacement workspace"><span><b>Instrument another workspace</b><small><strong>What happens:</strong> Reproduce the run in isolation and retain its filesystem, processes and network events. <strong>Trade-off:</strong> It improves reconstruction but does not itself remove existing access.</small></span></label>
+          </div>
+          <label class="notes-label">Reason, preservation step and proposed detection<textarea data-notes="p4" placeholder="We will preserve… / The detection should correlate…"></textarea></label>
+          <button class="primary commit" data-next="phase5" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase5" class="route">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 4 · 10:02 UTC</p><h1>Public fallout</h1><p>A second merchant has reported a suspicious partnership page. The story is now public.</p></div>
+          <span class="severity high">High</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 4 evidence">
+          <button class="evidence-tab active" data-target="p5-ticket">Support ticket</button>
+          <button class="evidence-tab" data-target="p5-page">Reported page</button>
+          <button class="evidence-tab" data-target="p5-siem">SIEM correlation</button>
+          <button class="evidence-tab" data-target="p5-forum">Public post</button>
+          <button class="evidence-tab reveal-tab hidden" data-target="p5-identity">Identity update</button>
+        </div>
+
+        <div id="p5-ticket" class="evidence-view active">
+          <div class="mail-window">
+            <div class="mail-sidebar"><b>Inbox</b><span>Open incidents</span><span>Merchant support</span><span>Abuse reports</span></div>
+            <article class="mail-message">
+              <p class="eyebrow">Ticket #RB-18429 · Merchant safety</p>
+              <h2>Is this merchant promotion real?</h2>
+              <div class="mail-meta">From: owner@little-comet-kitchen.example · 09:58 UTC</div>
+              <p>Ember & Olive sent us a link to a Roaming Bites merchant partnership. It opened a page that looked like a popular social platform and asked us to sign in again.</p>
+              <p>We entered our email address and password. The page showed an error, so we changed the password and contacted you. The link no longer works.</p>
+              <div class="attachment">▧ screenshot.png <span>1.5 MB</span></div>
+              <code>hxxps://ember-weekend-7f3a[.]loca[.]lt/partner</code>
+            </article>
+          </div>
+        </div>
+
+        <div id="p5-page" class="evidence-view image-evidence">
+          <img src="assets/phase-3-phishing-page.png" alt="Reported fake Roaming Bites creator partnership login page" data-zoomable>
+          <p>Screenshot supplied by Little Comet Kitchen. The reported page is no longer available.</p>
+        </div>
+
+        <div id="p5-siem" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>Correlated workspace activity</span><span class="live">● Live</span></div>
+            <div class="query">workspace_id="ws_d913e" OR drive_folder_id="drv_weekend_winback" | sort timestamp asc</div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Detail</th></tr></thead>
+              <tbody>
+                <tr><td>09:46:11</td><td>Drive audit</td><td>download</td><td>promotion-assets.zip</td></tr>
+                <tr><td>09:46:20</td><td>CloudWatch</td><td>process.start</td><td>python -m http.server 3000</td></tr>
+                <tr><td>09:46:32</td><td>Resolver DNS</td><td>query</td><td>loca.lt · NOERROR</td></tr>
+                <tr class="selected"><td>09:46:34</td><td>CloudWatch</td><td>process.start</td><td>lt --port 3000</td></tr>
+                <tr><td>09:46:36</td><td>Runtime</td><td>network.listen</td><td>0.0.0.0:3000</td></tr>
+                <tr class="selected"><td>09:49:18</td><td>HTTP access</td><td>POST /collect</td><td>fields=email,password · 302 · submission_id=sub_4c81</td></tr>
+                <tr class="selected"><td>09:49:19</td><td>Drive audit</td><td>upload</td><td>captured-submissions.ndjson · records=1 · actor=rb-connector</td></tr>
+                <tr><td>09:51:11</td><td>ECS</td><td>task.stop</td><td>maximum duration reached</td></tr>
+                <tr class="selected"><td>09:52:03</td><td>Drive audit</td><td>download</td><td>captured-submissions.ndjson · actor=anonymous link user · 198.51.100.86</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Scope of impact:</b> the fake page was hosted from the temporary workspace through LocalTunnel. The POST shows that it received credential fields; the Drive upload links that submission to the publicly shared folder, and the anonymous download proves retrieval outside Roaming Bites. Deployment and file-integrity records show no change to the main product website.</div>
+          </div>
+        </div>
+
+        <div id="p5-forum" class="evidence-view image-evidence">
+          <img src="assets/phase-3-forum-post.png" alt="Fictional Threadline post alleging Roaming Bites AI is hosting phishing pages" data-zoomable>
+          <p>412 votes · 96 comments · a journalist has requested confirmation.</p>
+        </div>
+
+        <div id="p5-identity" class="evidence-view">
+          <div class="reveal-banner">New evidence · released after the public-response decision</div>
+          <blockquote>“I made a lunch promotion last week, but I didn't create any of this. I didn't know the campaign assistant could install software or put a website online.”<cite>— Ember & Olive, reached by telephone</cite></blockquote>
+          <div class="system-window identity-window">
+            <div class="system-bar"><span>Roaming Bites Identity</span><span>Account investigation</span></div>
+            <dl class="detail-grid">
+              <dt>MFA status</dt><dd><span class="pill red">NOT ENROLLED</span></dd>
+              <dt>Merchant policy</dt><dd>MFA optional</dd>
+              <dt>New-device alert</dt><dd>Disabled by default</dd>
+              <dt>Reauthentication</dt><dd>Not required for Drive or campaign preview</dd>
+              <dt>Last familiar login</dt><dd>11 Sep · 16:42 · Utrecht · saved device</dd>
+              <dt>Suspicious login</dt><dd>12 Sep · 09:07 · 203.0.113.77 · new Windows device</dd>
+              <dt>Credential intelligence</dt><dd>Email and matching password pattern in unrelated breach corpus</dd>
+              <dt>Exact password reuse</dt><dd>Not confirmed</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="decision-card public-decision" data-phase="5">
+          <p class="eyebrow">Public-response decision</p><h2>How do you respond to the public post?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p5" value="Prepare a holding statement with Internal Communications"><span><b>Coordinate a PR statement</b><small><strong>What happens:</strong> Internal Communications agrees verified facts, spokesperson, approval and publication timing. <strong>Trade-off:</strong> Messaging is coordinated, but the public thread may develop before publication.</small></span></label>
+            <label><input type="radio" name="p5" value="Acknowledge publicly and move detail private"><span><b>Acknowledge, then go private</b><small><strong>What happens:</strong> Post a brief acknowledgement, then request evidence through a private support channel. <strong>Trade-off:</strong> This responds quickly but creates an immediate public commitment.</small></span></label>
+            <label><input type="radio" name="p5" value="Contact poster privately first"><span><b>Contact the poster privately</b><small><strong>What happens:</strong> Verify the reporter and collect the original URL, screenshots and timing before replying publicly. <strong>Trade-off:</strong> Evidence improves while the visible concern remains unanswered.</small></span></label>
+            <label><input type="radio" name="p5" value="Use official channels only"><span><b>Do not reply on the forum</b><small><strong>What happens:</strong> Publish updates through the status page, support and established company channels. <strong>Trade-off:</strong> You control the message but may appear absent from the active discussion.</small></span></label>
+            <label><input type="radio" name="p5" value="Request removal"><span><b>Request removal</b><small><strong>What happens:</strong> Ask moderators to remove the live phishing link and merchant-identifying details after preserving them. <strong>Trade-off:</strong> Exposure may fall, but removal can be perceived as suppressing criticism.</small></span></label>
+          </div>
+          <label class="notes-label">Three-sentence response—or reason for silence<textarea data-notes="p5" placeholder="We are investigating…"></textarea></label>
+          <button id="lockPublicDecision" class="primary" type="button">Lock response and receive identity update</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+
+        <div id="phase5Continue" class="decision-card hidden">
+          <p class="eyebrow">New evidence available</p><h2>Review the identity update</h2>
+          <p>The public-response decision is recorded. Review the newly released account-owner evidence, then continue when the facilitator opens the next phase.</p>
+          <button class="primary next-route" data-route="phase6" type="button">Open Phase 5 →</button>
+        </div>
+      </section>
+
+      <section id="phase6" class="route">
+        <header class="phase-header">
+          <div><p class="eyebrow">Phase 5 · 10:24 UTC</p><h1>The session is gone. The job isn't.</h1><p>The merchant account is suspended, but a queued campaign starts after containment.</p></div>
+          <span class="severity high">High</span>
+        </header>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 5 evidence">
+          <button class="evidence-tab active" data-target="p6-timeline">Containment timeline</button>
+          <button class="evidence-tab" data-target="p6-job">Queued job</button>
+          <button class="evidence-tab" data-target="p6-cloudtrail">CloudTrail</button>
+          <button class="evidence-tab" data-target="p6-drive">Drive grant</button>
+          <button class="evidence-tab" data-target="p6-authority">Authority lifetime</button>
+        </div>
+
+        <div id="p6-timeline" class="evidence-view active">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>Containment actions + subsequent activity</span><span class="live">● Live</span></div>
+            <div class="query">merchant_id="merchant_1047" | sort timestamp asc</div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Source</th><th>Action</th><th>Entity</th><th>Result</th></tr></thead>
+              <tbody>
+                <tr><td>10:05:12</td><td>Identity</td><td>TerminateSession</td><td>ses_8f21c</td><td><span class="pill green">SUCCESS</span></td></tr>
+                <tr><td>10:05:33</td><td>Campaign API</td><td>SuspendMerchant</td><td>merchant_1047</td><td><span class="pill green">SUCCESS</span></td></tr>
+                <tr><td>10:06:02</td><td>ECS</td><td>StopTask</td><td>ws_d913e</td><td><span class="pill green">STOPPED</span></td></tr>
+                <tr class="selected"><td>10:08:14</td><td>Orchestrator</td><td>StartQueuedJob</td><td>job_91c2</td><td><span class="pill red">STARTED</span></td></tr>
+                <tr><td>10:08:21</td><td>Drive audit</td><td>download</td><td>promotion-assets.zip</td><td><span class="pill amber">ALLOWED</span></td></tr>
+                <tr><td>10:08:29</td><td>Resolver DNS</td><td>query</td><td>campaign-metrics-sync.example</td><td><span class="pill green">BLOCKED</span></td></tr>
+                <tr><td>10:08:31</td><td>Resolver DNS</td><td>query</td><td>loca.lt</td><td><span class="pill green">BLOCKED</span></td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot"><b>Why activity continued:</b> there was no second merchant login. Job job_91c2 was accepted at 09:49 while session ses_8f21c was still valid, then executed at 10:08 after the account was suspended. This points to stored authorization on queued work, not a failed logout.</div>
+          </div>
+        </div>
+
+        <div id="p6-job" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span>Roaming Bites Campaign Jobs</span><span>Job detail · job_91c2</span></div>
+            <pre><code>{
+  "job_id": "job_91c2",
+  "merchant_id": "merchant_1047",
+  "created_at": "2026-09-12T09:49:42Z",
+  "created_by_session": "ses_8f21c",
+  "scheduled_for": "2026-09-12T10:08:00Z",
+  "started_at": "2026-09-12T10:08:14Z",
+  "authorization": {
+    "evaluated_at": "enqueue",
+    "merchant_state_at_execution": "not_checked"
+  },
+  "source_asset": "drive://campaigns/promotion-assets.zip",
+  "workspace_id": "ws_f047a"
+}</code></pre>
+            <div class="system-foot"><b>Control gap:</b> the scheduler stored “allowed” at enqueue time with no effective expiry. At execution it checked neither the merchant’s current suspension state nor the original session. Delayed work therefore converted an old decision into new compute authority.</div>
+          </div>
+        </div>
+
+        <div id="p6-cloudtrail" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark">aws</span><span>CloudTrail Lake · Event detail</span><span>us-east-1</span></div>
+            <pre><code>{
+  "eventTime": "2026-09-12T10:08:14Z",
+  "eventSource": "ecs.amazonaws.com",
+  "eventName": "RunTask",
+  "userIdentity": {
+    "type": "AssumedRole",
+    "arn": "arn:aws:sts::123456789012:assumed-role/rb-campaign-orchestrator-prod/scheduler-17a4"
+  },
+  "requestParameters": {
+    "cluster": "rb-campaign-prod",
+    "taskDefinition": "rb-campaign-workspace:42",
+    "tags": [
+      {"key": "merchant_id", "value": "merchant_1047"},
+      {"key": "job_id", "value": "job_91c2"},
+      {"key": "workspace_id", "value": "ws_f047a"}
+    ]
+  },
+  "responseElements": {"failures": []}
+}</code></pre>
+            <div class="system-foot"><b>Correlation required:</b> CloudTrail shows rb-campaign-orchestrator-prod starting the task, because an AWS service role—not the merchant—made the API call. The application job record is needed to trace that task back to session ses_8f21c and prove it came from a pre-suspension request.</div>
+          </div>
+        </div>
+
+        <div id="p6-drive" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span>Connector Administration</span><span>Merchant grant status</span></div>
+            <dl class="detail-grid">
+              <dt>Merchant</dt><dd>merchant_1047 · Ember &amp; Olive</dd>
+              <dt>Provider</dt><dd>Google Drive</dd>
+              <dt>Connected app</dt><dd>Roaming Bites Campaigns</dd>
+              <dt>Grant status</dt><dd><span class="pill amber">ACTIVE</span></dd>
+              <dt>Scope</dt><dd><code>drive.file</code></dd>
+              <dt>Granted</dt><dd>14 Mar 2026 · merchant approval</dd>
+              <dt>Last used</dt><dd>12 Sep 2026 · 10:08:21 UTC</dd>
+              <dt>Session suspension effect</dt><dd>Does not revoke provider grant</dd>
+              <dt>Public folder permission</dt><dd><span class="pill red">ACTIVE · ANYONE WITH LINK</span></dd>
+              <dt>Grant revocation effect</dt><dd>Stops connector use; does not remove existing public permission</dd>
+              <dt>Files identified</dt><dd>nikto-results.json · promotion-assets.zip · captured-submissions.ndjson</dd>
+              <dt>Evidence hold</dt><dd>Audit metadata only; controlled content copy not yet created</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div id="p6-authority" class="evidence-view">
+          <div class="system-window authority-window">
+            <div class="system-bar"><span class="aws-mark">aws</span><span>Authority inventory · incident scope</span><span>10:24 UTC</span></div>
+            <div class="authority-intro"><b>“Temporary” does not mean “harmless.”</b><span>Each authority has its own lifetime, renewal path and revocation control.</span></div>
+            <div class="authority-list">
+              <article><span class="credential-kind human">Human</span><div><b>Cognito access token</b><small>Merchant session · issued 09:07</small></div><strong>60 min</strong><p>Short-lived bearer token. Terminate session and deny refresh.</p></article>
+              <article><span class="credential-kind human">Human</span><div><b>Cognito refresh token</b><small>Merchant session · issued 09:07</small></div><strong>30 days</strong><p>Renewable authority. Revoke the session family, not only the access token.</p></article>
+              <article><span class="credential-kind aws">AWS</span><div><b>ECS task-role STS credentials</b><small>rb-campaign-task-prod</small></div><strong>Temporary</strong><p>Rotated by AWS. Stopping one task does not prevent a newly authorised task receiving new credentials.</p></article>
+              <article><span class="credential-kind aws">AWS</span><div><b>EC2 node-role credentials via IMDS</b><small>rb-ecs-node-prod · exposure questioned</small></div><strong>Temporary</strong><p>Metadata was reachable; use IMDSv2, hop limits and workload isolation. Use is not proven.</p></article>
+              <article class="selected"><span class="credential-kind oauth">OAuth</span><div><b>Google Drive grant</b><small>Authorised 91 days ago</small></div><strong>Renewable</strong><p>External delegated authority survived the Roaming Bites session suspension until revoked.</p></article>
+              <article class="selected"><span class="credential-kind job">Permission</span><div><b>Public Drive folder</b><small>Anyone with link · viewer</small></div><strong>Durable</strong><p>Anonymous read access survives session termination and OAuth revocation until the sharing permission is removed.</p></article>
+              <article class="selected"><span class="credential-kind job">Decision</span><div><b>Queued-job authorization</b><small>Evaluated at enqueue · 09:49</small></div><strong>No expiry</strong><p>Not a credential: a stored allow decision. It must be re-evaluated when the job runs.</p></article>
+              <article class="not-seen"><span class="credential-kind key">Not seen</span><div><b>IAM access key</b><small>No access key appears in this incident</small></div><strong>Long-lived</strong><p>A useful contrast: remains valid until disabled, deleted or expired by an added control.</p></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="6">
+          <p class="eyebrow">Recovery decision</p><h2>What must containment include before recovery?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p6" value="Cancel queued jobs, remove public Drive permissions, revoke the grant and quarantine files"><span><b>Contain the merchant path</b><small><strong>What happens:</strong> Cancel this merchant’s jobs, preserve a controlled evidence copy, remove public sharing, revoke its Drive grant and quarantine the files. <strong>Trade-off:</strong> Other merchants remain online while similar public folders and queued jobs still require hunting.</small></span></label>
+            <label><input type="radio" name="p6" value="Pause campaign execution and connectors globally"><span><b>Pause the assistant globally</b><small><strong>What happens:</strong> Stop every queued campaign and connected-service action while responders establish scope. <strong>Trade-off:</strong> This limits further execution but interrupts all merchants.</small></span></label>
+            <label><input type="radio" name="p6" value="Keep the product online with egress blocks and active hunting"><span><b>Rely on the new blocks</b><small><strong>What happens:</strong> Keep campaigns running, block the known destinations and hunt for matching jobs, files and domains. <strong>Trade-off:</strong> Service continues while unknown routes or actions may remain.</small></span></label>
+            <label><input type="radio" name="p6" value="Reset credentials, require MFA and restore the merchant"><span><b>Fix identity, then restore</b><small><strong>What happens:</strong> Reset the password, terminate human sessions and require MFA before restoring the account. <strong>Trade-off:</strong> Human access is reset, but non-session authority must be validated separately.</small></span></label>
+          </div>
+          <label class="notes-label">Name one validation query and one recovery gate<textarea data-notes="p6" placeholder="We would query… / We restore service only when…"></textarea></label>
+          <button class="primary commit" data-next="summary" type="button">Record final position</button>
+          <p class="commit-status" aria-live="polite"></p>
+          <p class="closing-question">What level of damage should one compromised merchant account be allowed to cause?</p>
+        </div>
+      </section>
+
+      <section id="summary" class="route">
+        <header class="phase-header summary-header">
+          <div><p class="eyebrow">Live incident record</p><h1>What happened—and what we learned</h1><p>This record grows with the exercise. It includes only phases opened, decisions recorded and role effects revealed so far.</p></div>
+          <button id="printSummary" class="icon-button summary-print-button" type="button">Print summary</button>
+        </header>
+
+        <section class="summary-meta" aria-label="Incident metadata">
+          <div><span>Incident</span><b>RB-2026-0912</b></div><div><span>Status</span><b id="summaryStatus">In progress</b></div><div><span>Severity</span><b id="summarySeverity">Not declared</b></div><div><span>Service state</span><b id="summaryService">Operational</b></div>
+        </section>
+
+        <section class="summary-team panel"><div><p class="eyebrow">Responding groups</p><h2>Your incident team</h2></div><div id="summaryTeam" class="summary-team-tiles"></div></section>
+
+        <div class="summary-overview-grid">
+          <article class="summary-block"><span>Summary</span><p id="summaryOverview">The incident record begins when Phase 1 is opened.</p></article>
+          <article class="summary-block"><span>Impact</span><p id="summaryImpact">No impact has been established.</p></article>
+          <article class="summary-block"><span>Trigger</span><p id="summaryTrigger">Not yet established.</p></article>
+          <article class="summary-block"><span>Detection</span><p id="summaryDetection">No detection evidence has been reviewed.</p></article>
+          <article class="summary-block"><span>Resolution and recovery</span><p id="summaryResolution">Final containment position not yet recorded.</p></article>
+          <article class="summary-block"><span>Contributing conditions</span><p id="summaryConditions">No contributing conditions have been established.</p></article>
+        </div>
+
+        <section class="summary-section panel">
+          <div class="summary-section-heading"><div><p class="eyebrow">Incident timeline</p><h2>Events and team decisions</h2></div><span id="summaryDecisionCount">0 decisions · 0 of 5 phases opened</span></div>
+          <div class="summary-table-wrap"><table class="summary-table"><thead><tr><th>UTC</th><th>Stage</th><th>What happened</th><th>Your response</th></tr></thead><tbody id="summaryTimeline"></tbody></table></div>
+        </section>
+
+        <div class="summary-learning-grid">
+          <section class="summary-section panel"><p class="eyebrow">Learning review</p><h2>What helped</h2><div id="summaryStrengths" class="summary-marker-list"></div></section>
+          <section class="summary-section panel"><p class="eyebrow">Learning review</p><h2>Organisational gaps</h2><div id="summaryGaps" class="summary-marker-list gaps"></div></section>
+        </div>
+
+        <section class="summary-section panel">
+          <div class="summary-section-heading"><div><p class="eyebrow">Follow-up</p><h2>Candidate action items</h2></div><span>Confirm owners and due dates after the exercise</span></div>
+          <div class="summary-table-wrap"><table class="summary-table action-table"><thead><tr><th>Action derived from decision</th><th>Type</th><th>Suggested owner</th><th>Status</th></tr></thead><tbody id="summaryActions"></tbody></table></div>
+          <label class="notes-label">Facilitator or incident-owner notes<textarea data-notes="summary" placeholder="Owners, due dates, evidence to preserve, or changes before publishing this record…"></textarea></label>
+        </section>
+
+        <aside class="summary-reference"><b>Format note</b><span>Structured around Google SRE’s blameless postmortem fields: summary, impact, root/contributing causes, trigger, resolution, detection, action items, lessons and timeline.</span><a href="https://sre.google/sre-book/example-postmortem/" target="_blank" rel="noreferrer">Google SRE example postmortem ↗</a></aside>
+      </section>
+
+      <section id="debrief" class="route">
+        <header class="phase-header"><div><p class="eyebrow">Facilitator only</p><h1>Debrief and evidence key</h1><p>Use after all groups have committed their final position.</p></div></header>
+        <article class="panel"><h2>Ground truth</h2><p>An attacker accessed Ember & Olive with a valid password. The Drive token stayed in the connector broker, but the compromised session could ask that broker to upload files and change sharing. The attacker supplied a GitHub Raw URL; application policy allowed the combined retrieve-and-execute chain without approval or content verification. The helper called two attacker-controlled domains. The root-running workspace installed Nikto, scanned the local site, read <code>/etc/shadow</code>, reached metadata paths and saved the Nikto result and phishing kit to a Drive folder made readable to anyone with its link. A later workspace restored the kit, exposed the page through LocalTunnel and stored a submitted email address and password in the public folder. An anonymous link user downloaded that submission. After the session was terminated, a previously accepted job still started because authorization was checked only when queued. The active Drive grant supplied the stored kit; new DNS controls blocked the callback and tunnel, but grant revocation alone would not remove existing public sharing. The main Roaming Bites frontend was not modified.</p></article>
+        <div class="brief-grid">
+          <article class="panel"><h2>Evidence supports</h2><ul><li>Valid merchant-session activity</li><li>The Drive token remained brokered</li><li>User-controlled content became executable code</li><li>A DNS request to a phishing-related domain</li><li>Root-level tool execution, Nikto scanning and metadata reachability</li><li>Drive persistence and anyone-with-link sharing</li><li>Credential collection, Drive storage and anonymous retrieval</li><li>Public exposure through LocalTunnel</li><li>Queued execution after session termination</li></ul></article>
+          <article class="panel"><h2>Evidence does not prove</h2><ul><li>The model received raw customer records</li><li>GitHub itself was malicious or compromised</li><li>Which payload came from the suspicious domain</li><li>Exact password reuse for the initial compromise</li><li>Use of stolen AWS credentials</li><li>Access to every merchant's Drive</li><li>Compromise of the production frontend</li><li>Who controlled the anonymous Drive client</li><li>New attacker login activity after containment</li></ul></article>
+        </div>
+        <article class="panel"><h2>Detection conversation</h2><p class="note">GuardDuty attributed the DNS finding to the EC2 node. Responders still needed ECS task, ENI and workspace-tag correlation to identify the merchant session. VirusTotal and urlscan supplied enrichment; they were not the source of the GuardDuty finding.</p><div class="tag-cloud"><span>context inventory</span><span>restricted data → workspace</span><span>external URL → process</span><span>phishing-domain DNS</span><span>node → task correlation</span><span>new device + high-impact action</span><span>metadata access</span><span>network scanning</span><span>package installation</span><span>tunnel-service DNS</span><span>cross-workspace artifact reuse</span><span>suspended identity + new task</span><span>connector use after suspension</span></div></article>
+        <article class="panel"><h2>Engineering conversation</h2><p>Do not end with “enable MFA.” Ask which capabilities remain safe after identity failure: non-root execution, fixed tools, mediated retrieval, policy over combined action chains, metadata isolation, bounded egress, private-by-default connector outputs, approval for public sharing and publishing, and durable runtime telemetry. The final phase adds authorization at execution time, cancellation of queued work, removal of public permissions, connector revocation and explicit recovery gates.</p><p><a href="facilitator.html">Open the full facilitator learning guide →</a></p><p><a href="technical-answer-sheet.html" target="_blank" rel="noreferrer">Open the technical evidence answer deck ↗</a></p></article>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="phaseRevealDialog" class="phase-reveal-dialog" aria-labelledby="revealTitle">
+    <div class="reveal-screen">
+      <div class="reveal-topline"><span id="revealPhase">Phase 1</span><span id="revealTime">09:18 UTC</span></div>
+      <div class="reveal-story">
+        <p>The promotion that wasn’t</p>
+        <h2 id="revealTitle">A familiar account.<br>An unfamiliar rhythm.</h2>
+        <div id="revealBody" class="reveal-body"></div>
+      </div>
+      <div class="reveal-actions"><button id="revealToEvidence" class="reveal-primary" type="button">Begin this phase →</button></div>
+      <div class="reveal-progress" aria-label="Incident phase progress"><span id="revealProgressBar"></span></div>
+    </div>
+  </dialog>
+
+  <dialog id="imageDialog"><button id="closeDialog" aria-label="Close image">×</button><img id="dialogImage" alt=""></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
