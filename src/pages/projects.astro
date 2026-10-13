@@ -1,0 +1,295 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import { hostedProjects, otherProjects } from '../data/projects';
+---
+
+<BaseLayout
+  title="Projects — Luda Hex"
+  description="Hands-on security sessions you can run in the browser, plus open-source and client work by Yianna Paris."
+>
+  <header class="container narrow head">
+    <p class="eyebrow">// projects</p>
+    <h1>Things you can open and run</h1>
+    <p class="lead">
+      Browser-based tabletops and workshops, hosted right here. No accounts, no
+      installs, no backend — everything you type stays in your browser.
+    </p>
+  </header>
+
+  <section class="container narrow hosted" aria-labelledby="hosted-heading">
+    <h2 id="hosted-heading">Run it in your browser</h2>
+    <div class="hosted-grid">
+      {
+        hostedProjects.map((item, i) => (
+          <article class:list={['session', i % 2 === 1 && 'alt']}>
+            <p class="kicker">{item.kicker}</p>
+            <h3>
+              <a href={item.href}>{item.name}</a>
+            </h3>
+            <p class="detail">{item.detail}</p>
+            <ul class="facts">
+              {item.facts.map((fact) => (
+                <li>{fact}</li>
+              ))}
+            </ul>
+            <a class="open" href={item.href}>
+              {item.cta} <span aria-hidden="true">→</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+    <p class="note">
+      Facilitating one of these? Each session carries its own notes — answer
+      sheets, timings and debrief prompts — linked from inside the page.
+    </p>
+  </section>
+
+  <section class="container narrow elsewhere" aria-labelledby="elsewhere-heading">
+    <h2 id="elsewhere-heading">Open source &amp; client work</h2>
+    <div class="other-grid">
+      {
+        otherProjects.map((item) => {
+          const Tile = item.href ? 'a' : 'div';
+          return (
+            <Tile class="other-tile" href={item.href}>
+              <div class="tile-top">
+                {item.tag && <span class="pill">{item.tag}</span>}
+                {item.href && (
+                  <span class="arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                )}
+              </div>
+              <h3>{item.name}</h3>
+              <p>{item.detail}</p>
+            </Tile>
+          );
+        })
+      }
+    </div>
+    <p class="note">
+      Talks, training and writing live on the
+      <a href="/experience">experience page</a>.
+    </p>
+  </section>
+
+  <ContactCTA />
+</BaseLayout>
+
+<style>
+  .head {
+    padding-top: var(--space-7);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 500;
+    margin-block: var(--space-2) var(--space-3);
+  }
+
+  .lead {
+    color: var(--text-muted);
+    max-width: 60ch;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 500;
+    margin-block: 0 var(--space-5);
+  }
+
+  .hosted {
+    padding-top: var(--space-7);
+  }
+
+  .elsewhere {
+    padding-top: var(--space-7);
+  }
+
+  .note {
+    margin-top: var(--space-5);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* hosted sessions — the headline act, so one card per row at full width */
+  .hosted-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .session {
+    --a: var(--magenta);
+    --a2: var(--cyan);
+    position: relative;
+    padding: var(--space-5);
+    background: linear-gradient(155deg, var(--bg-raise), var(--bg-inset));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .session.alt {
+    --a: var(--cyan);
+    --a2: var(--purple);
+  }
+
+  .session::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--a), var(--a2));
+  }
+
+  .session:hover {
+    border-color: var(--a);
+    box-shadow: 0 10px 32px -12px var(--a);
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--a);
+  }
+
+  .session h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-block: var(--space-2);
+  }
+
+  .session h3 a {
+    color: var(--text);
+  }
+
+  .session:hover h3 a {
+    color: var(--a);
+  }
+
+  .detail {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 68ch;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    list-style: none;
+    padding: 0;
+    margin-block: var(--space-4) var(--space-4);
+  }
+
+  .facts li {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  .open {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--a);
+  }
+
+  .open span {
+    transition: transform 150ms ease;
+  }
+
+  .open:hover span {
+    transform: translateX(3px);
+  }
+
+  /* open source & consulting — compact tiles */
+  .other-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .other-tile {
+    --a: var(--purple);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    transition:
+      border-color 150ms ease,
+      transform 150ms ease;
+  }
+
+  a.other-tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--a);
+  }
+
+  .tile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 18px;
+  }
+
+  .pill {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: var(--a);
+    border: 1px solid color-mix(in srgb, var(--a) 45%, transparent);
+    background: color-mix(in srgb, var(--a) 12%, transparent);
+  }
+
+  .arrow {
+    margin-left: auto;
+    color: var(--a);
+    font-size: 0.9rem;
+    opacity: 0.65;
+  }
+
+  a.other-tile:hover .arrow {
+    opacity: 1;
+  }
+
+  .other-tile h3 {
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  a.other-tile:hover h3 {
+    color: var(--a);
+  }
+
+  .other-tile p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>

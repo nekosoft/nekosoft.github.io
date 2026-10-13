@@ -1,15 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Card from '../components/Card.astro';
 import CardGrid from '../components/CardGrid.astro';
 import Sparkle from '../components/Sparkle.astro';
 import ContactCTA from '../components/ContactCTA.astro';
-
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-const recentPosts = posts.slice(0, 3);
+import { hostedProjects } from '../data/projects';
 ---
 
 <BaseLayout title="Luda Hex — breaking and building secure systems">
@@ -72,39 +67,31 @@ const recentPosts = posts.slice(0, 3);
 
   <section class="container section">
     <p class="eyebrow">// the grimoire</p>
-    <h2>Research &amp; documentation</h2>
+    <h2>Research &amp; projects</h2>
     <p class="section-sub">
-      Working notes from my research — methodology, process, and the
-      details most write-ups skip. Work in progress by design.
+      Working notes from my research, and hands-on sessions you can open and
+      run in the browser. Work in progress by design.
     </p>
     <CardGrid>
       <Card href="/docs/web-recon" glyph="01" title="Web Reconnaissance">
         A methodology for mapping attack surface: domains, URLs, service
         enumeration, and automating the boring parts.
       </Card>
-      <Card href="/blog" glyph="02" title="Blog">
-        Longer-form writing on security, engineering, and whatever is
-        currently bubbling in the cauldron.
+      <Card href="/projects" glyph="02" title="Projects">
+        Incident tabletops and security workshops hosted right here — no
+        accounts, no installs, nothing leaves your browser.
       </Card>
     </CardGrid>
-    {
-      recentPosts.length > 0 && (
-        <ul class="recent">
-          {recentPosts.map((post) => (
-            <li>
-              <a href={`/blog/${post.id}`}>{post.data.title}</a>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-GB', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              </time>
-            </li>
-          ))}
-        </ul>
-      )
-    }
+    <ul class="recent">
+      {
+        hostedProjects.map((item) => (
+          <li>
+            <a href={item.href}>{item.name}</a>
+            <span class="kind">{item.kicker}</span>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <ContactCTA />
@@ -247,10 +234,17 @@ const recentPosts = posts.slice(0, 3);
     border-bottom: 1px solid var(--border);
   }
 
-  .recent time {
+  .recent .kind {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: var(--text-muted);
     white-space: nowrap;
+  }
+
+  @media (max-width: 520px) {
+    .recent li {
+      flex-direction: column;
+      gap: 2px;
+    }
   }
 </style>

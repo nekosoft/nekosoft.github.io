@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Online footprint workshop — Luda Hex</title>
+<style>
+:root{--bg:#13102b;--raised:#1e1b4e;--inset:#0d0b20;--border:#35306b;--text:#eae7fb;--muted:#a5a0cf;--pink:#ff4fd8;--cyan:#53e8f4;--purple:#a78bfa;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0,rgba(167,139,250,.13),transparent 42%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,sans-serif}button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}button,a{touch-action:manipulation}button{cursor:pointer;color:var(--text)}a{color:var(--cyan);text-underline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}button:disabled{opacity:.45;cursor:default}.wrap{width:min(1120px,calc(100% - 48px));margin:auto}header{border-bottom:1px solid var(--border);background:rgba(13,11,32,.55)}.bar{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:850;letter-spacing:.08em;font-size:20px;display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}.brand svg{width:33px;height:33px}.top-label,.eyebrow,.meta,.number,.tag{font-family:var(--mono)}.top-label{color:var(--muted);font-size:12px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin:0 0 20px}.hero{padding:64px 0 45px;display:grid;grid-template-columns:1.35fr 1fr;gap:60px;align-items:center}h1{font-size:clamp(36px,4.6vw,58px);line-height:1.09;letter-spacing:-.055em;margin:0 0 24px;font-weight:850}h1 span{color:var(--cyan)}.lead{color:var(--muted);max-width:540px;font-size:18px;line-height:1.65}.chips{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}.chip{border:1px solid var(--border);border-radius:30px;padding:5px 12px;font-size:12px;color:var(--muted);font-family:var(--mono)}.primary,.secondary{border-radius:7px;padding:11px 18px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}.primary{background:var(--pink);color:var(--inset);border:1px solid var(--pink)}.primary:hover{background:#ff83e4}.secondary{background:transparent;border:1px solid var(--border)}.secondary:hover{border-color:var(--purple);background:var(--raised)}.actions{display:flex;gap:12px;flex-wrap:wrap}.portrait{min-height:300px;display:grid;place-items:center;background:radial-gradient(circle,rgba(83,232,244,.065),transparent 64%)}.portrait svg{width:100%;max-width:380px}.visual-note{font-size:12px;color:var(--muted);text-align:center;font-family:var(--mono);margin:0}.promise{display:flex;align-items:flex-start;gap:15px;border:1px solid var(--border);background:rgba(30,27,78,.35);border-radius:10px;padding:18px 22px;font-size:14px}.promise strong{color:var(--cyan)}.promise p{margin:0;color:var(--muted)}.promise .mark{color:var(--cyan);font-size:22px;line-height:1.4}.tabs{display:flex;gap:24px;margin:38px 0 30px;border-bottom:1px solid var(--border);overflow:auto}.tab{border:0;border-bottom:3px solid transparent;background:transparent;padding:14px 2px;white-space:nowrap;color:var(--muted);font-weight:650}.tab[aria-selected=true]{color:var(--text);border-color:var(--pink)}.tab small{color:var(--purple);font-family:var(--mono);margin-right:8px}.panel[hidden]{display:none}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}h2{font-size:28px;letter-spacing:-.025em;line-height:1.25;margin:0 0 9px}h3{font-size:19px;line-height:1.4;margin:0 0 12px}p{margin:0 0 14px}.muted{color:var(--muted)}.small{font-size:13px}.workshop-grid{display:grid;grid-template-columns:280px 1fr;gap:28px}.timer{border:1px solid var(--border);border-radius:10px;padding:20px;background:var(--inset);margin-bottom:18px}.timer-top{display:flex;justify-content:space-between;color:var(--muted);font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em}.clock{font-family:var(--mono);font-size:42px;letter-spacing:-.04em;margin:8px 0;color:var(--cyan);font-variant-numeric:tabular-nums}.timer .actions{gap:8px}.timer button{font-size:12px;padding:7px 10px}.progress{height:4px;background:var(--border);border-radius:4px;margin-top:18px;overflow:hidden}.progress div{height:100%;width:0;background:var(--pink)}.phase-list{display:flex;flex-direction:column;gap:6px}.phase-button{width:100%;display:flex;gap:12px;text-align:left;border:1px solid transparent;background:transparent;padding:12px 10px;border-radius:7px;align-items:flex-start}.phase-button:hover{background:var(--raised)}.phase-button[aria-current=step]{background:var(--raised);border-color:var(--border)}.number{color:var(--purple);font-size:12px;padding-top:2px}.phase-button strong{display:block;font-size:14px;font-weight:600}.phase-button small{display:block;color:var(--muted);font:11px var(--mono);margin-top:3px}.exercise{border:1px solid var(--border);border-radius:12px;background:rgba(13,11,32,.45);padding:32px;min-height:460px}.meta{color:var(--cyan);font-size:12px;letter-spacing:.08em;margin-bottom:12px}.exercise h2{font-size:30px}.exercise ul{padding-left:22px}.exercise li{margin:9px 0}.exercise .intro{color:var(--muted);font-size:17px}.prompt{border-left:2px solid var(--pink);padding:8px 0 8px 18px;margin:24px 0;font-size:19px}.foot-nav{display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:20px;margin-top:30px;gap:10px}.clues{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}.clue{border:1px solid var(--border);padding:18px;border-radius:8px;background:var(--raised);font-size:14px}.clue .tag{font-size:11px;color:var(--pink);margin-bottom:10px;display:block}.clue p{margin:0}details{border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:16px 0}summary{cursor:pointer;color:var(--purple);font-weight:650}details p{margin:14px 0 0;font-size:14px;color:var(--muted)}.queries{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}code{background:var(--raised);border:1px solid var(--border);border-radius:5px;padding:5px 8px;font:12px var(--mono);overflow-wrap:anywhere}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}.toolbar input{flex:1;min-width:200px}.toolbar select{width:190px}input,select,textarea{background:var(--inset);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:11px 12px;max-width:100%}input::placeholder,textarea::placeholder{color:var(--muted)}.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.source{border:1px solid var(--border);background:rgba(30,27,78,.3);border-radius:10px;padding:22px;display:flex;flex-direction:column}.source:hover{border-color:var(--purple)}.source-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.source-icon{font:22px var(--mono);color:var(--cyan)}.source .tag{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.source p{font-size:14px;color:var(--muted);margin-bottom:18px}.source details{margin-top:auto;margin-bottom:0;padding:10px 12px}.source details p{font-size:13px}.source details a{display:inline-block;font-size:13px;margin-top:12px}.empty{color:var(--muted);padding:30px 0}.audit-top{padding:22px;background:var(--raised);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px}.audit-count{font:28px var(--mono);color:var(--cyan);white-space:nowrap}.audit-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}.audit-box{border:1px solid var(--border);border-radius:10px;padding:26px;background:rgba(13,11,32,.45)}.check-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px}.check-row:last-child{border-bottom:0}.check-row select{font-size:12px;padding:6px 8px;width:118px}.field{display:block;font-size:13px;color:var(--muted);margin:18px 0 6px}.audit-box textarea,.audit-box input{width:100%;font-size:14px}.audit-box textarea{min-height:90px;resize:vertical}.tip{font-size:13px;color:var(--muted);margin:18px 0 0}.audit-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.backlog{margin-top:28px}.backlog p{max-width:75ch}.footer{border-top:1px solid var(--border);margin-top:64px;padding:26px 0 35px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer span:first-child{font-family:var(--mono)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip{position:absolute;left:20px;top:-100px;background:var(--cyan);color:var(--inset);padding:10px;z-index:5}.skip:focus{top:10px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);border:1px solid var(--cyan);border-radius:8px;padding:12px 20px;background:var(--inset);box-shadow:0 8px 35px #0007;z-index:10;width:max-content;max-width:90vw;font-size:14px}.toast:empty{display:none}
+@media(max-width:900px){.hero{gap:20px}.workshop-grid{grid-template-columns:235px 1fr}.exercise{padding:24px}.source-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.wrap{width:calc(100% - 32px)}.bar{height:64px}.brand{font-size:17px}.top-label{font-size:10px}.hero{grid-template-columns:1fr;padding:38px 0 30px;gap:10px}.portrait{min-height:0}.portrait svg{max-width:280px}.lead{font-size:16px}.tabs{gap:18px;margin-top:26px}.tab{font-size:13px}.workshop-grid{grid-template-columns:1fr}.phase-list{display:grid;grid-template-columns:1fr 1fr}.timer{margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.timer-top,.timer .progress{grid-column:1/-1}.clock{font-size:32px}.timer .actions{align-self:center;justify-content:flex-end}.timer .tip{grid-column:1/-1;margin:0}.exercise{padding:22px;min-height:0}.exercise h2{font-size:25px}.clues,.source-grid,.audit-layout{grid-template-columns:1fr}.section-head{flex-direction:column;gap:10px}.audit-top{padding:18px}.audit-box{padding:20px}.promise{padding:16px}.toolbar select{width:100%}.footer{margin-top:40px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{body{background:white;color:black;font-size:11pt}.wrap{width:100%}header,.hero,.promise,.tabs,.footer,.audit-actions,.toast{display:none!important}.panel{display:none!important}#audit{display:block!important}.audit-layout{display:block}.audit-box{break-inside:avoid;background:white;border:1px solid #bbb;margin:15px 0}.audit-top{background:white;color:black}.muted,.field,.tip,.audit-count{color:#333}input,textarea,select{background:white;color:black;border-color:#999}.audit-box textarea{min-height:70px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#workspace">Skip to workshop</a>
+<header>
+<div class="wrap bar">
+<a class="brand" href="https://ludahex.nl" target="_blank" rel="noopener noreferrer" aria-label="Luda Hex website">
+<svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M9 12 6 3l12 7h4L34 3l-3 9c4 5 4 15-1 19l-5 2v4H15v-4l-5-2C5 27 5 17 9 12Z" stroke="#ff4fd8" stroke-width="2"/><path d="M12 21h5m6 0h5m-9 6 1-2 1 2" stroke="#53e8f4" stroke-width="3" stroke-linecap="round"/></svg>
+LUDA HEX</a>
+<span class="top-label">// hands-on security awareness</span>
+</div>
+</header>
+<main class="wrap">
+<section class="hero" aria-labelledby="title">
+<div>
+<p class="eyebrow">// the online footprint workshop</p>
+<h1 id="title">What does the internet<br>know <span>about you?</span></h1>
+<p class="lead">Your routines. Your people. Your work. Small details can reveal a bigger picture. Find yours, check who can see them, and choose what stays visible.</p>
+<div class="chips"><span class="chip">60 minutes</span><span class="chip">3 audit rounds</span><span class="chip">1 practical change</span></div>
+<div class="actions"><button class="primary" id="begin">Explore the workshop ↗</button><button class="secondary" data-view="audit">Open my audit</button></div>
+</div>
+<div>
+<div class="portrait">
+<svg viewBox="0 0 400 330" role="img" aria-label="Separate clues about work, routines, possessions and people connect to one online identity">
+<circle cx="200" cy="162" r="109" fill="none" stroke="#35306b" stroke-dasharray="4 8"/>
+<circle cx="200" cy="162" r="74" fill="none" stroke="#35306b"/>
+<g stroke="#524aa8" stroke-width="1.5"><path d="M200 120 100 68M243 155l72-50M217 202l74 69M168 189l-75 66"/></g>
+<circle cx="200" cy="162" r="48" fill="#1e1b4e" stroke="#53e8f4"/>
+<circle cx="200" cy="150" r="11" fill="none" stroke="#53e8f4" stroke-width="2"/>
+<path d="M179 179c0-23 42-23 42 0" fill="none" stroke="#53e8f4" stroke-width="2"/>
+<g font-family="monospace" font-size="12" fill="#eae7fb">
+<rect x="28" y="37" width="125" height="50" rx="7" fill="#1e1b4e" stroke="#35306b"/>
+<text x="44" y="58" fill="#ff4fd8">01 / work</text><text x="44" y="75" font-size="10" fill="#a5a0cf">bio + event</text>
+<rect x="257" y="73" width="130" height="50" rx="7" fill="#1e1b4e" stroke="#35306b"/>
+<text x="271" y="94" fill="#53e8f4">02 / routine</text><text x="271" y="111" font-size="10" fill="#a5a0cf">time + place</text>
+<rect x="234" y="255" width="143" height="50" rx="7" fill="#1e1b4e" stroke="#35306b"/>
+<text x="248" y="276" fill="#a78bfa">03 / possessions</text><text x="248" y="293" font-size="10" fill="#a5a0cf">ad + photograph</text>
+<rect x="12" y="235" width="128" height="50" rx="7" fill="#1e1b4e" stroke="#35306b"/>
+<text x="26" y="256" fill="#ff4fd8">04 / people</text><text x="26" y="273" font-size="10" fill="#a5a0cf">tags + comments</text>
+</g>
+</svg>
+</div>
+<p class="visual-note">one clue is a detail / together, a picture</p>
+</div>
+</section>
+<div class="promise"><span class="mark" aria-hidden="true">◇</span><p><strong>Your discoveries stay yours.</strong> Search yourself. Share only what you choose. Use the fictional profile if you prefer. Notes stay in this page while it is open; refreshing clears them.</p></div>
+<div class="tabs" role="tablist" aria-label="Workshop sections">
+<button class="tab" id="tab-workshop" role="tab" aria-selected="true" aria-controls="workshop" tabindex="0" data-view="workshop"><small>01</small>The workshop</button>
+<button class="tab" id="tab-sources" role="tab" aria-selected="false" aria-controls="sources" tabindex="-1" data-view="sources"><small>02</small>Where to look</button>
+<button class="tab" id="tab-audit" role="tab" aria-selected="false" aria-controls="audit" tabindex="-1" data-view="audit"><small>03</small>My self-audit</button>
+</div>
+<div id="workspace">
+<section id="workshop" class="panel" role="tabpanel" aria-labelledby="tab-workshop">
+<div class="section-head"><div><h2>A little curiosity. A lot of discovery.</h2><p class="muted">Short prompts, private searching and conversations in pairs.</p></div><span class="chip">facilitator + participant view</span></div>
+<div class="workshop-grid">
+<aside aria-label="Session controls">
+<div class="timer">
+<div class="timer-top"><span>Session remaining</span><span id="timer-status">Ready</span></div>
+<div class="clock" id="clock" aria-label="Time remaining">60:00</div>
+<div class="actions"><button class="primary" id="timer-toggle">Start</button><button class="secondary" id="timer-reset">Reset</button></div>
+<div class="progress" role="progressbar" aria-label="Session elapsed" aria-valuemin="0" aria-valuemax="60" aria-valuenow="0"><div id="timer-progress"></div></div>
+<p class="tip">Select phases freely. The timer does not change your view.</p>
+</div>
+<nav class="phase-list" id="phases" aria-label="Workshop phases"></nav>
+</aside>
+<article class="exercise" id="exercise" aria-live="polite"></article>
+</div>
+<details class="backlog">
+<summary>Facilitator preparation and learning outcomes</summary>
+<p>Bring a device, internet access and private notes. Arrange groups of four for the clue puzzle and pairs for reflection. Test links beforehand and prepare the fictional example. For large rooms, use seated table discussions; online, use pair breakout rooms.</p>
+<p>Participants practise identifying three source types, checking their audiences, distinguishing fact from inference, and choosing a practical privacy change. This is a first pass, with the directory supporting further checks afterwards.</p>
+<p>No exposure leaderboard. Do not collect worksheets, project personal findings or search colleagues. If someone is uncomfortable, offer the fictional profile or a private break. Identify an internal contact for exposed work information.</p>
+</details>
+</section>
+<section id="sources" class="panel" role="tabpanel" aria-labelledby="tab-sources" hidden>
+<div class="section-head"><div><h2>Your footprint has more than one home.</h2><p class="muted">Pick a source you use. Open its checklist, then inspect your own information.</p></div><span class="chip" id="source-count">12 source types</span></div>
+<div class="toolbar">
+<label class="sr-only" for="source-search">Search sources</label>
+<input id="source-search" type="search" placeholder="Search: family, schedule, photos, work…">
+<label class="sr-only" for="source-filter">Filter by information category</label>
+<select id="source-filter"><option value="all">All categories</option><option value="identity">Identity & contact</option><option value="location">Location & schedule</option><option value="people">People & relationships</option><option value="work">Work & interests</option><option value="sharing">Links & sharing</option><option value="breach">Breach history</option></select>
+</div>
+<div class="source-grid" id="source-grid"></div>
+<p id="no-sources" class="empty" hidden>No matches. Try a broader word or another category.</p>
+<details class="backlog"><summary>What a public search cannot tell you</summary>
+<p>Search engines do not cover every account, link, archive or breach. A result might be outdated or belong to someone else. Confirm identity and recency before drawing conclusions. Nothing found is not proof of invisibility.</p>
+<p>Account exports, purchase history, ad preferences and location history show what a provider holds. They do not by themselves show what strangers can access. Review those privately as optional homework.</p>
+</details>
+</section>
+<section id="audit" class="panel" role="tabpanel" aria-labelledby="tab-audit" hidden>
+<div class="section-head"><div><h2>Make your own visibility choices.</h2><p class="muted">Record categories, audiences and actions. Keep identifying details off this worksheet.</p></div><button class="secondary" id="print">Print worksheet</button></div>
+<div class="audit-top"><div><strong>A first pass, not a perfect inventory.</strong><p class="muted small" style="margin:4px 0 0">Check three source types. Make one change. Plan two follow-ups.</p></div><div class="audit-count"><span id="checked-count">0</span><span class="muted"> / 3</span></div></div>
+<div class="audit-layout">
+<div class="audit-box"><h3>01 / Choose your sources</h3><p class="muted small">Unused services can be marked N/A. Unchecked is a useful answer too.</p><div id="audit-checks"></div></div>
+<div class="audit-box">
+<h3>02 / Understand a finding</h3>
+<label class="field" for="finding-source">Source and information category</label><input id="finding-source" placeholder="e.g. fitness app / recurring location">
+<label class="field" for="finding-audience">Who can see it?</label><select id="finding-audience"><option>Unknown — needs checking</option><option>Public</option><option>Account holders</option><option>Approved followers</option><option>Anyone with the link</option><option>Only me</option></select>
+<label class="field" for="finding-fact">What is directly visible?</label><textarea id="finding-fact" placeholder="Describe the category, not an exact address or name."></textarea>
+<label class="field" for="finding-inference">What could someone infer? What could be wrong?</label><textarea id="finding-inference" placeholder="e.g. a route suggests a routine, but does not prove where I live."></textarea>
+<label class="field" for="finding-match">Identity and recency</label><select id="finding-match"><option>Not yet confirmed</option><option>Confirmed mine and current</option><option>Confirmed mine but outdated</option><option>Uncertain match</option><option>Someone else</option></select>
+<p class="tip">Public, followers-only and link access are different audiences. A signed-out window can help check visibility; it does not make you anonymous.</p>
+</div>
+<div class="audit-box">
+<h3>03 / Change something</h3>
+<label class="field" for="action">One change or removal request</label><textarea id="action" placeholder="e.g. restrict an old post, review route visibility, revoke an old sharing link."></textarea>
+<label class="field" for="action-status">Action status</label><select id="action-status"><option>Not started</option><option>Completed and audience checked</option><option>Completed — verification pending</option><option>Request drafted — not sent</option><option>Requested — response pending</option><option>Needs investigation</option></select>
+<p class="tip">Keep information you intentionally want visible. If someone else publishes it, ask for a targeted change. Google search removal does not delete the source page.</p>
+</div>
+<div class="audit-box">
+<h3>04 / Keep going</h3>
+<label class="field" for="follow-one">Follow-up one and target date</label><input id="follow-one" placeholder="Action + date">
+<label class="field" for="follow-two">Follow-up two and target date</label><input id="follow-two" placeholder="Action + date">
+<details><summary>Private exit check</summary><p>Can I name three source types I checked? Can I explain a fact and an inference? Have I completed a change or marked it pending? Have I dated two next steps?</p></details>
+<p class="tip">Explain one method to a partner using fictional details if preferred. Share a category or lesson, never a screenshot or another person’s information.</p>
+</div>
+</div>
+<div class="audit-actions"><button class="primary" id="export">Download my private notes ↓</button><button class="secondary" id="clear">Clear my notes</button></div>
+<p class="tip">Nothing is sent by this page. Downloading creates a text file on your device. External search and resource sites have their own privacy practices.</p>
+</section>
+</div>
+<footer class="footer"><span>✦ LUDA HEX / security is a skill you can practise</span><span>Online footprint workshop · 60 minutes · self-audit</span></footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const phases=[
+{title:'Predict what is visible',time:'00–04 min',meta:'01 / opening poll / 4 minutes',intro:'Start with a guess. Which ordinary clue might tell someone the most?',body:'<div class="prompt">A work bio, a holiday photo, a product review or a running route?</div><ul><li>Vote with a show of hands, or choose privately.</li><li>Take 30 seconds with a neighbour to explain your choice.</li><li>Ask: does the audience, timing or combination of clues change your answer?</li></ul><p class="muted">There is no universal ranking. The session is about checking what your information reveals and making an informed choice.</p>'},
+{title:'Four clues, one person',time:'04–12 min',meta:'02 / fictional clue puzzle / 8 minutes',intro:'Work in a group of four. Each person reads one clue, then you combine them. All people, places and organisations here are fictional.',body:'<div class="clues"><div class="clue"><span class="tag">A / WORK BIO</span><p>Robin Veld is a finance operations manager at Northstar Foods and is speaking at a supplier event on Thursday.</p></div><div class="clue"><span class="tag">B / FITNESS POST</span><p>Robin’s public feed shows three Tuesday runs starting at the same street corner at about 07:00.</p></div><div class="clue"><span class="tag">C / MARKETPLACE</span><p>Account robinveld lists a high-end bicycle. A building entrance is in the photo. “Collection in Rivierwijk after 18:00.”</p></div><div class="clue"><span class="tag">D / TAGGED PHOTO</span><p>A public post tags Robin: “Me and my brother Robin are off to Portugal next week!” A suitcase is visible.</p></div></div><p class="small muted">1 min read · 3 min combine · 2 min choose a change · 2 min debrief</p><div class="prompt">What can you observe? What might you infer? What could be wrong?</div><p>Choose one exposure to reduce. Discuss how a familiar detail could make an unwanted message seem credible.</p><details><summary>Reveal the debrief</summary><p>The bio states a role, not payment authority. Repeated runs suggest a routine, not a home address or guaranteed future schedule. The advert links an account to a bicycle, not confirmed ownership. The photo claims a relationship and trip, not an empty house or exact travel dates. Matching handles alone do not prove identity.</p></details>'},
+{title:'Find your starting points',time:'12–24 min',meta:'03 / self-audit round one / 12 minutes',intro:'Search for your own name and identifiers. Open original results and check whether they really belong to you.',body:'<p class="small muted">2 min demonstration · 7 min private searching · 3 min optional pair discussion</p><div class="queries"><code>"First Last"</code><code>"First Last" city</code><code>"your-username"</code><code>"First Last" filetype:pdf</code></div><ul><li>Try a name variation, old surname or employer.</li><li>Search your own distinctive username or email in quotes. Phone searches are optional.</li><li>Inspect image results and one older document, bio, programme or club list.</li><li>Confirm identity, audience and recency. Mark uncertain matches as uncertain.</li></ul><div class="prompt">Would I expect this to be visible to a stranger?</div><p class="muted">A private browser window helps check a signed-out view. It does not make you anonymous or guarantee complete results.</p><button class="secondary" data-view="audit">Record a finding ↗</button>'},
+{title:'See what others see',time:'24–36 min',meta:'04 / self-audit round two / 12 minutes',intro:'Choose your main social platform and one old post, tagged photo or review profile.',body:'<p class="small muted">2 min demonstration · 7 min private checking · 3 min optional reflection</p><ul><li>Compare your intended audience with a public or signed-out view where available.</li><li>Check bios, contact information, visible connections, comments and tags.</li><li>Inspect one photo for screens, badges, delivery labels, reflections, house numbers or identifiable landmarks.</li><li>Look for dates and repeated places. Label suggested routines or relationships as inferences.</li></ul><div class="prompt">What does the background reveal that the caption does not?</div><p class="muted">Do not upload personal photos to third-party analysis tools. Share a category or method in discussion; keep exact details private.</p><button class="secondary" data-view="audit">Record a finding ↗</button>'},
+{title:'Choose a less obvious source',time:'36–46 min',meta:'05 / self-audit round three / 10 minutes',intro:'Follow one thread beyond your main social profile. Pick a service you actually use.',body:'<p class="small muted">1 min choose · 7 min investigate · 2 min reflect</p><ul><li>Fitness: activity audiences, repeated routes and map visibility.</li><li>Reviews or marketplaces: places, pickup details and photo backgrounds.</li><li>Work and hobbies: staff bios, conference schedules, forum profiles or public contributions.</li><li>Sharing: your own calendar, files and album permissions.</li><li>Breaches: your own email at Have I Been Pwned; inspect dates and data categories.</li></ul><p class="muted">For the breach check, never enter a password. A historic match does not prove current account access, and no match does not rule out exposure.</p><div class="actions"><button class="primary" data-view="sources">Choose from the source directory ↗</button><button class="secondary" data-view="audit">My checklist</button></div>'},
+{title:'Make one practical change',time:'46–54 min',meta:'06 / action time / 8 minutes',intro:'Choose based on the audience and potential impact. Keep the information you deliberately want public.',body:'<p class="small muted">2 min prioritise · 5 min act · 1 min record</p><ul><li>Restrict an older post or remove unnecessary contact detail.</li><li>Review an activity’s privacy and map visibility separately.</li><li>Revoke an obsolete file or album sharing link.</li><li>Draft a targeted request if another publisher controls the information.</li><li>Record the change, check the intended audience and choose two dated follow-ups.</li></ul><div class="prompt">Which small change reduces the most unnecessary exposure?</div><p class="muted">If you need permission from a work-file owner or a response from a publisher, mark the action pending.</p><button class="primary" data-view="audit">Write my action plan ↗</button>'},
+{title:'Teach back and reflect',time:'54–60 min',meta:'07 / reflection / 6 minutes',intro:'Leave with a method you can repeat and a next step you can actually take.',body:'<ul><li><strong>2 minutes:</strong> explain one source, one audience check and one action to a partner. Fictional details are welcome.</li><li><strong>2 minutes:</strong> share two or three category-only observations with the group.</li><li><strong>2 minutes:</strong> privately check your progress: three sources, fact versus inference, one action completed or pending, two dated follow-ups.</li></ul><div class="prompt">“Next time I share something, I will check…”</div><p class="muted">Your worksheet stays yours. Continue with the directory after the session; this hour is a first pass.</p><button class="primary" data-view="audit">Finish my self-audit ↗</button>'}
+];
+const sources=[
+{name:'Search engines & images',icon:'⌕',tag:'identity',keys:'name email phone identity contact photos old documents',examples:'Google, Bing, image results and public PDFs.',check:'Try name variants, your own handle or email, and an older result. Open the source to confirm identity and recency.',action:'Change the source if possible. Google offers removal requests for eligible personal information; search removal does not delete the source.',link:'https://support.google.com/websearch/answer/12719076?hl=en',label:'Google removal help'},
+{name:'Social profiles & tags',icon:'@',tag:'people',keys:'family friends relationships tags birthday contact work photos',examples:'LinkedIn, Instagram, Facebook, TikTok and X.',check:'Inspect bio, public posts, older audiences, tags, comments and visible connections. Compare with a public view where available.',action:'Review tag settings, limit relevant audiences and remove unnecessary contact information. Do not investigate relatives’ accounts.'},
+{name:'Fitness & location',icon:'↝',tag:'location',keys:'strava running race schedule routine location home travel',examples:'Strava, public race results and sports club sites.',check:'Check activity times, repeated routes, map endpoints, leaderboards and membership details.',action:'Review activity privacy and map visibility separately. Review existing activities as well as defaults.',link:'https://support.strava.com/en-us/articles/15402012-how-do-i-edit-my-map-visibility-on-strava',label:'Strava map visibility'},
+{name:'Reviews & contributions',icon:'☆',tag:'location',keys:'google maps review restaurant places photos location habits',examples:'Google Maps and other review profiles.',check:'Inspect display name, profile photo, reviews, uploaded images and the places connected to the profile.',action:'Edit revealing contributions and review their audience. Check whether different posts combine into a pattern.'},
+{name:'Marketplaces & hobbies',icon:'◇',tag:'identity',keys:'possessions own bicycle equipment marktplaats vinted etsy gaming username',examples:'Marktplaats, Vinted, Etsy, forums and gaming accounts.',check:'Check seller bio, old adverts, pickup areas, reused handles, avatars and objects or landmarks in photographs.',action:'Reduce pickup detail until needed and retire old adverts. Consider separate handles where cross-linking is unwanted.'},
+{name:'Work & public documents',icon:'</>',tag:'work',keys:'employer work schedule bio cv conference event presentation pdf',examples:'Employer pages, event programmes and association sites.',check:'Look for staff bios, speaker dates, CVs, presentations, newsletters and public contact details.',action:'Ask the publisher for a targeted change. Keep the professional visibility you deliberately want.'},
+{name:'Calendars & booking pages',icon:'▦',tag:'location',keys:'calendar meeting schedule availability time location booking',examples:'Your own shared calendars and appointment pages.',check:'Inspect who can see availability versus full event titles, locations and descriptions. Check permissions inside your own account.',action:'Reduce unnecessary detail and sharing recipients. Do not publish a test calendar.'},
+{name:'Cloud files & photo albums',icon:'↗',tag:'sharing',keys:'drive dropbox onedrive link album photos family files sharing',examples:'Drive, OneDrive, Dropbox and shared album services.',check:'Inspect your own links, recipients and anyone-with-the-link access. A link can be forwarded without being indexed.',action:'Revoke obsolete links and restrict unnecessary access. Involve the owner before changing shared work files.'},
+{name:'Technical profiles',icon:'>_',tag:'work',keys:'github code email profile forum contributions projects username',examples:'GitHub, technical forums and personal websites.',check:'Review profile email, contributions, issue comments, public files and links between identities.',action:'Review profile and future contribution settings. Deleting a page may not remove forks or historic copies.'},
+{name:'Community & other publishers',icon:'&',tag:'people',keys:'family school club charity fundraising newspaper friends relationship',examples:'Clubs, charities, school newsletters and local news.',check:'Inspect results about yourself: tagged posts, event lists, fundraising pages and association records.',action:'Request a targeted change and discuss future tagging preferences. Focus the audit on yourself.'},
+{name:'Business & historic records',icon:'≡',tag:'work',keys:'kvk company business domain archive history old records',examples:'Your business details, personal domains and archived pages.',check:'Check your own published records where relevant. Access and disclosure vary by record and jurisdiction; this is optional homework.',action:'Use official correction or privacy routes. Avoid buying broad people-search dossiers.'},
+{name:'Known breach records',icon:'!',tag:'breach',keys:'password email breach leak have i been pwned hibp account',examples:'Have I Been Pwned, using your own email.',check:'Read breach dates and data categories. The service covers known records, not every exposure. No match is not a guarantee.',action:'Review affected accounts, change exposed or reused passwords, and enable MFA or passkeys where supported. Never enter a password for this email exercise.',link:'https://haveibeenpwned.com',label:'Check my email exposure'}
+];
+let activePhase=0;
+function showView(id,focus=false){
+document.querySelectorAll('.panel').forEach(p=>p.hidden=p.id!==id);
+document.querySelectorAll('.tab').forEach(t=>{const on=t.dataset.view===id;t.setAttribute('aria-selected',String(on));t.tabIndex=on?0:-1});
+if(focus)document.getElementById('tab-'+id).focus();
+}
+function renderPhase(){
+document.getElementById('phases').innerHTML=phases.map((p,i)=>`<button class="phase-button" data-phase="${i}" ${i===activePhase?'aria-current="step"':''}><span class="number">${String(i+1).padStart(2,'0')}</span><span><strong>${p.title}</strong><small>${p.time}</small></span></button>`).join('');
+const p=phases[activePhase];
+document.getElementById('exercise').innerHTML=`<div class="meta">${p.meta}</div><h2>${p.title}</h2><p class="intro">${p.intro}</p>${p.body}<div class="foot-nav"><button class="secondary" data-step="-1" ${activePhase===0?'disabled':''}>← Previous</button><button class="secondary" data-step="1" ${activePhase===6?'disabled':''}>Next phase →</button></div>`;
+}
+document.addEventListener('click',e=>{
+const b=e.target.closest('button');if(!b)return;
+if(b.dataset.view)showView(b.dataset.view,true);
+if(b.dataset.phase!==undefined){activePhase=Number(b.dataset.phase);renderPhase()}
+if(b.dataset.step){activePhase=Math.max(0,Math.min(6,activePhase+Number(b.dataset.step)));renderPhase()}
+});
+document.querySelector('.tabs').addEventListener('keydown',e=>{
+const ts=[...document.querySelectorAll('.tab')];let i=ts.indexOf(document.activeElement);if(i<0)return;
+if(e.key==='ArrowRight')i=(i+1)%ts.length;else if(e.key==='ArrowLeft')i=(i+ts.length-1)%ts.length;else if(e.key==='Home')i=0;else if(e.key==='End')i=ts.length-1;else return;
+e.preventDefault();showView(ts[i].dataset.view,true);
+});
+document.getElementById('begin').onclick=()=>{
+showView('workshop',true);
+document.querySelector('.tabs').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+};
+let remaining=3600000,running=false,deadline=0;
+function updateTimer(){
+const seconds=Math.ceil(remaining/1000),mins=Math.floor(seconds/60);
+document.getElementById('clock').textContent=String(mins).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+const elapsed=(3600000-remaining)/60000;
+document.getElementById('timer-progress').style.width=(elapsed/60*100)+'%';
+document.querySelector('[role=progressbar]').setAttribute('aria-valuenow',elapsed.toFixed(1));
+document.getElementById('timer-toggle').textContent=running?'Pause':remaining===0?'Finished':'Start';
+document.getElementById('timer-toggle').disabled=remaining===0;
+document.getElementById('timer-status').textContent=running?'Running':remaining===0?'Complete':remaining===3600000?'Ready':'Paused';
+}
+document.getElementById('timer-toggle').onclick=()=>{
+if(running)remaining=Math.max(0,deadline-Date.now());else deadline=Date.now()+remaining;
+running=!running;updateTimer();
+};
+document.getElementById('timer-reset').onclick=()=>{running=false;remaining=3600000;updateTimer()};
+setInterval(()=>{
+if(running){remaining=Math.max(0,deadline-Date.now());if(!remaining){running=false;notify('Session finished. Complete your private exit check.')}updateTimer()}
+},250);
+function renderSources(){
+const q=document.getElementById('source-search').value.toLowerCase().trim(),filter=document.getElementById('source-filter').value;
+const shown=sources.filter(s=>(filter==='all'||s.tag===filter)&&(s.name+' '+s.keys+' '+s.examples).toLowerCase().includes(q));
+document.getElementById('source-grid').innerHTML=shown.map(s=>`<article class="source"><div class="source-header"><span class="source-icon" aria-hidden="true">${s.icon.replace(/</g,'&lt;')}</span><span class="tag">${s.tag}</span></div><h3>${s.name}</h3><p>${s.examples}</p><details><summary>What to check</summary><p><strong>Look for:</strong> ${s.check}</p><p><strong>Next step:</strong> ${s.action}</p>${s.link?`<a href="${s.link}" target="_blank" rel="noopener noreferrer">${s.label} ↗</a>`:''}</details></article>`).join('');
+document.getElementById('source-count').textContent=shown.length+' source types';
+document.getElementById('no-sources').hidden=shown.length>0;
+}
+document.getElementById('source-search').oninput=renderSources;
+document.getElementById('source-filter').onchange=renderSources;
+document.getElementById('audit-checks').innerHTML=sources.map((s,i)=>`<div class="check-row"><label for="check-${i}">${s.name}</label><select id="check-${i}" class="check-select"><option value="unchecked">Unchecked</option><option value="checked">Checked</option><option value="na">N/A</option></select></div>`).join('');
+document.getElementById('audit-checks').onchange=()=>{
+document.getElementById('checked-count').textContent=document.querySelectorAll('.check-select option[value=checked]:checked').length;
+};
+const fieldNames={'finding-source':'Source and category','finding-audience':'Audience','finding-fact':'Direct observation','finding-inference':'Inference and uncertainty','finding-match':'Identity and recency','action':'Change or request','action-status':'Action status','follow-one':'Follow-up one and date','follow-two':'Follow-up two and date'};
+let toastTimeout;
+function notify(t){
+document.getElementById('toast').textContent=t;clearTimeout(toastTimeout);
+toastTimeout=setTimeout(()=>document.getElementById('toast').textContent='',4500);
+}
+document.getElementById('export').onclick=()=>{
+const lines=['PRIVATE ONLINE FOOTPRINT SELF-AUDIT','Keep this file private.','','SOURCE CHECKS',...sources.map((s,i)=>s.name+': '+document.getElementById('check-'+i).selectedOptions[0].text),'',...Object.entries(fieldNames).map(([id,label])=>label+': '+document.getElementById(id).value)];
+const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');
+a.href=url;a.download='my-private-footprint-audit.txt';document.body.appendChild(a);a.click();a.remove();
+setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Your notes were downloaded to your device.');
+};
+document.getElementById('clear').onclick=()=>{
+if(!confirm('Clear your private notes and checklist? Download them first if you want to keep them.'))return;
+document.querySelectorAll('#audit input,#audit textarea').forEach(e=>e.value='');
+document.querySelectorAll('#audit select').forEach(e=>e.selectedIndex=0);
+document.getElementById('checked-count').textContent='0';notify('Notes and checklist cleared.');
+};
+document.getElementById('print').onclick=()=>window.print();
+renderPhase();renderSources();updateTimer();
+</script>
+</body>
+</html>
