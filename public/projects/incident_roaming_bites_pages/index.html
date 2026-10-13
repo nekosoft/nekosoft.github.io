@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Roaming Bites incident-response tabletop — Campaign Pages abuse scenario for mixed teams">
+  <title>Roaming Bites — The Page That Was Ours</title>
+  <link rel="stylesheet" href="../incident_roaming_bites/styles.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#briefing" data-route="briefing" aria-label="Roaming Bites incident briefing">
+      <span class="brand-mark" aria-hidden="true">▰</span>
+      <span><strong>Roaming Bites</strong><small>Incident console</small></span>
+    </a>
+    <div class="case-meta">
+      <span class="status-dot"></span>
+      <span>SEV-2 · RB-2027-0507</span>
+      <span class="utc">7 May 2027 · UTC</span>
+    </div>
+    <div class="timer" aria-live="polite">
+      <button id="replayStory" class="icon-button replay-story facilitator-only hidden" type="button" aria-label="Replay the current phase story">↺ Story</button>
+      <span id="timerDisplay">10:00</span>
+      <button id="timerToggle" class="icon-button" type="button">Start</button>
+      <button id="timerReset" class="icon-button muted" type="button">Reset</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" aria-label="Scenario navigation">
+      <div class="case-label">The page that was ours</div>
+      <nav>
+        <button class="nav-item active" data-route="briefing"><span>00</span> Briefing</button>
+        <button class="nav-item" data-route="seats"><span>★</span> Assign seats</button>
+        <button id="ledgerNav" class="nav-item hidden" data-route="ledger"><span>◫</span> Consequence ledger</button>
+        <button class="nav-item" data-route="phase1"><span>01</span> The call</button>
+        <button class="nav-item" data-route="phase2"><span>02</span> The page</button>
+        <button class="nav-item" data-route="phase3"><span>03</span> The change</button>
+        <button class="nav-item" data-route="phase4"><span>04</span> The alerts</button>
+        <button class="nav-item" data-route="phase5"><span>05</span> The scope</button>
+        <button class="nav-item" data-route="phase6"><span>06</span> The split</button>
+        <button id="summaryNav" class="nav-item hidden" data-route="summary"><span>✓</span> Incident record</button>
+        <button class="nav-item facilitator-only" data-route="debrief"><span>✓</span> Facilitator debrief</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="facilitatorToggle" class="text-button" type="button">Facilitator mode</button>
+        <button id="resetScenario" class="text-button danger" type="button">Reset decisions</button>
+      </div>
+    </aside>
+
+    <main id="mainContent">
+      <section id="incidentBoard" class="incident-board hidden" aria-label="Team incident board">
+        <div id="teamChips" class="team-chips" aria-label="Assigned seats"></div>
+        <div class="board-head">
+          <div>
+            <p class="eyebrow">Live incident board</p>
+            <h2>Your operating picture</h2>
+          </div>
+          <div class="board-head-right">
+            <div class="service-state"><span>Campaign Pages</span><strong id="serviceStatus">Live</strong></div>
+            <button id="boardToggle" class="board-toggle" type="button" aria-expanded="false">Show board</button>
+          </div>
+        </div>
+        <p id="boardSummary" class="board-summary"></p>
+        <div class="board-grid">
+          <article class="board-lane people"><header><span aria-hidden="true">●</span><b>People</b></header><p class="lane-help">Merchants affected, responders, support and communications.</p><div id="boardPeople" class="board-markers"><em>No affected people revealed</em></div></article>
+          <article class="board-lane data"><header><span aria-hidden="true">◆</span><b>Data</b></header><p class="lane-help">Information accessed, moved, exposed, retained or at risk.</p><div id="boardData" class="board-markers"><em>No data exposure revealed</em></div></article>
+          <article class="board-lane evidence"><header><span aria-hidden="true">⌕</span><b>Evidence</b></header><p class="lane-help">Records supporting the story, and what stays uncertain.</p><div id="boardEvidence" class="board-markers"><em>No evidence recorded</em></div></article>
+          <article class="board-lane authority"><header><span aria-hidden="true">⚿</span><b>Authority</b></header><p class="lane-help">Sessions, grants, approvals and decisions that allowed actions.</p><div id="boardAuthority" class="board-markers"><em>No authority path revealed</em></div></article>
+        </div>
+        <p class="board-note">Markers are an evolving operating picture—not a score. Facts appear as phases open; seat contributions and unfilled-seat consequences appear after decisions and remain for the debrief.</p>
+      </section>
+
+      <section id="briefing" class="route active-route">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">Incident-response tabletop · mixed teams</p>
+            <h1>A merchant has lost money to a page on your own domain.</h1>
+            <p class="lede">You are responding for Roaming Bites, an AI-assisted platform used by food trucks and restaurants to create campaigns. Six weeks ago it started publishing those campaigns as real public pages on its own domain.</p>
+          </div>
+        </div>
+
+        <div class="brief-grid">
+          <article class="panel">
+            <p class="eyebrow">Your operating rule</p>
+            <h2>Separate signal from story</h2>
+            <div class="triad">
+              <div><strong>Known</strong><span>Supported directly by evidence</span></div>
+              <div><strong>Assumed</strong><span>Plausible, but not established</span></div>
+              <div><strong>Missing</strong><span>Evidence you would request next</span></div>
+            </div>
+          </article>
+          <article class="panel role-rules">
+            <p class="eyebrow">Eight seats · you fill six</p>
+            <h2>This is not a security-team incident</h2>
+            <p>Every seat holds a lens the others do not. All evidence is open to everyone — a lens reveals what an option <em>costs</em>, never what the evidence <em>says</em>. Two seats always go unfilled, and their absence has consequences you will feel later, not a note in the debrief.</p>
+            <div class="mini-rule"><span>6</span><b>of eight seats</b><small>The facilitator decides which two go unfilled</small></div>
+          </article>
+        </div>
+
+        <article class="panel how-to-read">
+          <p class="eyebrow">Before you open any evidence</p>
+          <h2>Every record answers one of four questions</h2>
+          <div class="read-grid">
+            <div><strong>Identity</strong><span>Who or what was authenticated?</span></div>
+            <div><strong>Authority</strong><span>What was that identity allowed to do?</span></div>
+            <div><strong>Activity</strong><span>What action was observed, by which source?</span></div>
+            <div><strong>Impact</strong><span>What data, system or person was affected?</span></div>
+          </div>
+          <p class="note">No single record is the whole truth. A support call establishes what a merchant did, not what the system did. An access log shows requests, not successful captures. Keep them apart.</p>
+        </article>
+
+        <article class="panel architecture">
+          <p class="eyebrow">What the company shipped six weeks ago</p>
+          <h2>Campaign Pages — simplified path</h2>
+          <div class="flow" aria-label="Merchant prompt flows through the Campaign Assistant and safety filter to a public page on the Roaming Bites domain">
+            <div class="flow-node"><b>Merchant</b><span>Prompt</span></div><i>→</i>
+            <div class="flow-node"><b>Campaign Assistant</b><span>Generates page</span></div><i>→</i>
+            <div class="flow-node"><b>Safety filter</b><span>Abuse rules</span></div><i>→</i>
+            <div class="flow-node accent"><b>Publish</b><span>S3 · CloudFront</span></div><i>→</i>
+            <div class="flow-node"><b>Public page</b><span>*.roamingbites.example</span></div>
+          </div>
+          <p class="note">Before the launch, campaign assets were previews the merchant could download. They are now public pages on the company's own domain, served over the company's own certificate.</p>
+        </article>
+
+        <button class="primary next-route" data-route="seats" type="button">Assign the seats →</button>
+      </section>
+
+      <section id="seats" class="route">
+        <header class="phase-header team-page-header">
+          <div>
+            <p class="eyebrow">Setup</p>
+            <h1>Who is in the room?</h1>
+            <p>Eight seats exist and you can fill six. Choose deliberately: the two you leave empty are real organisational gaps, and the scenario behaves accordingly.</p>
+          </div>
+        </header>
+
+        <article class="panel crew-builder">
+          <div class="crew-heading">
+            <div>
+              <p class="eyebrow">Eight seats · six of them</p>
+              <h2>Choose the six people in the room</h2>
+            </div>
+            <div class="crew-counter"><strong id="seatCount">0</strong><span>of 6</span></div>
+          </div>
+          <div id="seatPicker" class="role-picker seat-picker"></div>
+          <div class="crew-actions">
+            <p id="seatStatus">Choose 6 more. Two of the eight will stay empty whatever you pick.</p>
+            <button id="lockSeats" class="primary" type="button" disabled>Lock the room</button>
+          </div>
+        </article>
+
+        <div class="setup-nav">
+          <button class="text-button" data-route="briefing" type="button">← Back to briefing</button>
+          <button id="openPhase1" class="primary" data-route="phase1" type="button" disabled>Lock the room to begin</button>
+        </div>
+      </section>
+
+      <section id="ledger" class="route">
+        <header class="phase-header">
+          <div>
+            <p class="eyebrow">Running total</p>
+            <h1>Consequence ledger</h1>
+            <p>What the incident has cost so far. Decisions move these figures. So do the seats you left empty.</p>
+          </div>
+        </header>
+        <div id="ledgerGrid" class="ledger-grid"></div>
+        <article class="panel">
+          <p class="eyebrow">How to read this</p>
+          <h2>This is a record, not a score</h2>
+          <p class="note">These figures exist so the debrief can state plainly what a missing owner cost in hours and in merchants. A team with fewer seats filled is not a worse team — it is a team that discovered, in a safe room, what their organisation would actually have done.</p>
+          <div id="ledgerCauses" class="ledger-causes"></div>
+        </article>
+      </section>
+
+      <section id="phase1" class="route">
+                <div class="evidence-tabs" role="tablist" aria-label="Phase 1 evidence">
+          <button class="evidence-tab active" data-target="p1-call">Support call</button>
+          <button class="evidence-tab" data-target="p1-tickets">Ticket queue</button>
+          <button class="evidence-tab" data-target="p1-page">The page</button>
+          <button class="evidence-tab" data-target="p1-auth">Authentication</button>
+          <button class="evidence-tab" data-target="p1-siem">SIEM correlation</button>
+        </div>
+
+        <div id="p1-call" class="evidence-view active">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Merchant Support</span><span>Call RB-C-88214 · transcript · 09:12 UTC · 4m 51s</span></div>
+            <div class="transcript">
+              <div class="turn agent"><b>Support</b><p>Roaming Bites merchant support, this is Femke.</p></div>
+              <div class="turn caller"><b>Ilse Brandt · Saffron &amp; Smoke</b><p>I think I've done something stupid. Someone called me yesterday afternoon, said he was from your payments team. He said my payout details needed verifying before the festival season rush or I wouldn't get paid.</p></div>
+              <div class="turn agent"><b>Support</b><p>Did he ask you for anything over the phone?</p></div>
+              <div class="turn caller"><b>Ilse Brandt</b><p>No — that's the thing. He said don't give details on a call, that's how scams work. He told me to go to my campaign page and there'd be a verification form. And there <em>was</em>. It was your site. It had your logo, it had the padlock, the address had roamingbites in it.</p></div>
+              <div class="turn agent"><b>Support</b><p>Can you read me the address you used?</p></div>
+              <div class="turn caller"><b>Ilse Brandt</b><p>bara-bara-bakehouse dot roamingbites dot example, slash payouts-verify. I remember thinking that's an odd name, but he said it was the shared merchant portal.</p></div>
+              <div class="turn agent"><b>Support</b><p>And you entered your payout details there.</p></div>
+              <div class="turn caller"><b>Ilse Brandt</b><p>Bank details, sort code, and it asked me to confirm with my Roaming Bites password. This morning there's a payment gone out that isn't mine. I checked with my bank and they said it was authorised.</p></div>
+              <div class="turn caller"><b>Ilse Brandt</b><p>I've been with you three years. I tell people to use you. How is there a page like that on your own website?</p></div>
+            </div>
+            <div class="system-foot">Transcript produced by the support platform's call recording. Speaker labels are assigned from the call leg. Caller identity is as held on the account and was not verified during the call.</div>
+          </div>
+        </div>
+
+        <div id="p1-tickets" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Merchant Support · queue</span><span>Filter: last 72 hours · keyword "payout"</span></div>
+            <table class="log-table">
+              <thead><tr><th>Opened</th><th>Merchant</th><th>Channel</th><th>Summary</th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>07 May 09:12</td><td>Saffron &amp; Smoke</td><td>Phone</td><td>Called by "payments team", entered bank details on a campaign page, unauthorised payment taken</td><td><span class="pill red">OPEN</span></td></tr>
+                <tr><td>06 May 16:40</td><td>Little Comet Kitchen</td><td>Email</td><td>"Is this page yours? Someone rang me about verifying payouts"</td><td><span class="pill slate">CLOSED · advised scam</span></td></tr>
+                <tr><td>06 May 11:05</td><td>Ember &amp; Olive</td><td>Chat</td><td>Asked whether Roaming Bites ever phones merchants about payouts</td><td><span class="pill slate">CLOSED · answered</span></td></tr>
+                <tr><td>05 May 14:22</td><td>Bara Bara Bakehouse</td><td>Email</td><td>"I can't sign in, I think my password changed"</td><td><span class="pill amber">OPEN · awaiting merchant</span></td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Queue filtered on the keyword shown in the header, newest first. <b>State</b> is the ticket's status at export, with the closing note where one was recorded.</div>
+          </div>
+        </div>
+
+        <div id="p1-page" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Preserved artifact</span><span>bara-bara-bakehouse.roamingbites.example/payouts-verify · captured 09:31 UTC</span></div>
+            <div class="page-capture">
+              <div class="browser-chrome"><span class="lock" aria-hidden="true">🔒</span><span class="url">https://bara-bara-bakehouse.roamingbites.example/payouts-verify</span></div>
+              <div class="fake-page" aria-label="Preserved copy of the fraudulent page, inert">
+                <div class="fake-brand"><span aria-hidden="true">▰</span> Roaming Bites</div>
+                <h3>Verify your payout details</h3>
+                <p>Festival season payouts begin 24 May. Confirm your account to avoid a hold on your earnings.</p>
+                <label>Account holder <input type="text" disabled placeholder="Name on account"></label>
+                <label>Sort code <input type="text" disabled placeholder="00-00-00"></label>
+                <label>Account number <input type="text" disabled placeholder="00000000"></label>
+                <label>Roaming Bites password <input type="text" disabled placeholder="Confirm it's you"></label>
+                <button type="button" disabled>Confirm payout details</button>
+                <small>Roaming Bites · Merchant Payments</small>
+              </div>
+            </div>
+            <p class="evidence-caution">This is an inert preserved copy. The fields are disabled and submit nowhere. The address bar and padlock are reproduced from the capture.</p>
+            <div class="system-foot">Captured by the support team from the live address at the time shown. A capture records what was served to one visitor at one moment. It does not record when the page was created or who else received the address.</div>
+          </div>
+        </div>
+
+        <div id="p1-auth" class="evidence-view">
+          <div class="system-window identity-window">
+            <div class="system-bar"><span class="system-title">Identity service</span><span>Account: Bara Bara Bakehouse · merchant_3318</span></div>
+            <dl class="detail-grid">
+              <dt>Last successful sign-in</dt><dd>05 May 09:41 UTC · <span class="pill amber">FIRST-SEEN CONTEXT</span></dd>
+              <dt>Source IP</dt><dd>198.51.100.77 · first seen on this account</dd>
+              <dt>Country</dt><dd>Not previously observed for this account (90-day history: 1 country)</dd>
+              <dt>Device</dt><dd>Unrecognised · no prior fingerprint match</dd>
+              <dt>Authentication</dt><dd>Password only · <span class="pill red">MFA NOT ENROLLED</span></dd>
+              <dt>Password changed</dt><dd>05 May 09:44 UTC · three minutes after sign-in, from the same session</dd>
+              <dt>Owner sign-ins since</dt><dd>0 · account owner has not signed in since 04 May</dd>
+              <dt>Session still active</dt><dd><span class="pill red">YES</span> · ses_d41f8, no expiry reached</dd>
+            </dl>
+            <div class="system-foot">Sign-in context is derived from the connecting address and a device fingerprint. &ldquo;First-seen&rdquo; compares against the trailing 90 days for this account only. The identity service records authentication events, not what a session did afterwards.</div>
+          </div>
+        </div>
+
+        <div id="p1-siem" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>Search · correlation_id="corr_4a71"</span><span class="live">● Live</span></div>
+            <div class="query">merchant_id=3318 OR page_host="bara-bara-bakehouse.roamingbites.example" | sort _time asc</div>
+            <table class="log-table">
+              <thead><tr><th>Time</th><th>Severity</th><th>Source</th><th>Entity</th><th>Summary</th></tr></thead>
+              <tbody>
+                <tr><td>05 May 09:41</td><td><span class="pill amber">LOW</span></td><td>Identity</td><td>merchant_3318</td><td>Sign-in from first-seen IP, device and country · no MFA on account</td></tr>
+                <tr><td>05 May 09:44</td><td><span class="pill slate">INFO</span></td><td>Identity</td><td>merchant_3318</td><td>Password changed from active session ses_d41f8</td></tr>
+                <tr><td>05 May 09:52</td><td><span class="pill amber">LOW</span></td><td>Campaign Pages</td><td>page_77c2</td><td>Page published: /payouts-verify · safety filter verdict ALLOW</td></tr>
+                <tr><td>05 May 10:30</td><td><span class="pill slate">INFO</span></td><td>CloudFront</td><td>page_77c2</td><td>First external requests observed · 4 unique clients</td></tr>
+                <tr><td>06 May 16:40</td><td><span class="pill amber">LOW</span></td><td>Support</td><td>merchant_2904</td><td>Merchant query referencing an unrecognised payouts page</td></tr>
+                <tr><td>07 May 09:12</td><td><span class="pill red">HIGH</span></td><td>Support</td><td>merchant_5107</td><td>Reported financial loss following a campaign-page form submission</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Events are normalised from their source systems onto one timeline; <b>Source</b> names the system each came from. Severity is assigned by the originating rule at the time of the event and is not reassessed later.</div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="1">
+          <p class="eyebrow">Commit to an action</p>
+          <h2>It is 09:30. What do you do in the next hour?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p1" value="Take the page down and suspend the Bara Bara Bakehouse session"><span><b>Take the page down now</b><small><strong>What happens:</strong> The page stops serving within minutes and the compromised session is killed. <strong>Trade-off:</strong> You lose the live artifact, the attacker learns they are seen, and you still don't know how many other pages exist.</small></span></label>
+            <label><input type="radio" name="p1" value="Search for other pages matching the same pattern before acting"><span><b>Find the others first</b><small><strong>What happens:</strong> You query every published page for credential-collection patterns before touching anything. <strong>Trade-off:</strong> The page keeps collecting while you look, and merchants are still being called.</small></span></label>
+            <label><input type="radio" name="p1" value="Warn all merchants that Roaming Bites will never phone about payouts"><span><b>Warn every merchant</b><small><strong>What happens:</strong> A broadcast goes out today telling merchants the company never calls about payouts. <strong>Trade-off:</strong> You are making a public statement on one confirmed report, before you know the scale.</small></span></label>
+            <label><input type="radio" name="p1" value="Treat it as an isolated account takeover and handle it in support"><span><b>Handle it as a support case</b><small><strong>What happens:</strong> Reset the affected accounts, refund the merchant, close the tickets. <strong>Trade-off:</strong> If the pattern is wider than three tickets, you have just closed your only early warning.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed, and the evidence you would request next<textarea data-notes="p1" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase2" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase2" class="route">
+                <div class="evidence-tabs" role="tablist" aria-label="Phase 2 evidence">
+          <button class="evidence-tab active" data-target="p2-prompt">The prompt</button>
+          <button class="evidence-tab" data-target="p2-moderation">Moderation log</button>
+          <button class="evidence-tab" data-target="p2-policy">Guardrail policy</button>
+          <button class="evidence-tab" data-target="p2-trace">Agent trace</button>
+          <button class="evidence-tab" data-target="p2-cloudtrail">Publish path</button>
+        </div>
+
+        <div id="p2-prompt" class="evidence-view active">
+          <div class="chat-window">
+            <div class="chat-header"><span>Campaign Assistant</span><small>Bara Bara Bakehouse · session ses_d41f8 · 05 May</small></div>
+            <div class="message user"><time>09:47</time><p>I need a page for merchants to confirm their payout details before festival season. Style it like the Roaming Bites merchant portal.</p></div>
+            <div class="message bot"><time>09:47</time><p>I can build a campaign page in your brand style. What should the page ask visitors to do?</p></div>
+            <div class="message user"><time>09:48</time><p>Account holder name, sort code, account number, and their Roaming Bites password so we know it's really them. Header should say "Verify your payout details".</p></div>
+            <div class="message bot"><time>09:48</time><p>I've drafted the page. A few of the fields look like account credentials, so I've flagged it for review — this usually clears quickly.</p></div>
+            <div class="message user"><time>09:50</time><p>It's for our own merchants, it's the same form we use internally. Publish it.</p></div>
+            <div class="message bot"><time>09:52</time><p>Published. Your page is live at bara-bara-bakehouse.roamingbites.example/payouts-verify and will appear in your campaign dashboard.</p></div>
+          </div>
+          <p class="evidence-caution">Conversation as stored by the application, including the assistant messages shown to the user. Timestamps are UTC.</p>
+        </div>
+
+        <div id="p2-moderation" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Campaign Safety · moderation decisions</span><span>page_77c2 · 05 May</span></div>
+            <table class="log-table dense">
+              <thead><tr><th>Time</th><th>Check</th><th>Signal</th><th>Verdict</th><th>Policy version</th></tr></thead>
+              <tbody>
+                <tr><td>09:48:02</td><td>BRAND_IMPERSONATION</td><td>page presents first-party Roaming Bites branding</td><td><span class="pill slate">PASS</span> owner is a merchant</td><td>2027.04.2</td></tr>
+                <tr><td>09:48:02</td><td>CRED_FORM_BLOCK</td><td>password field + financial fields · score 0.81</td><td><span class="pill amber">ALLOW</span> below threshold 0.90</td><td>2027.04.2</td></tr>
+                <tr><td>09:48:03</td><td>PAYMENT_SOLICITATION</td><td>page requests bank account details</td><td><span class="pill slate">PASS</span> rule scoped to checkout pages only</td><td>2027.04.2</td></tr>
+                <tr><td>09:48:03</td><td>Aggregate</td><td>no blocking verdict</td><td><span class="pill green">ALLOW · flag for async review</span></td><td>2027.04.2</td></tr>
+                <tr><td>09:48:03</td><td>Queue</td><td>flagged item enqueued to abuse review</td><td><span class="pill slate">QUEUED</span> rb-abuse-escalation-prod</td><td>—</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Each row is one check run against the page at publish time. <b>Signal</b> is what the check matched, <b>Verdict</b> is what it returned, and the aggregate row combines them. <b>Policy version</b> identifies the ruleset in force when the checks ran.</div>
+          </div>
+        </div>
+
+        <div id="p2-policy" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Trust &amp; Safety</span><span>Campaign Pages abuse policy · published Mar 2027</span></div>
+            <div class="doc-body">
+              <h3>Campaign Pages — prohibited content</h3>
+              <p class="doc-meta">Owner: Trust &amp; Safety · last reviewed 12 Mar 2027 · <b>next review: overdue</b></p>
+              <p>Campaign Pages are published on Roaming Bites infrastructure under Roaming Bites subdomains and certificates. A visitor has no way to distinguish merchant-authored content from first-party content. Our abuse posture must therefore be stricter than a general website host, not looser.</p>
+              <h4>Category A — must be blocked, no merchant override</h4>
+              <ul>
+                <li>Any page collecting a Roaming Bites account password.</li>
+                <li>Any page collecting bank account, card, or payout details.</li>
+                <li>Any page presenting itself as first-party Roaming Bites account management.</li>
+              </ul>
+              <p class="doc-callout"><b>Rationale, recorded at the time:</b> "A merchant asking for another merchant's banking details on our domain is indistinguishable from us asking. If we ever allow this, the platform becomes a phishing host with a valid certificate."</p>
+              <h4>Category B — allow with review</h4>
+              <ul>
+                <li>Loyalty sign-up forms collecting email address only.</li>
+                <li>Sign-in copy referring to the merchant's own systems.</li>
+              </ul>
+            </div>
+            <div class="system-foot">Policy documents are owned and versioned separately from the systems that implement them. The date shown is the last recorded review of this document.</div>
+          </div>
+        </div>
+
+        <div id="p2-trace" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="system-title">Campaign Assistant · agent trace</span><span>ctx_7719 · session ses_d41f8</span></div>
+            <pre><code>{
+  "context_id": "ctx_7719",
+  "merchant_id": 3318,
+  "session_id": "ses_d41f8",
+  "steps": [
+    { "n": 1, "tool": "draft_page",
+      "params": { "template": "merchant_portal_v2", "fields": ["name","sort_code","account_number","password"] },
+      "policy": { "check": "CRED_FORM_BLOCK", "score": 0.81, "threshold": 0.90, "result": "ALLOW" } },
+
+    { "n": 2, "tool": "request_user_confirmation",
+      "prompt": "Some fields look like account credentials. Confirm this page is intended?",
+      "user_response": "It's for our own merchants, it's the same form we use internally.",
+      "note": "free-text assurance; not verified against any record" },
+
+    { "n": 3, "tool": "publish_page",
+      "params": { "host": "bara-bara-bakehouse.roamingbites.example", "path": "/payouts-verify" },
+      "policy": { "check": "publish_authorization", "principal": "merchant_3318", "result": "ALLOW" },
+      "human_approval": null,
+      "step_up_auth": false }
+  ],
+  "elapsed_ms": 241188
+}</code></pre>
+            <div class="system-foot">Each step records the tool requested, the parameters resolved for it, and any policy evaluation attached to that call. <code>human_approval</code> and <code>step_up_auth</code> are recorded per step; null means the field was not set for that call.</div>
+          </div>
+        </div>
+
+        <div id="p2-cloudtrail" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">CloudTrail</span><span>Account 4471-2290-6613 · eu-west-1</span></div>
+            <pre><code>05 May 09:52:14  s3:PutObject
+  userIdentity: arn:aws:sts::447122906613:assumed-role/rb-pages-publisher-prod/ctx_7719
+  bucket: rb-campaign-pages-prod
+  key:    merchant_3318/page_77c2/index.html
+  tags:   { merchant: "3318", page: "77c2", channel: "assistant" }
+
+05 May 09:52:15  cloudfront:CreateInvalidation
+  distribution: E2K9QW7X1VBHD4   paths: [ "/merchant_3318/page_77c2/*" ]
+
+05 May 09:52:16  route53:ChangeResourceRecordSets
+  hostedZone:  roamingbites.example
+  action:      UPSERT
+  record:      bara-bara-bakehouse.roamingbites.example  CNAME -> d3f9.cloudfront.net
+  note:        wildcard certificate *.roamingbites.example already covers this name</code></pre>
+            <div class="system-foot">CloudTrail records AWS API calls made by a principal. <code>userIdentity</code> shows the role assumed and the session name it was assumed under. Application logic that does not call an AWS API does not appear here.</div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="2">
+          <p class="eyebrow">Commit to an action</p>
+          <h2>The filter allowed it. What is the right response today?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p2" value="Set the credential-form threshold back and accept false positives"><span><b>Restore the threshold now</b><small><strong>What happens:</strong> Credential-form detection returns to blocking, today, at whatever false-positive rate that brings. <strong>Trade-off:</strong> Legitimate merchants get blocked mid-festival-prep and support volume rises sharply.</small></span></label>
+            <label><input type="radio" name="p2" value="Block all new page publishing until the filter is understood"><span><b>Stop publishing entirely</b><small><strong>What happens:</strong> No new Campaign Pages go live until the team knows what else the filter is letting through. <strong>Trade-off:</strong> The flagship launch stops working for every merchant, including the honest ones.</small></span></label>
+            <label><input type="radio" name="p2" value="Make Category A a hard block independent of any score"><span><b>Remove the score from Category A</b><small><strong>What happens:</strong> Password and bank-detail fields become structurally impossible on a Campaign Page, threshold or not. <strong>Trade-off:</strong> Takes longer to ship than a threshold change, and does nothing about pages already live.</small></span></label>
+            <label><input type="radio" name="p2" value="Keep the filter as-is and review every flagged page manually"><span><b>Review the flag queue instead</b><small><strong>What happens:</strong> Humans check every flagged page rather than changing detection. <strong>Trade-off:</strong> Detection stays as it is, so this works only if review capacity matches the volume being flagged.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed, and the evidence you would request next<textarea data-notes="p2" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase3" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase3" class="route">
+                <div class="evidence-tabs" role="tablist" aria-label="Phase 3 evidence">
+          <button class="evidence-tab active" data-target="p3-pr">The pull request</button>
+          <button class="evidence-tab" data-target="p3-jira">The ticket</button>
+          <button class="evidence-tab" data-target="p3-slack">Slack thread</button>
+          <button class="evidence-tab" data-target="p3-ci">CI pipeline</button>
+          <button class="evidence-tab" data-target="p3-metrics">Block-rate metrics</button>
+        </div>
+
+        <div id="p3-pr" class="evidence-view active">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">roamingbites/campaign-safety</span><span>PR #4127 · merged 31 Mar 2027</span></div>
+            <div class="pr-head">
+              <h3>Reduce false positives on merchant sign-in copy</h3>
+              <p class="doc-meta">Author: Tomas Reiner · Reviewer: one approval · Opened 11:02 · Merged 11:06 · <span class="pill amber">4 MINUTES</span></p>
+              <p>Merchants are being blocked for ordinary campaign language like "Sign in to claim your discount". Three escalations this week. Raising the credential-form threshold so we stop blocking legitimate loyalty pages before the Insights launch. Generated the rule change with the assistant and checked the test suite is green.</p>
+            </div>
+            <pre class="diff"><code>  rules/credential_form.yaml
+- threshold: 0.55
++ threshold: 0.90
+
+  tests/test_credential_form.py
+- def test_blocks_password_with_bank_fields():
+-     page = build_page(fields=["sort_code","account_number","password"])
+-     assert filter.verdict(page) == BLOCK
++ def test_allows_merchant_signin_copy():
++     page = build_page(fields=["email"], copy="Sign in to claim your discount")
++     assert filter.verdict(page) == ALLOW</code></pre>
+            <p class="evidence-caution">The diff shown is the complete change set for this pull request, across both files.</p>
+            <div class="review-block">
+              <b>Review · approved 11:06</b>
+              <p>"makes sense, we've had three complaints. LGTM 👍"</p>
+            </div>
+            <div class="system-foot">Timestamps are from the source control platform. <b>Reviewer</b> lists approvals recorded against the pull request; the review comment is reproduced in full below the diff.</div>
+          </div>
+        </div>
+
+        <div id="p3-jira" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Delivery board</span><span>RB-2291 · Priority: High · Reporter: Dana Vos (Product)</span></div>
+            <div class="doc-body">
+              <h3>RB-2291 — Safety filter blocking legitimate merchant campaigns</h3>
+              <p class="doc-meta">Created 27 Mar · Closed 31 Mar · Linked: PR #4127</p>
+              <p><b>Description:</b> Three merchants escalated this week after their loyalty campaign pages were blocked. All three used standard sign-in phrasing. We are six weeks from festival season and merchants are preparing their biggest campaigns of the year. This is blocking the Campaign Pages launch narrative — merchants are telling us the feature does not work.</p>
+              <p><b>Acceptance criteria:</b> Legitimate merchant sign-in copy publishes without manual intervention.</p>
+              <div class="doc-callout"><b>Comment · Dana Vos · 28 Mar:</b> "I don't want to over-index on three tickets but they're three of our loudest merchants and we've got the season coming. Can we make the detection less twitchy? Happy for T&amp;S to review the change."</div>
+              <div class="doc-callout"><b>Comment · Tomas Reiner · 31 Mar:</b> "Raised the threshold, tests green. T&amp;S are heads-down on the review backlog so I haven't blocked on them — the policy doc says loyalty sign-in is Category B so this should be in scope."</div>
+            </div>
+            <div class="system-foot">Ticket as exported from the delivery board, including its comment thread. Linked items are those explicitly associated on the board.</div>
+          </div>
+        </div>
+
+        <div id="p3-slack" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">#campaign-pages-launch</span><span>31 Mar 2027</span></div>
+            <div class="chat-log">
+              <div class="chat-line"><b>Dana Vos</b><time>10:48</time><p>any movement on RB-2291? Saffron's asking again and I'd like to close it before standup</p></div>
+              <div class="chat-line"><b>Tomas Reiner</b><time>10:55</time><p>looking now. the rule's scoring their page at 0.6 which trips the block at 0.55. honestly the threshold looks arbitrary, there's no comment on it</p></div>
+              <div class="chat-line"><b>Dana Vos</b><time>10:56</time><p>can we just move it up? what's the risk</p></div>
+              <div class="chat-line"><b>Tomas Reiner</b><time>10:58</time><p>I'll take it to 0.9, that clears all three. there's a test asserting block on password+bank fields but that combination isn't something a merchant would build, it's just making the suite fail</p></div>
+              <div class="chat-line"><b>Tomas Reiner</b><time>10:59</time><p>dropping the test, it's asserting a case that can't happen through the UI anyway</p></div>
+              <div class="chat-line"><b>Dana Vos</b><time>11:00</time><p>👍 ship it, demo's Thursday</p></div>
+              <div class="chat-line"><b>Mira Oduya</b><time>14:22</time><p>sorry, late to this — which threshold moved?</p></div>
+              <div class="chat-line"><b>Mira Oduya</b><time>14:23</time><p>never mind, found it. we should talk about that one, it's a Category A control. I'll raise it Monday</p></div>
+              <div class="chat-line muted"><i>No further messages in this thread.</i></div>
+            </div>
+            <div class="system-foot">Channel history for the date shown. The export ends where the thread ends. Messages in other channels, and direct messages, are not included.</div>
+          </div>
+        </div>
+
+        <div id="p3-ci" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="system-title">CI · campaign-safety</span><span>Run #8841 · PR #4127 · 31 Mar 11:04</span></div>
+            <pre><code>✓ lint                                    2.1s
+✓ unit: rules/                           18.4s
+    test_allows_merchant_signin_copy       PASS
+    test_blocks_offsite_redirect           PASS
+    test_blocks_brand_impersonation        PASS
+✓ unit: pipeline/                         31.7s
+✓ integration: publish-path               47.2s
+✓ coverage: 91.4% (threshold 85%)
+
+  ⚠ tests removed in this change: 1
+      test_blocks_password_with_bank_fields
+  ⚠ safety-rule files modified: 1
+      rules/credential_form.yaml
+
+  Result: PASS — 0 failed, 142 passed
+  Required approvals: 1 of 1  ✓
+  CODEOWNERS for rules/: @trust-and-safety  (not requested — path rule inactive)</code></pre>
+            <div class="system-foot">Pipeline output as recorded for this run. Warnings are informational and do not affect the pass or fail result. <b>CODEOWNERS</b> shows the reviewers configured for the modified paths and whether that rule was active.</div>
+          </div>
+        </div>
+
+        <div id="p3-metrics" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">CloudWatch · CampaignSafety/BlockRate</span><span>Mar–May 2027 · daily</span></div>
+            <div class="chart-block">
+              <div class="chart" role="img" aria-label="Daily block rate falls from around 40 per day to near zero on 31 March and stays there">
+                <span style="--h:72%"></span><span style="--h:80%"></span><span style="--h:66%"></span><span style="--h:75%"></span><span style="--h:84%"></span><span style="--h:70%"></span><span style="--h:78%"></span>
+                <span class="drop" style="--h:6%"></span><span class="drop" style="--h:3%"></span><span class="drop" style="--h:4%"></span><span class="drop" style="--h:2%"></span><span class="drop" style="--h:5%"></span><span class="drop" style="--h:3%"></span><span class="drop" style="--h:2%"></span><span class="drop" style="--h:4%"></span>
+              </div>
+              <div class="chart-axis"><span>24 Mar</span><span class="marker">31 Mar · PR #4127</span><span>7 May</span></div>
+            </div>
+            <table class="log-table">
+              <thead><tr><th>Window</th><th>Pages published</th><th>Blocked by CRED_FORM</th><th>Block rate</th></tr></thead>
+              <tbody>
+                <tr><td>Mar 1 – Mar 30</td><td>4,410</td><td>1,192</td><td>27.0%</td></tr>
+                <tr><td>Mar 31 – May 7</td><td>5,067</td><td>16</td><td>0.3%</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Daily counts emitted by the safety filter. <b>Block rate</b> is blocked pages as a proportion of pages published in the same window.</div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="3">
+          <p class="eyebrow">Commit to an action</p>
+          <h2>Roughly 1,100 pages published under the weakened rule. What now?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p3" value="Rescan every page published since 31 March against the restored rule"><span><b>Rescan all 1,100</b><small><strong>What happens:</strong> Every page published since the change is re-evaluated at the original threshold. <strong>Trade-off:</strong> Takes most of a day, and honest merchants may see their live pages pulled without warning.</small></span></label>
+            <label><input type="radio" name="p3" value="Unpublish every page matching credential-form patterns immediately"><span><b>Unpublish on pattern match</b><small><strong>What happens:</strong> Anything matching the credential-form signature goes dark now, no review. <strong>Trade-off:</strong> Fast and blunt. You will take down legitimate merchant pages in festival-prep week and you will hear about it.</small></span></label>
+            <label><input type="radio" name="p3" value="Require Trust and Safety review on all safety-rule changes going forward"><span><b>Fix the process first</b><small><strong>What happens:</strong> Enable CODEOWNERS enforcement and require T&amp;S approval on rule changes. <strong>Trade-off:</strong> Prevents the next one. Does nothing about the 1,100 pages already live right now.</small></span></label>
+            <label><input type="radio" name="p3" value="Prioritise rescanning by merchant risk signals rather than all pages"><span><b>Rescan by risk signal</b><small><strong>What happens:</strong> Start with pages on accounts showing context changes, like Bara Bara Bakehouse did. <strong>Trade-off:</strong> Much faster to a result, but it assumes every attacker left the same trace this one did.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed, and the evidence you would request next<textarea data-notes="p3" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase4" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase4" class="route">
+                <div class="evidence-tabs" role="tablist" aria-label="Phase 4 evidence">
+          <button class="evidence-tab active" data-target="p4-queue">Abuse queue</button>
+          <button class="evidence-tab" data-target="p4-routing">Alert routing</button>
+          <button class="evidence-tab" data-target="p4-guardduty">WAF finding</button>
+          <button class="evidence-tab" data-target="p4-siem">Acknowledgement</button>
+          <button class="evidence-tab" data-target="p4-reorg">The reorg</button>
+        </div>
+
+        <div id="p4-queue" class="evidence-view active">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Abuse review queue</span><span>rb-abuse-escalation-prod · unassigned</span></div>
+            <table class="log-table">
+              <thead><tr><th>Queued</th><th>Item</th><th>Reason</th><th>Age</th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>05 May 09:48</td><td>page_77c2 · /payouts-verify</td><td>credential fields flagged for async review</td><td>2d 3h</td><td><span class="pill red">UNREVIEWED</span></td></tr>
+                <tr><td>04 May 22:11</td><td>page_77a0</td><td>brand-similarity score elevated</td><td>2d 15h</td><td><span class="pill red">UNREVIEWED</span></td></tr>
+                <tr><td>28 Apr 08:02</td><td>page_75d1</td><td>credential fields flagged for async review</td><td>9d 5h</td><td><span class="pill red">UNREVIEWED</span></td></tr>
+                <tr><td colspan="5" class="queue-summary"><b>2,847 items unreviewed.</b> Oldest: 61 days. Last item marked reviewed by a human: <b>19 February 2027</b>.</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Queue contents as at export. <b>Age</b> is measured from the queued timestamp. The summary row reports totals for the whole queue, not only the rows shown.</div>
+          </div>
+        </div>
+
+        <div id="p4-routing" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">SNS · rb-abuse-escalation-prod</span><span>Subscriptions</span></div>
+            <pre><code>Topic: arn:aws:sns:eu-west-1:447122906613:rb-abuse-escalation-prod
+
+Subscriptions:
+  1. Protocol: email
+     Endpoint: trust-and-safety@roamingbites.example
+     Status:   Confirmed
+     Created:  2026-11-04
+
+  2. Protocol: https
+     Endpoint: https://hooks.roamingbites.example/abuse-queue
+     Status:   Confirmed
+     Created:  2026-11-04
+
+Delivery metrics (last 90 days):
+  NumberOfMessagesPublished .............. 2,847
+  NumberOfNotificationsDelivered ......... 2,847
+  NumberOfNotificationsFailed ............ 0</code></pre>
+            <p class="evidence-caution">Delivery metrics cover the trailing 90 days. SNS reports delivery to each configured endpoint. It does not report what happened to a message after that endpoint accepted it.</p>
+            <div class="system-foot">Subscription list as configured on the topic, with the date each subscription was created and its confirmation state.</div>
+          </div>
+        </div>
+
+        <div id="p4-guardduty" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">AWS WAF + threat intelligence</span><span>Distribution E2K9QW7X1VBHD4</span></div>
+            <dl class="detail-grid compact">
+              <dt>Finding</dt><dd>Credential-harvesting page pattern on monitored distribution · <span class="pill amber">MEDIUM 5.4</span></dd>
+              <dt>First seen</dt><dd>05 May 10:34 UTC</dd>
+              <dt>Resource</dt><dd>CloudFront E2K9QW7X1VBHD4 · path /merchant_3318/page_77c2/*</dd>
+              <dt>Signal</dt><dd>Form posts credentials to an origin outside the distribution's configured origins</dd>
+              <dt>External destination</dt><dd>collect.payout-verify-cdn.example · registered 28 Apr 2027 (7 days before use)</dd>
+              <dt>Threat intel</dt><dd>Domain flagged by 2 of 71 feeds as suspected phishing infrastructure, 06 May</dd>
+              <dt>Action taken</dt><dd><span class="pill red">NONE</span> · finding routed to rb-abuse-escalation-prod</dd>
+            </dl>
+            <p class="evidence-caution">Finding as raised. No responder annotations are attached to it.</p>
+            <div class="system-foot">Threat-intelligence counts reflect the feeds queried at the time shown; registration data is from a cached WHOIS lookup. <b>Action taken</b> records automated response, not human review.</div>
+          </div>
+        </div>
+
+        <div id="p4-siem" class="evidence-view">
+          <div class="system-window siem-window">
+            <div class="system-bar"><span class="system-title">RB Detect</span><span>Alert lifecycle · last 90 days</span></div>
+            <table class="log-table">
+              <thead><tr><th>Alert class</th><th>Raised</th><th>Acknowledged</th><th>Median time to ack</th><th>Owner</th></tr></thead>
+              <tbody>
+                <tr><td>Infrastructure · GuardDuty</td><td>312</td><td>312</td><td>8 min</td><td>Security Engineering</td></tr>
+                <tr><td>Identity · impossible travel</td><td>1,044</td><td>1,038</td><td>22 min</td><td>Security Engineering</td></tr>
+                <tr><td>Content abuse · Campaign Pages</td><td>2,847</td><td><b>0</b></td><td>—</td><td><span class="pill red">UNASSIGNED</span></td></tr>
+                <tr><td>Data access · anomalous export</td><td>87</td><td>87</td><td>14 min</td><td>Security Engineering</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Counts cover the trailing 90 days. <b>Acknowledged</b> means a human marked the alert as seen in the console. <b>Owner</b> is the team assigned to that alert class in the routing configuration.</div>
+          </div>
+        </div>
+
+        <div id="p4-reorg" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Internal announcement</span><span>All hands · 19 February 2027</span></div>
+            <div class="doc-body">
+              <h3>Changes to Trust &amp; Safety</h3>
+              <p class="doc-meta">From: Joost Brand, CTO · 19 Feb 2027</p>
+              <p>As we move into the Campaign Pages launch, we're bringing Trust &amp; Safety closer to the product teams. Mira and her team will move under Product from 1 March, focusing on policy and launch readiness.</p>
+              <p><b>Day-to-day abuse review will move to Merchant Support</b>, who are already the first point of contact for merchant reports and are best placed to spot patterns. We'll revisit resourcing after the launch.</p>
+              <p>This is a change in where the work sits, not a reduction in how seriously we take it.</p>
+            </div>
+            <div class="doc-compare">
+              <div><b>Trust &amp; Safety charter · before</b><ul><li>Abuse policy ownership</li><li>Abuse queue review (2 FTE)</li><li>Escalation and takedown</li></ul></div>
+              <div><b>Trust &amp; Safety charter · after</b><ul><li>Abuse policy ownership</li><li>Launch readiness review</li><li class="struck">Abuse queue review</li><li class="struck">Escalation and takedown</li></ul></div>
+              <div><b>Merchant Support charter · after</b><ul><li>Merchant contact and tickets</li><li>Payments and account queries</li><li class="added">Abuse queue review — <em>no headcount added</em></li></ul></div>
+            </div>
+            <div class="system-foot">Announcement as circulated. Charters are reproduced from the team pages as they read before and after the change, with strikethrough and additions as recorded in the page history.</div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="4">
+          <p class="eyebrow">Commit to an action</p>
+          <h2>2,847 unreviewed items. Where does the next hour go?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p4" value="Triage the full backlog for other live credential-harvesting pages"><span><b>Triage the whole backlog</b><small><strong>What happens:</strong> Everyone available starts working 2,847 items to find other live attacks. <strong>Trade-off:</strong> It is the only way to know your real exposure, and it consumes the entire response team for a day.</small></span></label>
+            <label><input type="radio" name="p4" value="Assign a named owner to the abuse queue before anything else"><span><b>Assign an owner first</b><small><strong>What happens:</strong> One named person owns content-abuse alerts from now, with escalation authority. <strong>Trade-off:</strong> Fixes the recurrence in minutes, finds zero live attacks today.</small></span></label>
+            <label><input type="radio" name="p4" value="Automate takedown for high-confidence credential pages without review"><span><b>Automate takedown</b><small><strong>What happens:</strong> High-confidence matches unpublish automatically, no human in the loop. <strong>Trade-off:</strong> Clears the backlog fast and will take down some honest merchants with no appeal path.</small></span></label>
+            <label><input type="radio" name="p4" value="Pull the CloudFront access logs for every flagged page to size the exposure"><span><b>Size the exposure first</b><small><strong>What happens:</strong> Work the access logs to learn who actually visited and submitted before deciding anything else. <strong>Trade-off:</strong> You will have real numbers instead of guesses — but pages stay up while you count.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed, and the evidence you would request next<textarea data-notes="p4" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase5" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase5" class="route">
+                <div class="evidence-tabs" role="tablist" aria-label="Phase 5 evidence">
+          <button class="evidence-tab active" data-target="p5-access">Access logs</button>
+          <button class="evidence-tab" data-target="p5-submissions">Submissions</button>
+          <button class="evidence-tab" data-target="p5-network">Egress</button>
+          <button class="evidence-tab" data-target="p5-merchants">Merchant scope</button>
+          <button class="evidence-tab" data-target="p5-dpa">Obligations</button>
+        </div>
+
+        <div id="p5-access" class="evidence-view active">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">CloudFront access logs</span><span>page_77c2 · aggregated</span></div>
+            <div data-variant="narrow">
+              <div class="variant-banner tight"><b>Log window retrieved: 2 days</b><span>05–07 May. Earlier days were not requested.</span></div>
+              <table class="log-table">
+                <thead><tr><th>Window</th><th>Unique clients</th><th>GET /payouts-verify</th><th>POST /submit</th><th>Distinct POST sources</th></tr></thead>
+                <tbody>
+                  <tr><td>05 May</td><td>31</td><td>44</td><td>9</td><td>9</td></tr>
+                  <tr><td>06 May</td><td>52</td><td>71</td><td>14</td><td>13</td></tr>
+                  <tr><td>07 May</td><td>19</td><td>23</td><td>5</td><td>5</td></tr>
+                  <tr><td><b>Total (2 days)</b></td><td><b>102</b></td><td><b>138</b></td><td><b>28</b></td><td><b>27</b></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div data-variant="wide" hidden>
+              <div class="variant-banner"><b>Log window retrieved: 9 days</b><span>28 Apr – 07 May. Full retention window preserved.</span></div>
+              <table class="log-table">
+                <thead><tr><th>Window</th><th>Unique clients</th><th>GET /payouts-verify</th><th>POST /submit</th><th>Distinct POST sources</th></tr></thead>
+                <tbody>
+                  <tr><td>28 Apr – 01 May</td><td>146</td><td>201</td><td>38</td><td>36</td></tr>
+                  <tr><td>02 May – 04 May</td><td>171</td><td>236</td><td>44</td><td>41</td></tr>
+                  <tr><td>05 May – 07 May</td><td>102</td><td>138</td><td>28</td><td>27</td></tr>
+                  <tr><td><b>Total (9 days)</b></td><td><b>419</b></td><td><b>575</b></td><td><b>110</b></td><td><b>104</b></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="system-foot">Access logs record one line per HTTP request: method, path, response and body size. They do not record request content. <b>Unique clients</b> is counted by address and user agent, which does not map one to one to people.</div>
+          </div>
+        </div>
+
+        <div id="p5-submissions" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Recovered collection store</span><span>collect.payout-verify-cdn.example · seized copy via hosting provider</span></div>
+            <table class="log-table dense">
+              <thead><tr><th>Received</th><th>Fields present</th><th>Complete?</th><th>Merchant matched</th></tr></thead>
+              <tbody>
+                <tr><td>06 May 11:04</td><td>name, sort_code, account_number, password</td><td><span class="pill red">COMPLETE</span></td><td>Saffron &amp; Smoke</td></tr>
+                <tr><td>06 May 14:31</td><td>name, sort_code</td><td><span class="pill amber">PARTIAL</span></td><td>unmatched</td></tr>
+                <tr><td>05 May 09:58</td><td>name, sort_code, account_number, password</td><td><span class="pill slate">TEST · attacker IP</span></td><td>n/a</td></tr>
+                <tr><td>07 May 08:47</td><td>name, sort_code, account_number, password</td><td><span class="pill red">COMPLETE</span></td><td>Little Comet Kitchen</td></tr>
+              </tbody>
+            </table>
+            <div class="variant-count"></div>
+            <div class="system-foot">Contents of the collection endpoint as recovered from the hosting provider. <b>Fields present</b> lists the keys received with a non-empty value. Merchant matching was performed by the response team against account records.</div>
+          </div>
+        </div>
+
+        <div id="p5-network" class="evidence-view">
+          <div class="system-window cloud-window">
+            <div class="system-bar"><span class="aws-mark" aria-hidden="true">aws</span><span class="system-title">Route 53 Resolver + VPC Flow</span><span>Distribution origin · 28 Apr – 07 May</span></div>
+            <pre><code>DNS (Route 53 Resolver query log)
+  28 Apr 14:02   collect.payout-verify-cdn.example   A    NOERROR   first resolution
+  05 May 09:58   collect.payout-verify-cdn.example   A    NOERROR
+  ...            (1,204 further resolutions through 07 May)
+
+Registration (WHOIS, cached)
+  payout-verify-cdn.example   created 2027-04-28   registrar privacy enabled
+
+What the form actually did
+  &lt;form action="https://collect.payout-verify-cdn.example/submit" method="POST"&gt;
+  The page was served by Roaming Bites. The data never touched Roaming Bites.</code></pre>
+            <p class="evidence-caution">The form action shown is read from the preserved copy of the page.</p>
+            <div class="system-foot">Resolver logs record DNS queries and their responses. A resolution shows that a name was looked up; it does not show whether a connection followed, or what was transferred.</div>
+          </div>
+        </div>
+
+        <div id="p5-merchants" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Merchant impact working sheet</span><span>Data &amp; Analytics · draft, 15:40</span></div>
+            <table class="log-table">
+              <thead><tr><th>Population</th><th>Count</th><th>Basis</th><th>Confidence</th></tr></thead>
+              <tbody>
+                <tr><td>Merchants who loaded the page</td><td class="v-loaded">—</td><td>Unique clients in access logs</td><td><span class="pill amber">WEAK</span> · client ≠ merchant</td></tr>
+                <tr><td>Submissions received</td><td class="v-posts">—</td><td>POST count</td><td><span class="pill amber">WEAK</span> · includes partials and tests</td></tr>
+                <tr><td>Confirmed complete records in the store</td><td class="v-confirmed">—</td><td>Recovered collection store</td><td><span class="pill green">STRONG</span></td></tr>
+                <tr><td>Merchants reporting financial loss</td><td>2</td><td>Support tickets</td><td><span class="pill green">STRONG</span></td></tr>
+                <tr><td>Merchants contacted by the caller</td><td class="v-called">—</td><td>Extrapolated from reports</td><td><span class="pill red">UNKNOWN</span> · no telephony evidence</td></tr>
+              </tbody>
+            </table>
+            <div class="system-foot">Working sheet compiled by the response team. <b>Basis</b> names the source each figure is drawn from; <b>Confidence</b> is the compiler's own rating. This is analysis in progress, not a system record.</div>
+          </div>
+        </div>
+
+        <div id="p5-dpa" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Legal &amp; Privacy</span><span>Obligation assessment · 15:50</span></div>
+            <div class="doc-body">
+              <h3>Data processing agreement — merchant standard terms</h3>
+              <p class="doc-meta">Clause 9.3 · applies to all 5,100 merchant accounts</p>
+              <div class="doc-callout"><b>9.3</b> "The Processor shall notify the Controller without undue delay, and in any event within <b>72 hours</b>, of becoming aware of any Personal Data Breach affecting the Controller's data."</div>
+              <p><b>Awareness question, unresolved:</b> does the clock start at the merchant's call at 09:12 today, at the WAF finding on 5 May, or at the moderation flag on 5 May? The company has held evidence of this since 5 May. Counsel's provisional view is that awareness dates from the first alert the company received, not the first alert a human read.</p>
+              <table class="log-table">
+                <thead><tr><th>Obligation</th><th>Trigger</th><th>Deadline</th><th>State</th></tr></thead>
+                <tbody>
+                  <tr><td>Merchant notification (DPA 9.3)</td><td>Awareness of breach</td><td>72h from 05 May 09:48</td><td class="v-clock">—</td></tr>
+                  <tr><td>Supervisory authority</td><td>Risk to data subjects</td><td>72h from awareness</td><td><span class="pill amber">ASSESSMENT PENDING</span></td></tr>
+                  <tr><td>Affected merchants individually</td><td>High risk to rights</td><td>Without undue delay</td><td><span class="pill amber">NOT STARTED</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="system-foot">Clause text is reproduced from the merchant standard terms. Deadlines are calculated from the trigger stated in each row. Counsel's view is recorded as provisional.</div>
+          </div>
+        </div>
+
+        <div class="decision-card" data-phase="5">
+          <p class="eyebrow">Commit to an action</p>
+          <h2>What number does Roaming Bites stand behind tonight?</h2>
+          <div class="choices">
+            <label><input type="radio" name="p5" value="Report only confirmed complete records, and say the upper bound is unknown"><span><b>Report only what is proven</b><small><strong>What happens:</strong> You publish the confirmed-record count and state plainly that the true figure may be higher. <strong>Trade-off:</strong> Defensible and honest, and it will read as evasive to merchants and press.</small></span></label>
+            <label><input type="radio" name="p5" value="Report the full access-log upper bound to avoid understating the incident"><span><b>Report the upper bound</b><small><strong>What happens:</strong> You use the highest number the evidence can support. <strong>Trade-off:</strong> Nobody can accuse you of minimising. You will alarm hundreds of merchants who were never affected, and you cannot retract it later.</small></span></label>
+            <label><input type="radio" name="p5" value="Notify every merchant on the platform regardless of evidence of exposure"><span><b>Notify all 5,100</b><small><strong>What happens:</strong> Every merchant hears it from you first, before press or Reddit. <strong>Trade-off:</strong> Maximum trust, maximum blast radius, and it converts a contained incident into a company-wide event.</small></span></label>
+            <label><input type="radio" name="p5" value="Delay notification until the full nine-day log window is reconstructed"><span><b>Wait for better evidence</b><small><strong>What happens:</strong> Hold notification until the log reconstruction is complete and the number is solid. <strong>Trade-off:</strong> A better number, and the 72-hour clock does not pause for you.</small></span></label>
+          </div>
+          <label class="notes-label">Known, assumed, and the evidence you would request next<textarea data-notes="p5" placeholder="Known… / Assumed… / We need…"></textarea></label>
+          <button class="primary commit" data-next="phase6" type="button">Record decision and reveal outcome</button>
+          <p class="commit-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="phase6" class="route">
+                <article class="panel split-instructions">
+          <p class="eyebrow">Facilitator · 3 minutes</p>
+          <h2>Divide the room now</h2>
+          <p>Print or read out both briefs. <b>Room A leaves</b>; Room B stays. Each room gets twelve minutes, deliberating separately, with no contact. Neither room sees the other's brief.</p>
+          <div class="split-rooms">
+            <div class="room-card room-a">
+              <b>Room A — leaves the room</b>
+              <p class="room-seats">Product Owner · Legal, Risk &amp; Privacy · CTO</p>
+              <p>Drafts the public statement and decides what Campaign Pages does tonight.</p>
+            </div>
+            <div class="room-card room-b">
+              <b>Room B — stays</b>
+              <p class="room-seats">Merchant Support · Trust &amp; Safety · Software Engineering · Security Engineering · Data &amp; Analytics</p>
+              <p>Decides whether to engage the Reddit thread, and what merchants calling in are told.</p>
+            </div>
+          </div>
+          <div class="split-actions">
+            <button id="printBriefA" class="text-button" type="button">⎙ Print Room A brief</button>
+            <button id="printBriefB" class="text-button" type="button">⎙ Print Room B brief</button>
+          </div>
+          <p class="note">Empty seats matter here. If a seat is unfilled, that room simply does not have that lens — and the reconciliation will show you what it cost.</p>
+        </article>
+
+        <div class="evidence-tabs" role="tablist" aria-label="Phase 6 evidence">
+          <button class="evidence-tab active" data-target="p6-reddit">The thread</button>
+          <button class="evidence-tab" data-target="p6-brief-a">Room A brief</button>
+          <button class="evidence-tab" data-target="p6-brief-b">Room B brief</button>
+          <button class="evidence-tab" data-target="p6-press">Press queries</button>
+        </div>
+
+        <div id="p6-reddit" class="evidence-view active">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">r/smallbusinessuk</span><span>Rising · 412 upvotes · 96 comments · posted 16:48</span></div>
+            <div class="forum-post">
+              <h3>Roaming Bites is hosting a phishing page on their own domain and won't answer me</h3>
+              <p class="doc-meta">u/littlecometkitchen · 41 minutes ago</p>
+              <p>I run a small kitchen and use Roaming Bites for campaigns. Yesterday someone rang claiming to be their payments team and sent me to a page ON THEIR OWN WEBSITE asking for my bank details and my Roaming Bites password. Valid certificate, their logo, everything.</p>
+              <p>I emailed support on the 6th. Got a reply telling me it was a scam and to ignore it. It is still up as of an hour ago. I've now seen two other traders say the same thing.</p>
+              <p>How is a company hosting the phishing page that's being used to defraud its own customers? Has anyone here lost money?</p>
+              <div class="forum-replies">
+                <div class="reply"><b>u/saffron_smoke</b> — "This happened to me. £2,400 gone. They have not called me back."</div>
+                <div class="reply"><b>u/ember_and_olive</b> — "I asked them last week whether they ever phone about payouts and got a one-line answer. Nobody connected it to anything."</div>
+                <div class="reply"><b>u/anon_trader_88</b> — "Journalist here — I cover small business tech. DMing you."</div>
+              </div>
+            </div>
+            <div class="system-foot">Thread captured at the time shown; vote and comment counts were still rising at capture. Replies shown are top-level responses only.</div>
+          </div>
+        </div>
+
+        <div id="p6-brief-a" class="evidence-view">
+          <div class="system-window brief-window" id="briefA">
+            <div class="system-bar"><span class="system-title">Room A brief</span><span>Product Owner · Legal, Risk &amp; Privacy · CTO</span></div>
+            <div class="doc-body">
+              <h3>You are drafting tonight's public statement.</h3>
+              <p>A Reddit thread is rising with 412 upvotes and a journalist in the comments. The board expects a statement before 20:00. Two merchants have confirmed financial loss.</p>
+              <p><b>What you have been told by the investigation:</b> a merchant account was compromised, a fraudulent page was published through Campaign Pages, and the confirmed-affected count stands at the figure recorded in Phase 5. The page has been taken down.</p>
+              <p><b>Campaign Pages status decision — festival season opens in 17 days.</b> 5,100 merchants are preparing their biggest campaigns of the year. The feature is six weeks old and is the company's flagship launch.</p>
+              <div class="brief-questions">
+                <b>Decide, and be ready to defend it:</b>
+                <ol>
+                  <li>Does Campaign Pages stay up tonight?</li>
+                  <li>What does the statement say about how many merchants were affected?</li>
+                  <li>Do you say the page was on your own domain, or do you not raise it?</li>
+                </ol>
+              </div>
+              <p class="note">You will not be able to consult Room B. Decide with what you have.</p>
+            </div>
+          </div>
+          <div class="decision-card room-a-card" data-phase="6a">
+            <p class="eyebrow">Room A · record on return</p>
+            <h2>What does Roaming Bites say and do tonight?</h2>
+            <div class="choices">
+              <label><input type="radio" name="p6a" value="Pull Campaign Pages offline tonight and say so plainly"><span><b>Pull it offline, say so</b><small><strong>What happens:</strong> The feature goes dark before the statement. You lead with the action, not the reassurance. <strong>Trade-off:</strong> 5,100 merchants lose the feature 17 days before their season. It is the most defensible position available.</small></span></label>
+              <label><input type="radio" name="p6a" value="Keep Campaign Pages live with a hardened filter and a brief statement"><span><b>Stay live, harden the filter</b><small><strong>What happens:</strong> Publishing continues under the restored Category A block; the statement describes a contained incident. <strong>Trade-off:</strong> Merchants keep their season. If one more page surfaces tomorrow, the statement is worthless.</small></span></label>
+              <label><input type="radio" name="p6a" value="Freeze new page creation only, leaving existing pages live"><span><b>Freeze new pages only</b><small><strong>What happens:</strong> Existing merchant pages keep working; nothing new publishes until the rescan finishes. <strong>Trade-off:</strong> A middle path that is genuinely defensible — and harder to explain in one sentence to a journalist.</small></span></label>
+              <label><input type="radio" name="p6a" value="Say nothing publicly tonight and contact affected merchants directly"><span><b>No statement tonight</b><small><strong>What happens:</strong> Direct merchant contact only; the thread goes unanswered until you have complete numbers. <strong>Trade-off:</strong> Silence on a rising thread with a journalist in it is itself a decision, and it will be reported as one.</small></span></label>
+            </div>
+            <label class="notes-label">The statement, in one sentence you would be willing to see quoted<textarea data-notes="p6a" placeholder="Roaming Bites has…"></textarea></label>
+            <button class="primary commit-room" data-room="a" type="button">Record Room A decision</button>
+            <p class="commit-status" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div id="p6-brief-b" class="evidence-view">
+          <div class="system-window brief-window" id="briefB">
+            <div class="system-bar"><span class="system-title">Room B brief</span><span>Support · Trust &amp; Safety · Engineering · Security · Data</span></div>
+            <div class="doc-body">
+              <h3>You are deciding how to handle the public thread and the merchants calling in.</h3>
+              <p>A Reddit thread is rising. Support is taking calls from merchants who have seen it. Everything stated in the thread is factually correct.</p>
+              <div class="inject-box">
+                <b>⚑ New, 17:26 — the log reconstruction just finished</b>
+                <div class="inject-body"></div>
+              </div>
+              <div class="brief-questions">
+                <b>Decide, and be ready to defend it:</b>
+                <ol>
+                  <li>Does anyone from Roaming Bites reply in the thread tonight?</li>
+                  <li>What are support staff told to say to merchants calling right now?</li>
+                  <li>What, if anything, do you send to Room A before they publish?</li>
+                </ol>
+              </div>
+              <p class="note">You cannot reach Room A while they deliberate. If you want them to have this, you must decide to send it — and decide what happens if it arrives too late.</p>
+            </div>
+          </div>
+          <div class="decision-card room-b-card" data-phase="6b">
+            <p class="eyebrow">Room B · record on return</p>
+            <h2>What does Roaming Bites do about the thread tonight?</h2>
+            <div class="choices">
+              <label><input type="radio" name="p6b" value="Reply publicly in the thread acknowledging the page was on our domain"><span><b>Reply in the thread</b><small><strong>What happens:</strong> A named person responds publicly, confirms the page was on the company's domain and says what is being done. <strong>Trade-off:</strong> Meets people where they are. Commits the company publicly before Room A has published anything.</small></span></label>
+              <label><input type="radio" name="p6b" value="Contact the three named merchants directly and stay out of the thread"><span><b>Go direct, not public</b><small><strong>What happens:</strong> The three named traders get a call tonight; nobody posts. <strong>Trade-off:</strong> Fixes the loudest voices and leaves 96 comments unanswered with a journalist reading.</small></span></label>
+              <label><input type="radio" name="p6b" value="Give support a holding line and wait for the official statement"><span><b>Holding line only</b><small><strong>What happens:</strong> Support gets an approved script; everything else waits for Room A. <strong>Trade-off:</strong> Consistent and slow. Merchants calling tonight get a script instead of an answer.</small></span></label>
+              <label><input type="radio" name="p6b" value="Escalate the new finding to Room A and hold all response until they have it"><span><b>Stop Room A first</b><small><strong>What happens:</strong> Everything pauses while you get the new scope finding to Room A before they publish. <strong>Trade-off:</strong> The right instinct, and it costs you the evening on the thread while you chase them down.</small></span></label>
+            </div>
+            <label class="notes-label">What you would send to Room A, if anything<textarea data-notes="p6b" placeholder="Room A needs to know…"></textarea></label>
+            <button class="primary commit-room" data-room="b" type="button">Record Room B decision</button>
+            <p class="commit-status" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div id="p6-press" class="evidence-view">
+          <div class="system-window">
+            <div class="system-bar"><span class="system-title">Inbound press</span><span>press@roamingbites.example · last 90 minutes</span></div>
+            <div class="doc-body">
+              <div class="press-item"><b>17:02 · trade publication</b><p>"We're running a piece tomorrow morning on the Reddit thread. Can you confirm whether the page was hosted on a roamingbites.example subdomain, and how many merchants were affected? Deadline 21:00."</p></div>
+              <div class="press-item"><b>17:19 · national, business desk</b><p>"Do you have a statement on reports that merchants were defrauded via pages hosted on your own platform? Specifically: when did you first become aware?"</p></div>
+              <div class="press-item"><b>17:31 · merchant trade body</b><p>"Several members have contacted us. Are you advising merchants to change their Roaming Bites passwords?"</p></div>
+            </div>
+            <p class="evidence-caution">Queries reproduced as received, with outlet type in place of names.</p>
+            <div class="system-foot">Deadlines are those stated by each outlet. No response has been sent to any of these.</div>
+          </div>
+        </div>
+
+        <div id="reconciliation" class="reconciliation hidden">
+          <div class="recon-head">
+            <p class="eyebrow">Both rooms have reported</p>
+            <h2>Bring the room back together</h2>
+          </div>
+          <div id="reconBody"></div>
+          <button id="openRecord" class="primary" data-route="summary" type="button">Open the incident record →</button>
+        </div>
+      </section>
+
+      <section id="summary" class="route">
+        <header class="phase-header">
+          <div>
+            <p class="eyebrow">Incident record</p>
+            <h1>RB-2027-0507</h1>
+            <p>Built from the phases you opened, the decisions you recorded and the seats you filled. Nothing here is invented.</p>
+          </div>
+          <button id="printSummary" class="text-button summary-print-button" type="button">⎙ Print record</button>
+        </header>
+        <div id="summaryBody"></div>
+      </section>
+
+      <section id="debrief" class="route">
+        <header class="phase-header">
+          <div>
+            <p class="eyebrow">Facilitator only</p>
+            <h1>Debrief</h1>
+            <p>The questions worth twenty minutes at the end.</p>
+          </div>
+        </header>
+        <article class="panel">
+          <h2>What this scenario is actually about</h2>
+          <p>Nobody in this story is incompetent and nobody is malicious except the attacker. A product decision made publishing possible, a false-positive problem was real, a threshold change was reasonable on its face, a reorg was well-intentioned, and a support agent gave correct generic advice. The incident is the <em>composition</em> of those five ordinary decisions.</p>
+          <div class="debrief-grid">
+            <div><b>Phase 1</b><p>Why did three separate merchant reports not become one incident? What would have had to be true for the pattern to surface without a phone call?</p></div>
+            <div><b>Phase 2</b><p>The Assistant asked the account holder to confirm intent. Who else could it have asked? What is a confirmation prompt actually a control against?</p></div>
+            <div><b>Phase 3</b><p>The test was deleted in the same commit as the threshold change. What in your own pipeline would notice that? Would a green build have stopped you?</p></div>
+            <div><b>Phase 4</b><p>SNS reported 2,847 successful deliveries to nobody. Where in your organisation is a queue that would look exactly like this today?</p></div>
+            <div><b>Phase 5</b><p>Which of the five numbers would you have put in a public statement, and could you have defended it a week later?</p></div>
+            <div><b>Phase 6</b><p>Did the two rooms contradict each other? Would anything the team did earlier have prevented that — and whose job was it?</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <h2>On the unfilled seats</h2>
+          <p>Ask the room directly: which empty seat hurt most, and did anyone notice its absence before the consequence landed? In most organisations the answer is that nobody notices a missing lens until an incident makes it expensive. That is the lesson, and it is not a criticism of the people who were in the room.</p>
+          <div id="debriefGaps"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="phaseRevealDialog" class="phase-reveal-dialog">
+    <div class="reveal-screen">
+      <div class="reveal-meta"><span id="revealPhase"></span><time id="revealTime"></time></div>
+      <div class="reveal-story"><h2 id="revealTitle"></h2></div>
+      <div class="reveal-body" id="revealBody"></div>
+      <div class="reveal-progress"><span id="revealProgressBar"></span></div>
+      <div class="reveal-actions"><button id="revealToEvidence" class="primary" type="button">Open the evidence →</button></div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
