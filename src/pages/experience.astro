@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { slugifyTag } from '../utils/tags';
+import { projects, type WorkItem } from '../data/projects';
 
 const cv: { period: string; role: string; org: string }[] = [
   { period: '2026 — now', role: 'Founder & Security Researcher', org: 'Luda Hex' },
@@ -8,48 +9,6 @@ const cv: { period: string; role: string; org: string }[] = [
   { period: '2024 — 2025', role: 'IT Security Lead', org: 'ANVA' },
   { period: '2023 — 2024', role: 'Application & Offensive Security Consultant', org: 'Xebia' },
   { period: '2020 — 2023', role: 'Security Engineer', org: 'SEEK' },
-];
-
-interface WorkItem {
-  name: string;
-  detail: string;
-  href?: string;
-  tag?: string;
-}
-
-const projects: WorkItem[] = [
-  {
-    name: 'Roaming Bites — incident response tabletop',
-    detail:
-      'A five-phase browser tabletop on an AI-agent compromise in AWS. Pick a response team, work the evidence, commit decisions. Runs in the browser, nothing to install.',
-    href: '/projects/incident_roaming_bites/',
-    tag: 'Training',
-  },
-  {
-    name: 'smbscan',
-    detail: 'Contributor to this open-source tool for enumerating SMB file shares on an internal network.',
-    href: 'https://github.com/jeffhacks/smbscan',
-    tag: 'Open source',
-  },
-  {
-    name: 'OWASP Low-Code/No-Code Top 10',
-    detail:
-      'Contributor — added business-user descriptions and plain-language examples so citizen developers can act on the risks.',
-    href: 'https://owasp.org/www-project-top-10-low-code-no-code-security-risks',
-    tag: 'Open source',
-  },
-  {
-    name: 'Lely — secure robotics engineering',
-    detail:
-      'Secure development and engineering for agricultural robotics at Lely.',
-    tag: 'Consulting',
-  },
-  {
-    name: 'Agentic AI lifestyle assistants',
-    detail:
-      'Threat hunting, cloud security controls and penetration testing of LLM- and agent-powered consumer lifestyle assistants for an undisclosed client.',
-    tag: 'Consulting',
-  },
 ];
 
 const talks: WorkItem[] = [
