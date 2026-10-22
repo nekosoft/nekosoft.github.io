@@ -3,28 +3,102 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { slugifyTag } from '../utils/tags';
 import { projects, type WorkItem } from '../data/projects';
 
-const cv: { period: string; role: string; org: string }[] = [
+const cv: {
+  period: string;
+  role: string;
+  org: string;
+  summary?: string[];
+}[] = [
   { period: '2026 — now', role: 'Founder & Security Researcher', org: 'Luda Hex' },
-  { period: '2025 — now', role: 'Offensive & Software Security Specialist', org: 'Xebia' },
-  { period: '2024 — 2025', role: 'IT Security Lead', org: 'ANVA' },
-  { period: '2023 — 2024', role: 'Application & Offensive Security Consultant', org: 'Xebia' },
-  { period: '2020 — 2023', role: 'Security Engineer', org: 'SEEK' },
+  {
+    period: '2025 — now',
+    role: 'Offensive & Software Security Specialist',
+    org: 'Xebia',
+    summary: [
+      'Penetration tests, architecture reviews, threat modelling and targeted research across changing technology stacks.',
+      'Bring an offensive perspective into architecture and engineering discussions, where teams naturally understand the intended path better than the ways it can be misused.',
+      'Share findings through engineering talks, client workshops and hands-on training, adapting the depth to the people in the room.',
+      'Create new courses and workshops centred on secure engineering, cloud and AI.',
+    ],
+  },
+  {
+    period: '2024 — 2025',
+    role: 'IT Security Lead',
+    org: 'ANVA',
+    summary: [
+      'Led the introduction of secure engineering practices from design to deployment and runtime, where previously only a governance- and policy-based strategy was in place.',
+      'Brought secure code review into automated pipelines and local development workflows so engineers received feedback while they were still working on the code.',
+      'Connected signals across applications, networks, customer support and employee experience so isolated warnings could be recognised as part of the same incident.',
+    ],
+  },
+  {
+    period: '2023 — 2024',
+    role: 'Application & Offensive Security Consultant',
+    org: 'Xebia',
+    summary: [
+      'Worked with Lely to bring security into agricultural robotics engineering, where connected-device weaknesses could affect operational and physical safety. Attack surface covered embedded applications, local wireless networks connecting to remote systems, and development environments.',
+      'Built and delivered practical training in firmware reverse engineering, cloud and local network exploitation, and attacks against wireless devices.',
+    ],
+  },
+  {
+    period: '2020 — 2023',
+    role: 'Security Engineer',
+    org: 'SEEK',
+    summary: [
+      'Helped grow an early threat-intelligence capability into what is now a dedicated function.',
+      'Hosted capture-the-flag exercises in which developers practised exploiting the weaknesses they were learning to prevent.',
+      'Attack-surface expert on the offensive security team — social engineering, physical pentesting, and remote technical systems, from street to corporate network to server room.',
+    ],
+  },
+];
+
+const impact: string[] = [
+  'Security-tested production LLMs, chatbots and agents — demonstrating jailbreaks and critical attack paths, including authentication and race-condition flaws, poisoned-corpus prompt injection that bypassed guardrails, and an overly permissive agent sandbox that enabled root-level RCE and persistent data exfiltration.',
+  'Hands-on with hardware and IoT: rooted and backdoored webcams, sniffed and analysed radio signals (BLE, Bluetooth Classic, Wi-Fi, Zigbee), and developed the research into an IoT exploitation masterclass delivered as co-trainer at DEF CON.',
+  'Helped hundreds of engineers improve their security workflows by teaching and implementing agentic, deterministic and manual techniques — correlating and filtering signals across code, configuration and production to shorten the time from discovery to proven exploit.',
+  'Developed current research into paid client trainings: AWS Security in the Age of AI, LLM and Agentic Hacking, From Secure Code Review to Hackbot, and a Threat Modelling workshop.',
+  'Discovered compromised containerised workloads in AWS-hosted client applications using threat hunting, code review and cloud security controls.',
+  'Assessed and designed cloud IAM architectures and account/project structures across AWS, Google Cloud and Nebius — separating production, development, sandbox and centralised logging environments to support separation of duties.',
+];
+
+const research: { title: string; detail: string }[] = [
+  {
+    title: 'AI-assisted security research & LLM guardrail testing',
+    detail:
+      'Custom test harnesses with per-experiment cost tracking. Moving beyond jailbreak testing to measuring the effectiveness of cloud-provided guardrails and open-weight safety classifiers. Comparing security workflows across Opus, Sonnet, Sol, GLM and more — connecting an organisation’s security objectives with the logic actually implemented in their code.',
+  },
+  {
+    title: 'Wi-Fi motion sensing & radio frequency intelligence',
+    detail:
+      'Programming ESP32 chips and experimenting with channel-state information for motion sensing. Analysing smart "spy" glasses and cheap electronics and the potential for detecting these devices. Exploring what ordinary wireless signals can reveal about people and critical infrastructure — feeding into a new IoT course.',
+  },
 ];
 
 const talks: WorkItem[] = [
   {
     name: 'IoT Exploitation Masterclass: Hardware & RF Hacking',
-    detail: 'DEF CON Trainings 2026 · with Smriti Gaba',
+    detail: 'DEF CON Training, Singapore · 2026 · with Smriti Gaba',
     href: 'https://training.defcon.org/products/iot-exploitation-masterclass-hardware-rf-hacking-smriti-gaba-yianna-paris-dctlv2026',
   },
   {
-    name: 'Recon workshop with Jason Haddix',
-    detail: 'Red Team Village, DEF CON',
+    name: 'Would you let an agent fix production at 3am?',
+    detail: 'GoDataFest · 2026',
+    href: 'https://events.xebia.com/cloud-data-modernization/godatafest-2026',
   },
   {
-    name: 'Scripted Recon: Turning Data into Intelligence',
-    detail: 'Recon automation workshop',
-    href: 'https://0xcc.sh/sr.html',
+    name: 'I jailbroke a scam bot with 1 prompt, and so can you',
+    detail: 'WICCON · 2026',
+    href: 'https://program.wiccon.nl/wiccon-2026/talk/DGAYA3/',
+  },
+  {
+    name: 'One arrow, multiple breaches: what I’ve learned jailbreaking AI chatbots',
+    detail: 'Techorama Netherlands · 2026',
+    href: 'https://www.techorama.nl/schedule/sessions/1246988',
+  },
+  {
+    name: 'Cracking the API: Challenges in IoT and Modern Applications',
+    detail: 'OWASP Netherlands · 2024',
+    href: 'https://owasp.org/www-chapter-netherlands/pastevents',
   },
   {
     name: 'Threat Hunting: More than blue, it’s a team sport',
@@ -32,14 +106,18 @@ const talks: WorkItem[] = [
     href: 'https://www.youtube.com/watch?v=hYM0hW9-GL4',
   },
   {
-    name: 'Building secure apps start with secure relationships',
-    detail: 'The Diana Initiative',
-    href: 'https://www.youtube.com/watch?v=yBsAj5Vs0BU',
+    name: 'Scripted Recon Workshop',
+    detail: '0xcc · 2023',
+    href: 'https://0xcc.sh/sr.html',
   },
   {
-    name: 'Cracking the API: Challenges in IoT and Modern Applications',
-    detail: 'OWASP Netherlands · 2024',
-    href: 'https://owasp.org/www-chapter-netherlands/pastevents',
+    name: 'Recon and bug bounty hunting w/ Jason Haddix',
+    detail: 'Red Team Village, DEF CON · 2023',
+  },
+  {
+    name: 'Building secure apps starts with secure relationships',
+    detail: 'The Diana Initiative · 2022',
+    href: 'https://www.youtube.com/watch?v=yBsAj5Vs0BU',
   },
 ];
 
@@ -86,6 +164,13 @@ const workGroups: { label: string; accent: string; items: WorkItem[] }[] = [
     </p>
   </header>
 
+  <section class="container narrow impact">
+    <h2>Impact in 2026</h2>
+    <ul class="impact-list">
+      {impact.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
   <section class="container narrow career">
     <h2>Career</h2>
     <ol class="cv-list">
@@ -93,17 +178,39 @@ const workGroups: { label: string; accent: string; items: WorkItem[] }[] = [
         cv.map((job) => (
           <li class="cv-row">
             <span class="cv-period">{job.period}</span>
-            <span class="cv-role">
+            <div class="cv-role">
               <strong>{job.role}</strong> · {job.org}
-            </span>
+              {job.summary && (
+                <ul class="cv-summary">
+                  {job.summary.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </li>
         ))
       }
     </ol>
     <p class="cv-earlier">
-      Before that: software development at SEEK, full-stack &amp; UX founder at
-      Yolko, and university teaching at RMIT and the University of Melbourne.
+      Earlier experience spans 10+ years, including software development at
+      SEEK, building a full-stack product as a founder at Yolko, and teaching
+      at RMIT and the University of Melbourne.
     </p>
+  </section>
+
+  <section class="container narrow research">
+    <h2>Independent research</h2>
+    <div class="research-list">
+      {
+        research.map((item) => (
+          <article class="research-item">
+            <h3>{item.title}</h3>
+            <p>{item.detail}</p>
+          </article>
+        ))
+      }
+    </div>
   </section>
 
   <section class="container narrow work">
@@ -157,8 +264,67 @@ const workGroups: { label: string; accent: string; items: WorkItem[] }[] = [
     white-space: nowrap;
   }
 
-  .career {
+  .impact {
     padding-top: var(--space-6);
+  }
+
+  .impact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .impact-list li {
+    position: relative;
+    padding-left: var(--space-4);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .impact-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--magenta);
+    font-size: 0.78rem;
+    line-height: 1.75;
+  }
+
+  .career {
+    padding-top: var(--space-7);
+  }
+
+  .research {
+    padding-top: var(--space-7);
+  }
+
+  .research-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .research-item {
+    border-left: 2px solid var(--purple);
+    padding-left: var(--space-4);
+  }
+
+  .research-item h3 {
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--text);
+  }
+
+  .research-item p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
   }
 
   .work {
@@ -205,6 +371,32 @@ const workGroups: { label: string; accent: string; items: WorkItem[] }[] = [
   .cv-role strong {
     font-weight: 600;
     color: var(--text);
+  }
+
+  .cv-summary {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cv-summary li {
+    position: relative;
+    padding-left: var(--space-3);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .cv-summary li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    top: -2px;
+    color: var(--cyan);
+    font-size: 1.1rem;
   }
 
   .cv-earlier {
