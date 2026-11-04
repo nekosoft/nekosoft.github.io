@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fish &amp; Chips art workshop — Luda Hex</title>
+<meta name="description" content="A hands-on anti-surveillance art workshop: notice what is watching, then make work that looks back.">
+<meta property="og:title" content="Fish &amp; Chips — an anti-surveillance art workshop">
+<meta property="og:description" content="Notice what is watching, then make work that looks back.">
+<meta property="og:image" content="https://ludahex.nl/projects/fish_chips_workshop/fish-chips-art-rotation.gif">
+<style>
+/* Fonts are self-hosted: an anti-surveillance page shouldn't phone a font CDN. */
+@font-face{font-family:"Playfair Display";font-weight:700;src:url(fonts/playfair-display-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:400;src:url(fonts/source-serif-4-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:400;font-style:italic;src:url(fonts/source-serif-4-latin-400-italic.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:600;src:url(fonts/source-serif-4-latin-600-normal.woff2) format("woff2");font-display:swap}
+
+:root{--paper:#fff;--ink:#111;--soft:#5a5a5a;--line:#d8d8d8;--head:"Playfair Display",Georgia,serif;--body:"Source Serif 4",Georgia,serif;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:19px/1.65 var(--body)}
+a{color:var(--ink);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+p{margin:0 0 1em}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
+.skip{position:absolute;left:-999px}.skip:focus{left:12px;top:12px;background:var(--paper);border:1px solid;padding:6px 10px;z-index:9}
+.sheet{width:min(1040px,calc(100% - 48px));margin:0 auto;padding:40px 0 64px}
+.label{font-size:15px;color:var(--soft);margin:0 0 8px}
+
+/* masthead */
+.masthead{text-align:center;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+.masthead h1{font-size:clamp(40px,7vw,72px);letter-spacing:-.01em}
+.masthead p{font-style:italic;color:var(--soft);margin:6px 0 0}
+.dateline{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--ink);font-size:15px;color:var(--soft)}
+
+/* lead story */
+.lead{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:start;padding:48px 0 56px}
+.lead>*{min-width:0}
+.lead h2{font-size:clamp(34px,4.6vw,52px);margin-bottom:18px}
+.deck{font-size:22px;line-height:1.5;margin-bottom:24px}
+.story{max-width:62ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-block;padding:11px 20px;border:1.5px solid var(--ink);font-family:var(--body);font-weight:600;font-size:17px;text-decoration:none}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:hover{background:#f2f2f2}.btn.primary:hover{background:#333}
+
+/* the one art nouveau flourish: an arched frame */
+.plate{margin:0}
+.arch{border:1.5px solid var(--ink);border-radius:999px 999px 0 0;padding:12px 12px 0;overflow:hidden}
+.arch img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:999px 999px 0 0}
+.plate figcaption{border:1.5px solid var(--ink);border-top:0;padding:8px 12px;font-size:15px;font-style:italic;color:var(--soft);text-align:center}
+
+/* sections */
+.section{padding:44px 0;border-top:1px solid var(--line)}
+.section>h2{font-size:30px;margin-bottom:24px}
+
+.details{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin:0}
+.details dt{font-size:15px;color:var(--soft);margin-bottom:2px}
+.details dd{margin:0;font-weight:600}
+.todo{font-weight:400;font-style:italic;color:var(--soft);text-decoration:underline dotted;text-underline-offset:4px}
+
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:32px 56px;list-style:none;margin:0;padding:0;counter-reset:step}
+.steps li{counter-increment:step;display:grid;grid-template-columns:44px 1fr}
+.steps li::before{content:counter(step);font-family:var(--head);font-size:30px;line-height:1.1}
+.steps h3{font-size:22px;margin-bottom:6px}
+.steps p{color:#333;margin:0}
+
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.themes svg{width:44px;height:44px;display:block;margin-bottom:12px}
+.themes h3{font-size:22px;margin-bottom:6px}
+.themes p{color:#333;margin:0}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.two h3{font-size:22px;margin-bottom:10px}
+.two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
+
+.bring-title,.thanks-title{font-size:22px;margin-bottom:10px}
+.bring-list{margin:0;padding-left:1.1em}.bring-list li{margin:4px 0}
+
+/* Donations: full-width text, then shout-outs three to a row. */
+.support-text{margin-bottom:32px}
+.donations{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.donation{background:#f5f5f2;border-radius:6px;padding:16px 18px;min-width:0}
+.donation strong{display:block;font-family:var(--head);font-size:20px;line-height:1.25}
+.donation .amount{display:block;color:var(--soft);font-size:15px;margin-top:2px}
+.donation p{margin:8px 0 0;font-size:16px;font-style:italic;color:#333}
+.no-donations{color:var(--soft);font-style:italic;margin:0}
+.donations:has(.donation)+.no-donations{display:none}
+
+/* Upcoming events: one row each, date on the left. */
+.events{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.event{display:grid;grid-template-columns:160px 1fr;gap:24px;padding:16px 0;border-bottom:1px solid var(--line)}
+.event>*{min-width:0}
+.event time{font-family:var(--head);font-weight:700;font-size:20px;line-height:1.3}
+.event strong{display:block;font-weight:600}
+.event span{display:block;color:var(--soft)}
+.event a{display:inline-block;margin-top:4px;font-size:16px}
+.no-events{color:var(--soft);font-style:italic;margin:0}
+.events:has(.event)+.no-events{display:none}
+.events:not(:has(.event)){border-top:0}
+
+/* Announcement under the dateline, centred above the lead story. */
+.announce{text-align:center;margin:32px 0 0;text-wrap:balance}
+.announce span{display:block;font-size:16px;color:var(--soft)}
+.announce strong{display:block;font-family:var(--head);font-weight:700;font-size:clamp(20px,2.6vw,26px);line-height:1.25;margin:2px 0 4px}
+.announce span:last-child{font-style:italic}
+
+.makers-intro{font-size:21px;line-height:1.5;margin-bottom:28px}
+.makers{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.makers figure{margin:0}
+/* Both pictures fill the same 16:9 box so the captions line up. */
+.makers img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:6px}
+.makers img[src="lilygo-cat.gif"]{object-fit:contain;border-radius:0}
+.makers figcaption{font-size:16px;color:var(--soft);margin-top:8px}
+.credit{font-size:13px;color:var(--soft);margin:18px 0 0}
+
+footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft)}
+
+@media(max-width:860px){
+  .lead{grid-template-columns:1fr;gap:40px}.plate{max-width:420px}
+  .details{grid-template-columns:1fr 1fr}
+  .steps,.themes,.two,.makers{grid-template-columns:1fr;gap:28px}
+  .donations{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  body{font-size:18px}.sheet{width:calc(100% - 32px);padding-top:24px}
+  .dateline{flex-direction:column;gap:0}
+  .deck{font-size:20px}
+  .event{grid-template-columns:1fr;gap:2px}
+  .section{padding:36px 0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#events">Skip to upcoming events</a>
+
+<div class="sheet">
+<header>
+  <div class="masthead">
+    <h1>Fish &amp; Chips</h1>
+    <p>An anti-surveillance art workshop</p>
+  </div>
+  <div class="dateline">
+    <span>Issue no. 1</span>
+    <span>December 2026</span>
+    <span>A community workshop by Zoë, Yianna and Jocasta</span>
+  </div>
+  <p class="announce">
+    <span>We're debuting our community workshop at</span>
+    <strong>CCC – Chaos Communication Congress, Hamburg</strong>
+    <span>A version of this workshop will run free across many community events.</span>
+  </p>
+</header>
+
+<main>
+<article class="lead">
+  <div class="story">
+    <h2>Who's watching, and how do we look back?</h2>
+    <p class="deck">Cameras on doorbells, spyglasses, and trackers in our pockets. A hands-on workshop for spotting them, questioning them, and making art that turns the surveillance around.</p>
+    <p>Every walk to the shop passes a dozen quiet observers. Some are obvious, like a camera on a pole. Others are invisible, announcing themselves over Bluetooth and Wi-Fi to anyone who listens.</p>
+    <p>In this workshop we listen. A small radio scanner shows what is broadcasting in the room. We ask who the watching is for, and make a piece that reveals and alerts.</p>
+    <p class="label">No experience needed. All materials provided.</p>
+    <!-- <div class="actions"> -->
+      <!-- TODO: replace # with the conference sign-up link
+      <a class="btn primary" href="#">Reserve a seat</a>
+      <a class="btn" href="#plan">See the plan</a> -->
+    <!-- </div> -->
+  </div>
+  <figure class="plate">
+    <div class="arch"><img src="fish-chips-art-rotation.gif" width="480" height="480" alt="Looping animation: a human eye turns into a fish, then into a camera lens."></div>
+    <figcaption>Watch them back.</figcaption>
+  </figure>
+</article>
+
+<!-- <section class="section" id="details"> -->
+  <!-- <h2>When and where</h2> -->
+  <!-- TODO: fill in the event details below and remove the .todo spans -->
+  <!-- <dl class="details">
+    <div><dt>Conference</dt><dd><span class="todo">[conference name]</span></dd></div>
+    <div><dt>Date and time</dt><dd><span class="todo">[date · start–end]</span></dd></div>
+    <div><dt>Venue</dt><dd><span class="todo">[venue · room]</span></dd></div>
+    <div><dt>Places</dt><dd><span class="todo">[capacity]</span></dd></div>
+  </dl>
+</section> -->
+
+<section class="section" id="events">
+  <h2>Upcoming events</h2>
+  <!-- To add an event, copy this line inside the list below and fill it in.
+       Put the soonest event first. The link is optional; delete it if not needed.
+       <li class="event"><time datetime="2026-12-12">12 Dec 2026</time><div><strong>Event name</strong><span>Venue, City</span><a href="https://example.org">Event page</a></div></li>
+  -->
+  <ul class="events">
+  </ul>
+  <p class="no-events">More details coming soon.</p>
+</section>
+
+<section class="section" id="makers">
+  <h2>Fish, meet chips</h2>
+  <p class="makers-intro"><strong>Zoë makes fish. Yianna programs chips.</strong> In this workshop we're merging the two: handmade objects and tiny programmable screens, put together to make anti-surveillance art. Pics are early prototypes while we work out the details.</p>
+  <div class="makers">
+    <figure>
+      <img src="fish-bead.jpg" width="1600" height="900" loading="lazy" alt="A jointed fish lure in white and deep red, hung with red and white beads and a small heart, made into a keyring.">
+      <figcaption>Zoë makes fish: beaded fish art, built by hand.</figcaption>
+    </figure>
+    <figure>
+      <img src="lilygo-cat.gif" width="508" height="230" loading="lazy" alt="A LilyGo T-Display-S3 board whose small screen shows a pixel-art white cat bouncing next to a pink heart.">
+      <figcaption>Yianna programs chips: pixel art running on a LilyGo T-Display-S3 with a 1.9-inch screen. Info from signals and devices detected will be displayed and interacted with on the board.</figcaption>
+    </figure>
+  </div>
+  <p class="credit">Board photo: LILYGO, from the <a href="https://github.com/Xinyuan-LilyGO/T-Display-S3">T-Display-S3 repository</a>, MIT licence. Cat on screen added.</p>
+</section>
+
+<section class="section" id="plan">
+  <h2>The plan</h2>
+  <ol class="steps">
+    <li><div><h3>Radio Signals</h3><p>A short tour of everyday surveillance and radio frequencies. Learn what is broadcasting around us on 2.4 GHz.</p></div></li>
+    <li><div><h3>Make artwork</h3><p>Take your anti surveillance piece home, share it, fork it, improve it.</p></div></li>
+    <li><div><h3>The Chip</h3><p>Development on either: ESP32, ESP32-S3 or ESP32-C6, all with screens, depending on availability and cost.  </p></div></li>
+    <li><div><h3>The Fish</h3><p>We're providing materials to make a beautiful casing, inspired by the fish made by Zoë.</p></div></li>
+  </ol>
+</section>
+<!-- 
+<section class="section" id="themes">
+  <h2>Three ways in</h2>
+  <div class="themes">
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 22 Q22 6 41 22 Q22 38 3 22Z"/><circle cx="22" cy="22" r="7"/><circle cx="22" cy="22" r="2.5" fill="currentColor"/></svg>
+      <h3>The eye</h3>
+      <p>Being watched by people, and by systems built to look like they aren't watching.</p>
+    </div>
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M10 22 C 17 12, 32 12, 40 22 C 32 32, 17 32, 10 22Z"/><path d="M10 22 L3 15 Q6 22 3 29Z"/><circle cx="33" cy="20.5" r="1.4" fill="currentColor"/></svg>
+      <h3>The fish</h3>
+      <p>Phishing, lures and bait: how attention and trust get caught.</p>
+    </div>
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="22" cy="22" r="19"/><circle cx="22" cy="22" r="11"/><circle cx="22" cy="22" r="4" fill="currentColor"/></svg>
+      <h3>The lens</h3>
+      <p>Cameras, chips and sensors, and what changes when you point one back.</p>
+    </div>
+  </div>
+</section> -->
+
+<section class="section" id="bring">
+  <h3 class="bring-title">What to bring</h3>
+  <ul class="bring-list">
+    <li>Yourself and some curiosity</li>
+  </ul>
+  <p class="label" style="margin-top:10px">We are providing: crafts, ESP32 development board (to be decided) and 450 mAh batteries.</p>
+</section>
+
+<section class="section" id="support">
+  <h2>Consider supporting us with voluntary donations</h2>
+  <p class="support-text">We can afford to fund 30 kits at CCC. We are getting €200 from the conference but it's not enough to cover all the material costs, so we are funding everything else ourselves. We estimate the cost of each kit to be <em>€15-30 euro</em> depending on hardware choice. You get to keep your chips and what you make. This is an important topic for us and we really want to educate more people. This is meant to be an accessible workshop for people who don't know much about radio signals, all the way to enthusiasts who can make the project better.</p>
+
+  <h3 class="thanks-title">Thank you to our supporters</h3>
+  <!-- To add a donation, copy this line inside the list below and fill it in.
+       The amount and message are optional; delete those parts if not wanted.
+       <li class="donation"><strong>Name</strong><span class="amount">€25</span><p>Optional message.</p></li>
+  -->
+  <ul class="donations">
+    <li class="donation"><strong>Anonymous hacker from NL</strong><span class="amount">Donated the 450 mAh batteries</span></li>
+  </ul>
+  <p class="no-donations">No donations yet. Be the first to support the workshop.</p>
+</section>
+</main>
+
+<footer>Published by <a href="https://ludahex.nl">Luda Hex</a> · Based on our own firmware · Inspired by <a href="https://squachwatch.com/">SquachWatch</a></footer>
+</div>
+</body>
+</html>

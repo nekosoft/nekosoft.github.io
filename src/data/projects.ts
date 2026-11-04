@@ -22,6 +22,16 @@ export interface HostedProject extends WorkItem {
 
 export const hostedProjects: HostedProject[] = [
   {
+    name: 'Fish & Chips — who’s watching?',
+    kicker: 'Anti-surveillance art workshop',
+    detail:
+      'Learn what is broadcasting around us on 2.4 GHz, then build an anti-surveillance piece: an ESP32 with a screen inside a handmade fish casing. Debuting at CCC in Hamburg; no experience needed.',
+    facts: ['hands-on', 'debuting at CCC', 'materials provided'],
+    href: '/projects/fish_chips_workshop/',
+    cta: 'See the workshop',
+    tag: 'Art',
+  },
+  {
     name: 'Roaming Bites — The Promotion That Wasn’t',
     kicker: 'Incident tabletop',
     detail:
