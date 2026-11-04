@@ -10,266 +10,186 @@
 <meta property="og:image" content="https://ludahex.nl/projects/fish_chips_workshop/fish-chips-art-rotation.gif">
 <style>
 /* Fonts are self-hosted: an anti-surveillance page shouldn't phone a font CDN. */
-@font-face{font-family:Federo;src:url(fonts/federo-latin-400-normal.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Playfair Display";font-weight:700;src:url(fonts/playfair-display-latin-700-normal.woff2) format("woff2");font-display:swap}
-@font-face{font-family:"Playfair Display";font-weight:900;src:url(fonts/playfair-display-latin-900-normal.woff2) format("woff2");font-display:swap}
-@font-face{font-family:"Playfair Display";font-style:italic;src:url(fonts/playfair-display-latin-400-italic.woff2) format("woff2");font-display:swap}
-@font-face{font-family:"Old Standard TT";src:url(fonts/old-standard-tt-latin-400-normal.woff2) format("woff2");font-display:swap}
-@font-face{font-family:"Old Standard TT";font-style:italic;src:url(fonts/old-standard-tt-latin-400-italic.woff2) format("woff2");font-display:swap}
-@font-face{font-family:"Old Standard TT";font-weight:700;src:url(fonts/old-standard-tt-latin-700-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:400;src:url(fonts/source-serif-4-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:400;font-style:italic;src:url(fonts/source-serif-4-latin-400-italic.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Source Serif 4";font-weight:600;src:url(fonts/source-serif-4-latin-600-normal.woff2) format("woff2");font-display:swap}
 
-:root{--paper:#fffefa;--ink:#111;--grey:#555;--rule:#111;--nouveau:Federo,"Didot",serif;--head:"Playfair Display",Georgia,serif;--body:"Old Standard TT",Georgia,"Times New Roman",serif;color-scheme:light}
+:root{--paper:#fff;--ink:#111;--soft:#5a5a5a;--line:#d8d8d8;--head:"Playfair Display",Georgia,serif;--body:"Source Serif 4",Georgia,serif;color-scheme:light}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body)}
-a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:3px}
+body{margin:0;background:var(--paper);color:var(--ink);font:19px/1.65 var(--body)}
+a{color:var(--ink);text-underline-offset:3px}
 a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-p{margin:0 0 .9em}
+p{margin:0 0 1em}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .skip{position:absolute;left:-999px}.skip:focus{left:12px;top:12px;background:var(--paper);border:1px solid;padding:6px 10px;z-index:9}
-.sheet{width:min(1120px,calc(100% - 48px));margin:0 auto;padding:28px 0 56px}
-
-/* ornaments */
-.ornament{display:block;width:100%;height:34px;color:var(--ink)}
-.rule-double{border:0;border-top:4px double var(--rule);margin:0}
+.sheet{width:min(1040px,calc(100% - 48px));margin:0 auto;padding:40px 0 64px}
+.label{font-size:15px;color:var(--soft);margin:0 0 8px}
 
 /* masthead */
-.ears{display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:13px;line-height:1.35}
-.ear{border:1px solid var(--ink);padding:8px 12px;width:180px;flex:none;text-align:center}
-.ear b{display:block;font-family:var(--nouveau);font-weight:400;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
-.masthead{text-align:center;padding:10px 0 4px;flex:1;min-width:0}
-.masthead h1{margin:0;font-family:var(--nouveau);font-weight:400;font-size:clamp(40px,7vw,86px);letter-spacing:.06em;line-height:1;text-transform:uppercase}
-.masthead h1 .amp{font-family:var(--head);font-style:italic;text-transform:none;font-size:.85em;letter-spacing:0;padding:0 .04em}
-.masthead .motto{font-family:var(--head);font-style:italic;font-size:clamp(16px,2vw,21px);margin:6px 0 10px}
-.dateline{display:flex;justify-content:space-between;gap:16px;padding:6px 2px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--nouveau)}
+.masthead{text-align:center;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+.masthead h1{font-size:clamp(40px,7vw,72px);letter-spacing:-.01em}
+.masthead p{font-style:italic;color:var(--soft);margin:6px 0 0}
+.dateline{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--ink);font-size:15px;color:var(--soft)}
 
 /* lead story */
-.lead{display:grid;grid-template-columns:1.45fr 1fr;gap:40px;padding:34px 0 30px}
+.lead{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:start;padding:48px 0 56px}
 .lead>*{min-width:0}
-.kicker{font-family:var(--nouveau);letter-spacing:.2em;text-transform:uppercase;font-size:13px;margin:0 0 10px}
-.lead h2{font-family:var(--head);font-weight:900;font-size:clamp(38px,5.4vw,66px);line-height:1.02;letter-spacing:-.01em;margin:0 0 14px}
-.deck{font-family:var(--head);font-style:italic;font-size:21px;line-height:1.4;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid var(--rule)}
-.byline{font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 14px}
-.cols{columns:2;column-gap:32px;column-rule:1px solid var(--rule);text-align:justify;hyphens:auto}
-.cols p:first-child::first-letter{float:left;font-family:var(--nouveau);font-size:4.2em;line-height:.85;border:1px solid var(--ink);margin:.1em .14em 0 0;padding:.12em .14em .04em}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-.btn{display:inline-block;padding:10px 18px;border:2px solid var(--ink);font-family:var(--nouveau);letter-spacing:.14em;text-transform:uppercase;font-size:14px;text-decoration:none;background:var(--paper);transition:transform .15s,box-shadow .15s}
+.lead h2{font-size:clamp(34px,4.6vw,52px);margin-bottom:18px}
+.deck{font-size:22px;line-height:1.5;margin-bottom:24px}
+.story{max-width:62ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-block;padding:11px 20px;border:1.5px solid var(--ink);font-family:var(--body);font-weight:600;font-size:17px;text-decoration:none}
 .btn.primary{background:var(--ink);color:var(--paper)}
-.btn:hover{box-shadow:4px 4px 0 var(--ink);transform:translate(-2px,-2px)}
-.btn.primary:hover{box-shadow:4px 4px 0 #999}
+.btn:hover{background:#f2f2f2}.btn.primary:hover{background:#333}
 
-/* arched figure */
-.plate{margin:0;text-align:center}
-.arch{border:5px double var(--ink);border-bottom:0;border-radius:999px 999px 0 0;padding:14px 14px 0;position:relative}
-.arch img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:999px 999px 0 0;filter:grayscale(1) contrast(1.15);transition:filter .6s}
-.plate:hover img,.plate:focus-within img{filter:none}
-.plate figcaption{border:5px double var(--ink);padding:8px 10px;font-family:var(--head);font-style:italic;font-size:15px}
-.plate figcaption b{font-family:var(--nouveau);font-style:normal;font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:12px;margin-right:6px}
+/* the one art nouveau flourish: an arched frame */
+.plate{margin:0}
+.arch{border:1.5px solid var(--ink);border-radius:999px 999px 0 0;padding:12px 12px 0;overflow:hidden}
+.arch img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:999px 999px 0 0;filter:grayscale(1);transition:filter .6s}
+.plate:hover img{filter:none}
+.plate figcaption{border:1.5px solid var(--ink);border-top:0;padding:8px 12px;font-size:15px;font-style:italic;color:var(--soft);text-align:center}
 
 /* sections */
-.section{padding:30px 0 26px}
-.section-title{text-align:center;margin:0 0 4px}
-.section-title h2{font-family:var(--nouveau);font-weight:400;font-size:clamp(24px,3vw,34px);letter-spacing:.16em;text-transform:uppercase;margin:6px 0 0}
-.section-title p{font-family:var(--head);font-style:italic;margin:2px 0 0}
+.section{padding:44px 0;border-top:1px solid var(--line)}
+.section>h2{font-size:30px;margin-bottom:24px}
 
-/* notices (details) */
-.notices{display:grid;grid-template-columns:repeat(4,1fr);border:5px double var(--ink);margin:20px 0 0}
-.notice{padding:16px 18px;text-align:center}
-.notice+.notice{border-left:1px solid var(--ink)}
-.notice dt{font-family:var(--nouveau);letter-spacing:.16em;text-transform:uppercase;font-size:13px;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:8px}
-.notice dd{margin:0;font-family:var(--head);font-weight:700;font-size:20px;line-height:1.3}
-.todo{font-family:var(--body);font-weight:400;font-style:italic;color:var(--grey);text-decoration:underline dotted;text-underline-offset:4px}
+.details{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin:0}
+.details dt{font-size:15px;color:var(--soft);margin-bottom:2px}
+.details dd{margin:0;font-weight:600}
+.todo{font-weight:400;font-style:italic;color:var(--soft);text-decoration:underline dotted;text-underline-offset:4px}
 
-/* order of proceedings */
-.proceedings{display:grid;grid-template-columns:repeat(4,1fr);margin:22px 0 0;list-style:none;padding:0}
-.proceedings li{padding:0 20px;text-align:justify;hyphens:auto}
-.proceedings li+li{border-left:1px solid var(--rule)}
-.proceedings li:first-child{padding-left:0}.proceedings li:last-child{padding-right:0}
-.numeral{display:block;text-align:center;font-family:var(--nouveau);font-size:34px;line-height:1;margin-bottom:4px}
-.proceedings h3{font-family:var(--head);font-weight:900;font-size:22px;line-height:1.2;text-align:center;margin:0 0 4px}
-.proceedings .step{display:block;text-align:center;font-family:var(--nouveau);letter-spacing:.2em;text-transform:uppercase;font-size:12px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
-.proceedings p{font-size:16px}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:32px 56px;list-style:none;margin:0;padding:0;counter-reset:step}
+.steps li{counter-increment:step;display:grid;grid-template-columns:44px 1fr}
+.steps li::before{content:counter(step);font-family:var(--head);font-size:30px;line-height:1.1}
+.steps h3{font-size:22px;margin-bottom:6px}
+.steps p{color:#333;margin:0}
 
-/* three arched panels */
-.panels{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:24px}
-.panel{border:2px solid var(--ink);border-radius:999px 999px 0 0;padding:44px 24px 22px;text-align:center;position:relative}
-.panel::before{content:"";position:absolute;inset:6px;border:1px solid var(--ink);border-radius:999px 999px 0 0;pointer-events:none}
-.panel svg{width:84px;height:84px;display:block;margin:0 auto 10px}
-.panel h3{font-family:var(--nouveau);font-weight:400;letter-spacing:.18em;text-transform:uppercase;font-size:20px;margin:0 0 8px}
-.panel p{font-family:var(--head);font-style:italic;font-size:17px;line-height:1.45;margin:0}
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.themes svg{width:44px;height:44px;display:block;margin-bottom:12px}
+.themes h3{font-size:22px;margin-bottom:6px}
+.themes p{color:#333;margin:0}
 
-/* classifieds */
-.back{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:22px}
-.classified{border:1px solid var(--ink);padding:18px 22px}
-.classified h3{font-family:var(--head);font-weight:900;font-size:24px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.02em}
-.classified ul{margin:0;padding:0;list-style:none}
-.classified li{padding:7px 0;border-bottom:1px dotted var(--ink);font-size:17px}
-.classified li:last-child{border-bottom:0}
-.classified li::before{content:"❧ "}
-.to-readers{border:5px double var(--ink);padding:18px 22px;text-align:justify;hyphens:auto}
-.to-readers h3{font-family:var(--nouveau);font-weight:400;letter-spacing:.16em;text-transform:uppercase;font-size:18px;text-align:center;margin:0 0 8px}
-.to-readers p{font-size:17px;margin:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.two h3{font-size:22px;margin-bottom:10px}
+.two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
 
-footer{text-align:center;font-size:14px;letter-spacing:.08em;padding-top:14px}
-footer p{margin:10px 0 0}
+footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft)}
 
-@media(max-width:900px){
-  .ears .ear{display:none}
-  .lead{grid-template-columns:1fr}.plate{max-width:440px;margin:0 auto;width:100%}
-  .notices{grid-template-columns:1fr 1fr}.notice:nth-child(3){border-left:0}.notice:nth-child(n+3){border-top:1px solid var(--ink)}
-  .proceedings{grid-template-columns:1fr 1fr;row-gap:26px}.proceedings li:nth-child(3){border-left:0;padding-left:0}.proceedings li:nth-child(2){padding-right:0}
-  .panels{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto}
-  .back{grid-template-columns:1fr}
+@media(max-width:860px){
+  .lead{grid-template-columns:1fr;gap:40px}.plate{max-width:420px}
+  .details{grid-template-columns:1fr 1fr}
+  .steps,.themes,.two{grid-template-columns:1fr;gap:28px}
 }
-@media(max-width:600px){
-  body{font-size:17px}.sheet{width:calc(100% - 32px);padding-top:16px}
-  .dateline{flex-direction:column;align-items:center;gap:2px;font-size:11px;text-align:center}
-  .cols{columns:1;text-align:left}
-  .notices{grid-template-columns:1fr}.notice+.notice{border-left:0;border-top:1px solid var(--ink)}
-  .proceedings{grid-template-columns:1fr}.proceedings li{padding:0!important;border-left:0!important;text-align:left}
-  .proceedings li+li{border-top:1px solid var(--rule);padding-top:22px!important}
-  .to-readers{text-align:left}
+@media(max-width:560px){
+  body{font-size:18px}.sheet{width:calc(100% - 32px);padding-top:24px}
+  .dateline{flex-direction:column;gap:0}
+  .deck{font-size:20px}
+  .section{padding:36px 0}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.arch img,.btn{transition:none}}
-@media print{.actions{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.arch img{transition:none}}
 </style>
 </head>
 <body>
-<!-- Art-nouveau whiplash divider: two curling stems meeting at an eye. -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="whiplash" viewBox="0 0 600 40">
-    <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-      <g id="half">
-        <path d="M324 20 C 360 20, 372 5, 410 8 S 470 33, 512 22 C 540 15, 556 24, 546 31 C 538 36, 528 28, 536 23 C 541 20, 546 24, 542 27"/>
-        <path d="M410 8 C 430 2, 446 6, 452 13" stroke-width="1"/>
-        <path d="M556 20 H600" stroke-width="1"/>
-      </g>
-      <use href="#half" transform="matrix(-1 0 0 1 600 0)"/>
-      <path d="M280 20 Q300 5 320 20 Q300 35 280 20Z"/>
-    </g>
-    <circle cx="300" cy="20" r="5" fill="currentColor"/>
-  </symbol>
-</svg>
-
 <a class="skip" href="#details">Skip to workshop details</a>
 
 <div class="sheet">
 <header>
-  <div class="ears">
-    <div class="ear"><b>Weather</b>Overcast, with scattered cameras and a chance of trackers</div>
-    <div class="masthead">
-      <h1>Fish <span class="amp">&amp;</span> Chips</h1>
-      <p class="motto">An anti-surveillance art workshop</p>
-    </div>
-    <div class="ear"><b>Price</b>Free of charge. All materials provided.</div>
+  <div class="masthead">
+    <h1>Fish &amp; Chips</h1>
+    <p>An anti-surveillance art workshop</p>
   </div>
-  <hr class="rule-double">
   <div class="dateline">
-    <span>Vol. I · No. 1</span>
+    <span>Issue no. 1</span>
     <!-- TODO: replace with the workshop date -->
     <span class="todo">[date]</span>
-    <span>A community conference special</span>
+    <span>A community conference workshop</span>
   </div>
-  <hr class="rule-double">
 </header>
 
 <main>
 <article class="lead">
-  <div>
-    <p class="kicker">Special edition</p>
-    <h2>Who's Watching, and How Do We Look Back?</h2>
+  <div class="story">
+    <h2>Who's watching, and how do we look back?</h2>
     <p class="deck">Cameras on doorbells, readers on lamp-posts, trackers in our pockets. A hands-on workshop for spotting them, questioning them, and making art that turns the lens around.</p>
-    <p class="byline">By Luda Hex · No experience needed</p>
-    <div class="cols">
-      <p>Every walk to the shop now passes a dozen quiet observers. Some are obvious: a camera on a pole, a dome above a door. Others are invisible, chirping their presence over Bluetooth and Wi-Fi to anyone who cares to listen.</p>
-      <p>In this workshop we listen. A small pocket radio scanner shows how much is broadcasting in the room around us. Then we put pen to paper: mapping where we are seen, and asking who all this watching is really for.</p>
-      <p>Finally, we make. With collage, drawing, stencils and found images, every participant leaves with a piece that hides, reveals, or simply looks back.</p>
-    </div>
+    <p>Every walk to the shop passes a dozen quiet observers. Some are obvious, like a camera on a pole. Others are invisible, announcing themselves over Bluetooth and Wi-Fi to anyone who listens.</p>
+    <p>In this workshop we listen. A small radio scanner shows what is broadcasting in the room. Then we map where we are seen, ask who the watching is for, and make a piece that hides, reveals or looks back.</p>
+    <p class="label">No experience needed. All materials provided.</p>
     <div class="actions">
       <!-- TODO: replace # with the conference sign-up link -->
       <a class="btn primary" href="#">Reserve a seat</a>
-      <a class="btn" href="#plan">Order of proceedings</a>
+      <a class="btn" href="#plan">See the plan</a>
     </div>
   </div>
   <figure class="plate">
     <div class="arch"><img src="fish-chips-art-rotation.gif" width="480" height="480" alt="Looping animation: a human eye turns into a fish, then into a camera lens."></div>
-    <figcaption><b>Plate I.</b>Eye, fish, lens. Hover to restore its colour.</figcaption>
+    <figcaption>Eye, fish, lens. Hover for colour.</figcaption>
   </figure>
 </article>
 
-<svg class="ornament" aria-hidden="true"><use href="#whiplash"/></svg>
-
 <section class="section" id="details">
-  <div class="section-title"><h2>Public Notices</h2><p>When and where to find us</p></div>
+  <h2>When and where</h2>
   <!-- TODO: fill in the event details below and remove the .todo spans -->
-  <dl class="notices">
-    <div class="notice"><dt>Conference</dt><dd><span class="todo">[conference name]</span></dd></div>
-    <div class="notice"><dt>Date &amp; Time</dt><dd><span class="todo">[date · start–end]</span></dd></div>
-    <div class="notice"><dt>Venue</dt><dd><span class="todo">[venue · room]</span></dd></div>
-    <div class="notice"><dt>Places</dt><dd><span class="todo">[capacity]</span></dd></div>
+  <dl class="details">
+    <div><dt>Conference</dt><dd><span class="todo">[conference name]</span></dd></div>
+    <div><dt>Date and time</dt><dd><span class="todo">[date · start–end]</span></dd></div>
+    <div><dt>Venue</dt><dd><span class="todo">[venue · room]</span></dd></div>
+    <div><dt>Places</dt><dd><span class="todo">[capacity]</span></dd></div>
   </dl>
 </section>
 
-<svg class="ornament" aria-hidden="true"><use href="#whiplash"/></svg>
-
 <section class="section" id="plan">
-  <div class="section-title"><h2>Order of Proceedings</h2><p>Timings are a guide; the making gets most of the time</p></div>
-  <ol class="proceedings">
-    <li><span class="numeral">I</span><h3>What's watching this room?</h3><span class="step">Notice</span><p>A short tour of everyday surveillance: doorbell and street cameras, number-plate readers, Bluetooth trackers, smart glasses. A pocket radio scanner shows what is broadcasting around us right now.</p></li>
-    <li><span class="numeral">II</span><h3>Draw your route</h3><span class="step">Map</span><p>Sketch a walk you take often and mark where you think you are seen, recorded or counted. Compare maps in small groups: what surprised you?</p></li>
-    <li><span class="numeral">III</span><h3>Turn the lens around</h3><span class="step">Make</span><p>Collage, drawing, stencils and found images. Disguise, distort or reveal: make a piece that hides you from a camera, exposes one, or asks who it is for.</p></li>
-    <li><span class="numeral">IV</span><h3>Pin-up and talk-back</h3><span class="step">Share</span><p>Put the work on the wall and talk it through. Leave with your piece and a short list of things you can actually change.</p></li>
+  <h2>The plan</h2>
+  <ol class="steps">
+    <li><div><h3>Notice</h3><p>A short tour of everyday surveillance: doorbell and street cameras, number-plate readers, Bluetooth trackers, smart glasses. A radio scanner shows what is broadcasting around us.</p></div></li>
+    <li><div><h3>Map</h3><p>Sketch a walk you take often and mark where you think you are seen, recorded or counted. Compare maps in small groups.</p></div></li>
+    <li><div><h3>Make</h3><p>Collage, drawing, stencils and found images. Make a piece that hides you from a camera, exposes one, or asks who it is for.</p></div></li>
+    <li><div><h3>Share</h3><p>Put the work on the wall and talk it through. Leave with your piece and a short list of things you can change.</p></div></li>
   </ol>
 </section>
 
-<svg class="ornament" aria-hidden="true"><use href="#whiplash"/></svg>
-
 <section class="section" id="themes">
-  <div class="section-title"><h2>Three Ways In</h2><p>Starting points for your piece</p></div>
-  <div class="panels">
-    <article class="panel">
-      <svg viewBox="0 0 84 84" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 42 Q42 12 76 42 Q42 72 8 42Z"/><circle cx="42" cy="42" r="13"/><circle cx="42" cy="42" r="5" fill="currentColor"/><path d="M42 8v8M24 13l4 7M60 13l-4 7M12 24l6 5M72 24l-6 5" stroke-width="1.2"/></svg>
-      <h3>The Eye</h3>
+  <h2>Three ways in</h2>
+  <div class="themes">
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 22 Q22 6 41 22 Q22 38 3 22Z"/><circle cx="22" cy="22" r="7"/><circle cx="22" cy="22" r="2.5" fill="currentColor"/></svg>
+      <h3>The eye</h3>
       <p>Being watched by people, and by systems built to look like they aren't watching.</p>
-    </article>
-    <article class="panel">
-      <svg viewBox="0 0 84 84" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 42 C 26 24, 52 22, 66 42 C 52 62, 26 60, 14 42Z"/><path d="M14 42 L4 30 Q8 42 4 54Z"/><circle cx="56" cy="39" r="2.4" fill="currentColor"/><path d="M34 30 Q38 42 34 54M42 28 Q46 42 42 56" stroke-width="1.1"/><path d="M74 14 V30 C 74 38, 66 38, 66 32" stroke-width="1.3"/></svg>
-      <h3>The Fish</h3>
+    </div>
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M10 22 C 17 12, 32 12, 40 22 C 32 32, 17 32, 10 22Z"/><path d="M10 22 L3 15 Q6 22 3 29Z"/><circle cx="33" cy="20.5" r="1.4" fill="currentColor"/></svg>
+      <h3>The fish</h3>
       <p>Phishing, lures and bait: how attention and trust get caught.</p>
-    </article>
-    <article class="panel">
-      <svg viewBox="0 0 84 84" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="42" cy="42" r="32"/><circle cx="42" cy="42" r="24" stroke-width="1.1"/><circle cx="42" cy="42" r="15"/><circle cx="42" cy="42" r="7" fill="currentColor"/><path d="M33 33 Q37 29 42 29" stroke-width="1.4" stroke-linecap="round"/></svg>
-      <h3>The Lens</h3>
+    </div>
+    <div>
+      <svg viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="22" cy="22" r="19"/><circle cx="22" cy="22" r="11"/><circle cx="22" cy="22" r="4" fill="currentColor"/></svg>
+      <h3>The lens</h3>
       <p>Cameras, chips and sensors, and what changes when you point one back.</p>
-    </article>
+    </div>
   </div>
 </section>
 
-<svg class="ornament" aria-hidden="true"><use href="#whiplash"/></svg>
-
 <section class="section" id="bring">
-  <div class="section-title"><h2>Classifieds</h2><p>What to bring, and a word to our readers</p></div>
-  <div class="back">
-    <div class="classified">
-      <h3>Wanted</h3>
+  <div class="two">
+    <div>
+      <h3>What to bring</h3>
       <ul>
         <li>Yourself and some curiosity</li>
         <li>Optional: old magazines, printouts or photos to cut up</li>
         <li>Optional: a phone, to photograph your work</li>
-        <li>Paper, scissors, glue, pens and stencils provided</li>
       </ul>
+      <p class="label" style="margin-top:10px">Paper, scissors, glue, pens and stencils are provided.</p>
     </div>
-    <div class="to-readers">
-      <h3>A Notice to Readers</h3>
-      <p>Nothing leaves the room. The radio scanner only listens: it does not connect to, store or identify anyone's devices. Your maps and artwork are yours to take home, and photographs are taken only with permission. This page loads no trackers, no analytics and no third-party fonts.</p>
+    <div>
+      <h3>Nothing leaves the room</h3>
+      <p>The radio scanner only listens. It does not connect to, store or identify anyone's devices. Your maps and artwork are yours to take home, and photos are only taken with permission. This page loads no trackers, analytics or third-party fonts.</p>
     </div>
   </div>
 </section>
 </main>
 
-<footer>
-  <hr class="rule-double">
-  <p>Printed &amp; published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></p>
-</footer>
+<footer>Published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></footer>
 </div>
 </body>
 </html>
