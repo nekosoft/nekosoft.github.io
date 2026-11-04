@@ -74,13 +74,12 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .two h3{font-size:22px;margin-bottom:10px}
 .two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
 
-.makers{display:grid;grid-template-columns:1fr 1fr;gap:40px}
-.maker{margin:0}
-.maker .frame{aspect-ratio:16/9;border:1.5px solid var(--ink);overflow:hidden;display:grid;place-items:center;margin-bottom:14px}
-.maker .frame img{display:block;width:100%;height:100%;object-fit:cover}
-.maker .frame.pixel img{width:46%;height:auto;object-fit:contain;image-rendering:pixelated}
-.maker h3{font-size:22px;margin-bottom:4px}
-.maker p{color:#333;margin:0}
+.makers-intro{font-size:21px;line-height:1.5;max-width:46ch;margin-bottom:28px}
+.makers{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.makers figure{margin:0}
+.makers img{display:block;width:100%;height:auto;border-radius:6px}
+.makers figcaption{font-size:16px;color:var(--soft);margin-top:8px}
+.credit{font-size:13px;color:var(--soft);margin:18px 0 0}
 
 footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft)}
 
@@ -178,17 +177,19 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
 </section>
 
 <section class="section" id="makers">
-  <h2>Who makes it</h2>
+  <h2>Fish, meet chips</h2>
+  <p class="makers-intro"><strong>Zoë makes fish. Yianna programs chips.</strong> In this workshop we're merging the two: handmade objects and tiny programmable screens, put together to make anti-surveillance art.</p>
   <div class="makers">
-    <figure class="maker">
-      <div class="frame"><img src="fish-bead.jpg" width="1600" height="900" loading="lazy" alt="A jointed fish lure in white and deep red, hung with red and white beads and a small heart, made into a keyring."></div>
-      <figcaption><h3>Zoë makes chips</h3><p>Beaded fish art, built by hand.</p></figcaption>
+    <figure>
+      <img src="fish-bead.jpg" width="1600" height="900" loading="lazy" alt="A jointed fish lure in white and deep red, hung with red and white beads and a small heart, made into a keyring.">
+      <figcaption>Zoë makes fish: beaded fish art, built by hand.</figcaption>
     </figure>
-    <figure class="maker">
-      <div class="frame pixel"><img src="cat-heart.gif" width="360" height="258" loading="lazy" alt="A pixel-art white cat bouncing next to a pink heart."></div>
-      <figcaption><h3>Yianna programs chips</h3><p>Pixel art and firmware for tiny screens.</p></figcaption>
+    <figure>
+      <img src="lilygo-cat.gif" width="508" height="230" loading="lazy" alt="A LilyGo T-Display-S3 board whose small screen shows a pixel-art white cat bouncing next to a pink heart.">
+      <figcaption>Yianna programs chips: pixel art running on a LilyGo T-Display-S3 with a 1.9-inch screen.</figcaption>
     </figure>
   </div>
+  <p class="credit">Board photo: LILYGO, from the <a href="https://github.com/Xinyuan-LilyGO/T-Display-S3">T-Display-S3 repository</a>, MIT licence. Cat on screen added.</p>
 </section>
 
 <section class="section" id="bring">
