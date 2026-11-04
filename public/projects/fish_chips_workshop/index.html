@@ -99,6 +99,12 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .events:has(.event)+.no-events{display:none}
 .events:not(:has(.event)){border-top:0}
 
+/* Announcement under the dateline, centred above the lead story. */
+.announce{text-align:center;margin:32px 0 0;text-wrap:balance}
+.announce span{display:block;font-size:16px;color:var(--soft)}
+.announce strong{display:block;font-family:var(--head);font-weight:700;font-size:clamp(20px,2.6vw,26px);line-height:1.25;margin:2px 0 4px}
+.announce span:last-child{font-style:italic}
+
 .makers-intro{font-size:21px;line-height:1.5;margin-bottom:28px}
 .makers{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
 .makers figure{margin:0}
@@ -138,8 +144,13 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
   <div class="dateline">
     <span>Issue no. 1</span>
     <span>December 2026</span>
-    <span>A community conference workshop</span>
+    <span>A community workshop by Zoë, Yianna and Jocasta</span>
   </div>
+  <p class="announce">
+    <span>We're debuting our community workshop at</span>
+    <strong>CCC – Chaos Communication Congress, Hamburg</strong>
+    <span>A version of this workshop will run free across many community events.</span>
+  </p>
 </header>
 
 <main>
@@ -181,7 +192,7 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
   -->
   <ul class="events">
   </ul>
-  <p class="no-events">Dates coming soon.</p>
+  <p class="no-events">More details coming soon.</p>
 </section>
 
 <section class="section" id="makers">
@@ -241,7 +252,7 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
 
 <section class="section" id="support">
   <h2>Consider supporting us with voluntary donations</h2>
-  <p class="support-text">We can afford to fund 30 kits. We are getting €200 from the conference but it's not enough to cover all the material costs, so we are funding everything else ourselves. We estimate the cost of each kit to be <em>€20-30 euro</em> depending on hardware availability. You get to keep your chips and what you make. This is an important topic for us and we really want to educate more people. This is meant to be an accessible workshop for people who don't know much about radio signals, all the way to enthusiasts who can make the project better.</p>
+  <p class="support-text">We can afford to fund 30 kits at CCC. We are getting €200 from the conference but it's not enough to cover all the material costs, so we are funding everything else ourselves. We estimate the cost of each kit to be <em>€15-30 euro</em> depending on hardware choice. You get to keep your chips and what you make. This is an important topic for us and we really want to educate more people. This is meant to be an accessible workshop for people who don't know much about radio signals, all the way to enthusiasts who can make the project better.</p>
 
   <h3 class="thanks-title">Thank you to our supporters</h3>
   <!-- To add a donation, copy this line inside the list below and fill it in.

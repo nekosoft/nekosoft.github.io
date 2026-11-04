@@ -25,8 +25,8 @@ export const hostedProjects: HostedProject[] = [
     name: 'Fish & Chips — who’s watching?',
     kicker: 'Anti-surveillance art workshop',
     detail:
-      'Spot the cameras, trackers and sensors around us, map where you are seen, then make work that turns the lens around. Collage, drawing and stencils; no experience needed.',
-    facts: ['hands-on', 'community conference', 'materials provided'],
+      'Learn what is broadcasting around us on 2.4 GHz, then build an anti-surveillance piece: an ESP32 with a screen inside a handmade fish casing. Debuting at CCC in Hamburg; no experience needed.',
+    facts: ['hands-on', 'debuting at CCC', 'materials provided'],
     href: '/projects/fish_chips_workshop/',
     cta: 'See the workshop',
     tag: 'Art',
