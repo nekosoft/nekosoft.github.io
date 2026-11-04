@@ -47,8 +47,7 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 /* the one art nouveau flourish: an arched frame */
 .plate{margin:0}
 .arch{border:1.5px solid var(--ink);border-radius:999px 999px 0 0;padding:12px 12px 0;overflow:hidden}
-.arch img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:999px 999px 0 0;filter:grayscale(1);transition:filter .6s}
-.plate:hover img{filter:none}
+.arch img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:999px 999px 0 0}
 .plate figcaption{border:1.5px solid var(--ink);border-top:0;padding:8px 12px;font-size:15px;font-style:italic;color:var(--soft);text-align:center}
 
 /* sections */
@@ -75,7 +74,8 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .two h3{font-size:22px;margin-bottom:10px}
 .two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
 
-footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft)}
+footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft);display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.mascot{display:block;width:150px;height:auto;image-rendering:pixelated}
 
 @media(max-width:860px){
   .lead{grid-template-columns:1fr;gap:40px}.plate{max-width:420px}
@@ -88,7 +88,7 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
   .deck{font-size:20px}
   .section{padding:36px 0}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.arch img{transition:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -124,7 +124,7 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
   </div>
   <figure class="plate">
     <div class="arch"><img src="fish-chips-art-rotation.gif" width="480" height="480" alt="Looping animation: a human eye turns into a fish, then into a camera lens."></div>
-    <figcaption>Eye, fish, lens. Hover for colour.</figcaption>
+    <figcaption>Eye, fish, lens.</figcaption>
   </figure>
 </article>
 
@@ -189,7 +189,10 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
 </section>
 </main>
 
-<footer>Published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></footer>
+<footer>
+  <span>Published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></span>
+  <img class="mascot" src="cat-heart.gif" width="360" height="258" alt="A pixel-art white cat bouncing next to a pink heart.">
+</footer>
 </div>
 </body>
 </html>
