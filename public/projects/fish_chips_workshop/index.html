@@ -74,13 +74,20 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .two h3{font-size:22px;margin-bottom:10px}
 .two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
 
-footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft);display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-.mascot{display:block;width:150px;height:auto;image-rendering:pixelated}
+.makers{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.maker{margin:0}
+.maker .frame{aspect-ratio:16/9;border:1.5px solid var(--ink);overflow:hidden;display:grid;place-items:center;margin-bottom:14px}
+.maker .frame img{display:block;width:100%;height:100%;object-fit:cover}
+.maker .frame.pixel img{width:46%;height:auto;object-fit:contain;image-rendering:pixelated}
+.maker h3{font-size:22px;margin-bottom:4px}
+.maker p{color:#333;margin:0}
+
+footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var(--soft)}
 
 @media(max-width:860px){
   .lead{grid-template-columns:1fr;gap:40px}.plate{max-width:420px}
   .details{grid-template-columns:1fr 1fr}
-  .steps,.themes,.two{grid-template-columns:1fr;gap:28px}
+  .steps,.themes,.two,.makers{grid-template-columns:1fr;gap:28px}
 }
 @media(max-width:560px){
   body{font-size:18px}.sheet{width:calc(100% - 32px);padding-top:24px}
@@ -170,6 +177,20 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
   </div>
 </section>
 
+<section class="section" id="makers">
+  <h2>Who makes it</h2>
+  <div class="makers">
+    <figure class="maker">
+      <div class="frame"><img src="fish-bead.jpg" width="1600" height="900" loading="lazy" alt="A jointed fish lure in white and deep red, hung with red and white beads and a small heart, made into a keyring."></div>
+      <figcaption><h3>Zoë makes chips</h3><p>Beaded fish art, built by hand.</p></figcaption>
+    </figure>
+    <figure class="maker">
+      <div class="frame pixel"><img src="cat-heart.gif" width="360" height="258" loading="lazy" alt="A pixel-art white cat bouncing next to a pink heart."></div>
+      <figcaption><h3>Yianna programs chips</h3><p>Pixel art and firmware for tiny screens.</p></figcaption>
+    </figure>
+  </div>
+</section>
+
 <section class="section" id="bring">
   <div class="two">
     <div>
@@ -189,10 +210,7 @@ footer{border-top:2px solid var(--ink);padding-top:14px;font-size:15px;color:var
 </section>
 </main>
 
-<footer>
-  <span>Published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></span>
-  <img class="mascot" src="cat-heart.gif" width="360" height="258" alt="A pixel-art white cat bouncing next to a pink heart.">
-</footer>
+<footer>Published by <a href="https://ludahex.nl">Luda Hex</a> · <a href="https://ludahex.nl/projects">More workshops</a></footer>
 </div>
 </body>
 </html>
