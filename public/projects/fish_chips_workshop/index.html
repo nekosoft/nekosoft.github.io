@@ -75,9 +75,11 @@ h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0}
 .two ul{margin:0;padding-left:1.1em}.two li{margin:4px 0}
 
 .makers-intro{font-size:21px;line-height:1.5;max-width:46ch;margin-bottom:28px}
-.makers{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.makers{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
 .makers figure{margin:0}
-.makers img{display:block;width:100%;height:auto;border-radius:6px}
+/* Both pictures fill the same 16:9 box so the captions line up. */
+.makers img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:6px}
+.makers img[src="lilygo-cat.gif"]{object-fit:contain;border-radius:0}
 .makers figcaption{font-size:16px;color:var(--soft);margin-top:8px}
 .credit{font-size:13px;color:var(--soft);margin:18px 0 0}
 
