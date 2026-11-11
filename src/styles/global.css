@@ -41,7 +41,7 @@
   --space-8: 64px;
 
   /* type */
-  --font-display: 'Unbounded Variable', 'Space Grotesk Variable', system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', system-ui, sans-serif;
   --font-sans: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
 
@@ -166,15 +166,15 @@ h3 {
 .prose h3,
 .prose h4 {
   color: var(--text);
-  line-height: 1.25;
+  line-height: 1.12;
   margin-block: 1.5em 0.6em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .prose h1 {
   font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: 500;
+  font-weight: 700;
   margin-top: 0;
 }
 
