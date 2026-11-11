@@ -1,6 +1,6 @@
 ---
 title: The characters you can't see, in GitHub repos you trusted
-description: Invisible Unicode can hide destructive instructions inside a clean-looking runbook — and carry them all the way to an AWS agent that acts on them. What worked, what surprised me, and what actually stopped it.
+description: Invisible Unicode can hide destructive instructions inside a clean-looking runbook, and carry them all the way to an AWS agent that acts on them. What worked, what surprised me, and what actually stopped it.
 pubDate: 2026-11-11
 tags: ["LLM / Agentic AI", "Application Security"]
 draft: false
