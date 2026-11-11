@@ -36,7 +36,7 @@ But switch the carrier to zero-width characters and the warning disappears. This
 
 ![The same runbook with a zero-width payload - no warning banner at all](/blog/invisible-unicode/zw_no_banner.png)
 
-And it isn't just the banner, open that zero-width file in GitHub's raw view and the hidden characters still don't show. Here I show a different payload file:
+And it isn't just the banner, open that zero-width file in GitHub's raw view and the hidden characters still don't show:
 
 ![The zero-width runbook in GitHub's raw view - the hidden characters are still invisible](/blog/invisible-unicode/raw_doesnt_show.png)
 
