@@ -15,6 +15,8 @@ export default defineConfig({
   // Old Hugo paths kept alive as meta-refresh stubs so existing
   // deep links (and search results) don't break after the rewrite.
   redirects: {
+    // experience was merged into the about page
+    '/experience': '/about',
     '/web_recon_docs': '/docs/web-recon',
     '/web_recon_docs/recon_intro': '/docs/web-recon/recon-intro',
     '/web_recon_docs/web_reconnaissance': '/docs/web-recon/web-reconnaissance',
