@@ -126,10 +126,13 @@
       W: 30, H: 60, clr: 4, spacing: 64, springSpace: 44, plugDepth: 96,
       lipT: 5, opening: 18, keywayH: 44, chisel: 9, tipW: 8, keyPinW: 26,
       springK: 3.5, springPreload: 40, gravity: 120, springDamp: 0.3, pinDamp: 8, pinMass: 0.6, pickRise: 200,
+      keySpringK: 60, keySpeed: 250,
       tensionMax: 2000, plugReturn: 15, maxTravel: 30, openAt: 23,
       pickMaxForce: 1500, pickKp: 1600, pickKd: 70,
       friction: 0.22, substeps: 24, mode: 'pick', maxTilt: 0.08,
     }, o);
+    // a key pushes pins much faster than a pick, so key mode needs firmer springs
+    if (cfg.mode === 'key' && o.springK === undefined) cfg.springK = cfg.keySpringK;
     const { W, H, clr, spacing } = cfg;
     const n = cfg.pins.length;
     const xs = cfg.pins.map((_, i) => (i - (n - 1) / 2) * spacing);
@@ -241,7 +244,53 @@
 
     // key (key mode) ----------------------------------------------------------
     let key = null;
-    if (cfg.mode === 'key') key = makeKey();
+    if (cfg.mode === 'key') {
+      key = makeKey();
+      // Key-to-pin contact is solved against the key's outline directly. As a
+      // stack of strips the key has internal corners that snag the pin bevels
+      // and make pins hang, then drop and bounce, as the key slides in.
+      key.layer = 0; key.mask = 0;
+      for (const p of pins) {
+        // real key pins have almost no side play; the drawing's wide bores let
+        // the key shove them sideways onto the flank of their cut
+        const cx0 = p.key.x - plug.x;
+        world.constraints.push({ solve() { const c = cx0 + plug.x; p.key.x = Math.max(c - 1.5, Math.min(c + 1.5, p.key.x)); } });
+        world.constraints.push({ solve() { keyContact(p); } });
+      }
+    }
+    function keyContact(p) {
+      const prof = key.data.profile;
+      if (!prof) return;
+      const half = cfg.keyPinW / 2, tw = cfg.tipW / 2, slope = cfg.chisel / (half - tw), last = prof.length - 1;
+      const surf = u => {
+        if (u > prof[last][0]) return Infinity;          // past the key tip
+        if (u <= prof[0][0]) return prof[0][1];
+        for (let i = 0; i < last; i++) {
+          const a = prof[i], b = prof[i + 1];
+          if (u <= b[0]) return a[1] + (b[1] - a[1]) * (u - a[0]) / (b[0] - a[0]);
+        }
+        return prof[last][1];
+      };
+      // lowest the pin tip can sit with its centre at key-local xc: the bevel
+      // gives slope * (|dx| - tw) of extra room away from the flat tip
+      const limitAt = xc => {
+        let lim = Infinity;
+        const at = dx => { const h = surf(xc + dx) + slope * Math.max(0, Math.abs(dx) - tw); if (h < lim) lim = h; };
+        at(-half); at(-tw); at(tw); at(half);
+        for (const v of prof) { const dx = v[0] - xc; if (dx > -half && dx < half) at(dx); }
+        return lim;
+      };
+      const xc = p.key.x - key.x, lim = limitAt(xc);
+      if (lim === Infinity) return;
+      const C = p.key.y + p.keyLen + cfg.chisel - key.y - lim;
+      if (C <= 0) return;
+      // push out along the contact normal, so a pin on a flank slides into the cut
+      const l0 = limitAt(xc - 0.5), l1 = limitAt(xc + 0.5);
+      const g = l0 === Infinity || l1 === Infinity ? 0 : (l1 - l0);
+      const w = 1 + g * g;
+      p.key.y -= C / w;
+      if (p.key.imx) p.key.x += C * g / w;
+    }
     function makeKey() {
       const kb = world.add(new Body({ name: 'key', kinematic: true, x: xMin - 4, y: Kf - 4, shapes: [], layer: L.KEY, mask: L.KEYPIN, friction: 0.12 }));
       kb.data.tipFull = xs[n - 1] + spacing * 0.55;
@@ -292,7 +341,8 @@
     function setKeyInsertion(t) {
       if (!key) return;
       const x = key.data.entrance + (key.data.tipFull - key.data.entrance) * Math.max(0, Math.min(1, t));
-      key.kTarget = { x, y: Kf - 4, a: 0 };
+      key.data.goalX = x;
+      if (!key.kTarget || !cfg.keySpeed) key.kTarget = { x, y: Kf - 4, a: 0 };
     }
 
     // ------------------------------------------------------------- queries
@@ -337,6 +387,11 @@
           // a hand presses up, it does not strike: cap how fast the tip rises
           ctl.pickY = Math.max(ctl.pickYUser, ctl.pickY - cfg.pickRise * dt);
         } else ctl.pickY = ctl.pickYUser;
+      }
+      // a hand slides a key in; it does not slam it (pins would fly off the cuts)
+      if (key && cfg.keySpeed && key.data.goalX !== undefined && key.kTarget) {
+        const d = key.data.goalX - key.kTarget.x, v = cfg.keySpeed * dt;
+        key.kTarget.x += Math.max(-v, Math.min(v, d));
       }
       world.step(dt);
       // smoothed contact forces (single substeps flicker as contacts switch)

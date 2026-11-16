@@ -155,8 +155,8 @@
   // ------------------------------------------------- physics settings
   // Session only: kept in this object, never saved, gone on reload.
   const TUNE = [
-    { k: 'tensionMax', label: 'Strongest turning force', min: 500, max: 4000, step: 50, fmt: v => v.toFixed(0), help: 'What 100% on the turning-pressure slider means.' },
-    { k: 'springK', label: 'Spring stiffness', min: 0.5, max: 12, step: 0.1, fmt: v => v.toFixed(1) },
+    { k: 'tensionMax', label: 'Strongest turning force', min: 500, max: 4000, step: 50, fmt: v => v.toFixed(0), help: 'What 100% on the turning-pressure slider means.', pickOnly: true },
+    { k: 'springK', label: 'Spring stiffness', min: 0.5, max: 12, step: 0.1, keyMin: 2, keyMax: 120, keyStep: 1, fmt: v => v.toFixed(1), keyHelp: 'Firm springs keep the pins riding on the key.' },
     { k: 'springPreload', label: 'Spring preload', min: 0, max: 80, step: 1, fmt: v => v.toFixed(0) + ' px', help: 'How squashed the spring is at rest.' },
     { k: 'friction', label: 'Friction', min: 0, max: 0.6, step: 0.01, fmt: v => v.toFixed(2) },
     { k: 'pinMass', label: 'Pin weight', min: 0.1, max: 2, step: 0.05, fmt: v => v.toFixed(2) + '×', help: 'Lighter pins react faster; heavier pins carry more momentum.' },
@@ -164,25 +164,30 @@
     { k: 'springDamp', label: 'Spring damping', min: 0, max: 5, step: 0.1, fmt: v => v.toFixed(1) },
     { k: 'gravity', label: 'Gravity', min: 0, max: 400, step: 5, fmt: v => v.toFixed(0) },
     { k: 'pickRise', label: 'Pick speed limit', min: 50, max: 1500, step: 10, fmt: v => v >= 1500 ? 'off' : v.toFixed(0) + ' px/s', pickOnly: true, help: 'How fast the pick tip can rise. Fast picks knock pins upward.' },
-    { k: 'plugReturn', label: 'Plug return spring', min: 0, max: 60, step: 1, fmt: v => v.toFixed(0) },
+    { k: 'plugReturn', label: 'Plug return spring', min: 0, max: 60, step: 1, fmt: v => v.toFixed(0), pickOnly: true },
+    { k: 'keySpeed', label: 'Key speed limit', min: 50, max: 1500, step: 10, fmt: v => v >= 1500 ? 'off' : v.toFixed(0) + ' px/s', keyOnly: true, help: 'How fast the key can slide. Fast keys throw pins off the cuts.' },
   ];
-  const tune = {};
-  let tuneBase = null;   // engine defaults, read once from a throwaway lock
+  // picking and the key lesson are tuned separately (the key needs firmer springs)
+  const tunes = { pin: {}, key: {} };
+  const tuneBase = {};   // engine defaults per mode, read from a throwaway lock
+  const mode = () => lesson.kind === 'key' ? 'key' : 'pin';
   function tuneDefaults() {
-    if (!tuneBase) { const c = Locks.buildPinLock({ pins: [{ type: 'standard', keyLen: 50, offset: 0 }] }).cfg; tuneBase = {}; TUNE.forEach(t => { tuneBase[t.k] = c[t.k]; }); }
-    return tuneBase;
+    const m = mode();
+    if (!tuneBase[m]) { const c = Locks.buildPinLock({ mode: m === 'key' ? 'key' : 'pick', pins: [{ type: 'standard', keyLen: 50, offset: 0 }] }).cfg; tuneBase[m] = {}; TUNE.forEach(t => { tuneBase[m][t.k] = c[t.k]; }); }
+    return tuneBase[m];
   }
   function buildPin(scene) {
-    const o = Object.assign({}, scene, tune);
+    const o = Object.assign({}, scene, tunes[(scene && scene.mode) === 'key' ? 'key' : 'pin']);
     if (o.pickRise >= 1500) o.pickRise = 0;
+    if (o.keySpeed >= 1500) o.keySpeed = 0;
     return Locks.buildPinLock(o);
   }
   /** change one setting on the running lock, without rebuilding it */
   function setTune(k, v) {
-    tune[k] = v;
+    tunes[mode()][k] = v;
     if (!lock || lock.kind !== 'pin') return;
     const c = lock.cfg, old = c[k];
-    c[k] = k === 'pickRise' && v >= 1500 ? 0 : v;
+    c[k] = (k === 'pickRise' || k === 'keySpeed') && v >= 1500 ? 0 : v;
     for (const p of lock.pins) {
       if (k === 'springK') p.spring.k = v;
       if (k === 'springDamp') p.spring.damping = v;
@@ -208,22 +213,29 @@
     const sliders = [];
     for (const t of TUNE) {
       if (t.pickOnly && lesson.kind === 'key') continue;
+      if (t.keyOnly && lesson.kind !== 'key') continue;
       const w = document.createElement('div'); w.className = 'ctl';
       const lab = document.createElement('label'), out = document.createElement('output'), inp = document.createElement('input');
       lab.textContent = t.label; lab.appendChild(out); lab.htmlFor = inp.id = 'tune-' + t.k;
-      inp.type = 'range'; inp.min = t.min; inp.max = t.max; inp.step = t.step;
+      const isKey = lesson.kind === 'key';
+      inp.type = 'range';
+      inp.min = isKey && t.keyMin !== undefined ? t.keyMin : t.min;
+      inp.max = isKey && t.keyMax !== undefined ? t.keyMax : t.max;
+      inp.step = isKey && t.keyStep !== undefined ? t.keyStep : t.step;
+      const tune = tunes[mode()];
       const cur = tune[t.k] !== undefined ? tune[t.k] : def[t.k];
-      inp.value = t.k === 'pickRise' && !cur ? t.max : cur;
+      inp.value = (t.k === 'pickRise' || t.k === 'keySpeed') && !cur ? t.max : cur;
       const upd = () => { const v = +inp.value; out.textContent = t.fmt(v) + (Math.abs(v - def[t.k]) < 1e-9 ? '' : ' *'); };
       inp.addEventListener('input', () => { setTune(t.k, +inp.value); upd(); });
       upd();
       w.append(lab, inp);
-      if (t.help) { const h = document.createElement('small'); h.textContent = t.help; w.appendChild(h); }
+      const help = isKey && t.keyHelp ? t.keyHelp : t.help;
+      if (help) { const h = document.createElement('small'); h.textContent = help; w.appendChild(h); }
       grid.appendChild(w); sliders.push([t, inp, upd]);
     }
     const reset = button('Back to defaults', '', () => {
-      for (const [t, inp, upd] of sliders) { inp.value = t.k === 'pickRise' && !def[t.k] ? t.max : def[t.k]; setTune(t.k, def[t.k]); upd(); }
-      for (const k in tune) delete tune[k];
+      for (const [t, inp, upd] of sliders) { inp.value = (t.k === 'pickRise' || t.k === 'keySpeed') && !def[t.k] ? t.max : def[t.k]; setTune(t.k, def[t.k]); upd(); }
+      tunes[mode()] = {};
     });
     const note = document.createElement('p'); note.className = 'tune-note';
     note.textContent = 'Changes apply straight away and last until you reload the page. Nothing is saved. * marks a changed value.';
