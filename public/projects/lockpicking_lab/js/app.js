@@ -67,6 +67,7 @@
     $('kicker').textContent = lesson.kicker; $('pnum').textContent = lesson.num;
     $('title').textContent = lesson.title; $('subtitle').textContent = lesson.subtitle;
     $('intro').hidden = !lesson.intro; $('intro').textContent = lesson.intro || '';
+    $('legend').hidden = !lesson.legend;
     $('legend').innerHTML = (lesson.legend || []).map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
     $('feel').textContent = lesson.feel || ''; $('helps').textContent = lesson.helps || '';
     $('helpsLabel').textContent = lesson.helpsLabel || 'WHAT HELPS';
@@ -76,9 +77,11 @@
     $('note').textContent = lesson.note || ''; $('refs').textContent = lesson.refs || '';
     $('cards').hidden = !lesson.cards;
     if (lesson.cards) $('cards').innerHTML = lesson.cards.map(c => `<div><h4><span class="k" style="color:${c.color}">${c.n}</span>${c.title}</h4><p>${c.text}</p></div>`).join('');
-    const gallery = lesson.kind === 'gallery';
-    $('gallery').hidden = !gallery; $('stage').hidden = gallery;
+    const gallery = lesson.kind === 'gallery', doc = lesson.kind === 'doc';
+    $('gallery').hidden = !gallery; $('stage').hidden = gallery || doc;
+    $('article').hidden = !doc; $('article').innerHTML = doc ? lesson.article : '';
     if (gallery) { buildGallery(); lock = null; }
+    else if (doc) { lock = null; }
     else { S = {}; buildScene(); buildControls(); }
     buildSteps();
     document.title = lesson.title + ' · LockLab';
@@ -141,6 +144,7 @@
   // ------------------------------------------------------------ controls
   function slider(id, labelText, value, min, max, fmt, oninput) {
     const w = document.createElement('div'); w.className = 'ctl';
+    id = 'ctl-' + id;   // never clash with a lesson id in the URL hash (#shim)
     w.innerHTML = `<label for="${id}">${labelText}<output id="${id}Out"></output></label><input type="range" id="${id}" min="${min}" max="${max}" value="${value}">`;
     const inp = w.querySelector('input'), out = w.querySelector('output');
     const upd = () => { out.textContent = fmt(+inp.value); };
@@ -353,7 +357,8 @@
     el.hidden = !lesson.steps || !lesson.steps.length;
     (lesson.steps || []).forEach((s, i) => {
       const b = document.createElement('button'); b.className = 'step';
-      b.innerHTML = `<h4><span class="k">${i + 1}</span>${s.title}</h4><p>${s.caption}</p><div class="play">▶ PLAY IN THE SIMULATOR</div>`;
+      b.innerHTML = `<h4><span class="k">${i + 1}</span>${s.title}</h4><p>${s.caption}</p>`;
+      b.title = 'Show this in the simulator';
       b.onclick = () => runStep(i);
       el.appendChild(b);
     });

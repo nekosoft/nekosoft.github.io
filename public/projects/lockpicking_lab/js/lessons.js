@@ -28,7 +28,83 @@
     <p>Here <i>k·x</i> is the spring, <i>μ</i> is the friction coefficient and <i>N</i> is the sideways force from your tension. More tension means more friction and a stiffer pin. When the split reaches the shear line the plug turns a little until the <i>next</i> stack binds. Push further and the key pin crosses the line: an overset.</p>`;
 
   const PHYS_ENGINE = `
-    <p><b>How the simulation works.</b> Every part is a rigid body made of convex polygons. A position-based dynamics solver (XPBD) resolves contacts 24 times per frame with Coulomb friction (μ ≈ 0.22, lubricated brass). Nothing here is scripted. Binding, setting, false sets and counter-rotation all come from the shapes, the springs and your two forces: tension on the plug and lift from the pick.</p>`;
+    <p class="more"><a href="#engine">How the physics engine works →</a></p>`;
+
+  const ENGINE_ARTICLE = `
+    <section class="doc-card wide">
+      <h3>ONE FRAME, 24 TIMES OVER</h3>
+      <p>Each frame lasts 1/60 of a second, and the engine cuts it into 24 substeps. Short steps keep stiff contacts steady, so a pin pressed hard against the plug stays put instead of jittering. Every substep does the same five things:</p>
+      <ol class="flow">
+        <li><b>Forces</b><span>Springs, gravity, your turning force on the plug and the pick's push.</span></li>
+        <li><b>Predict</b><span>Move every body along its current velocity.</span></li>
+        <li><b>Contacts</b><span>Find which parts overlap, and where.</span></li>
+        <li><b>Correct</b><span>Push overlapping parts apart and enforce the limits.</span></li>
+        <li><b>Velocities</b><span>Read the new speeds off how far things moved, then apply sliding friction.</span></li>
+      </ol>
+    </section>
+    <section class="doc-card">
+      <h3>WHY POSITION-BASED</h3>
+      <p>Most game engines push bodies apart with impulses. This one uses extended position-based dynamics (XPBD): it corrects positions directly and works out velocities from the result.</p>
+      <p>That suits a lock, where every part is pressed against another and the clearances are tiny. Impulse solvers tend to make tightly packed parts buzz. Here a wedged pin simply stays wedged.</p>
+    </section>
+    <section class="doc-card">
+      <h3>SHAPES AND CONTACTS</h3>
+      <p>Every part is a rigid body made of one or more convex polygons. A driver pin is one rectangle, a spool is three stacked pieces, and the housing is a set of blocks around the holes.</p>
+      <p>Overlaps are found with the separating-axis test. Each contact gets up to two points, so a flat pin end rests flat. The key is the exception: its contact with the pins is worked out straight from its outline, which stops the pin tips catching on the joins between its pieces.</p>
+    </section>
+    <section class="doc-card">
+      <h3>FRICTION DOES THE REAL WORK</h3>
+      <p>Binding is friction. Turning the plug presses the most out-of-line pin against the edge of its hole, and friction then holds that pin against the pick:</p>
+      <p class="eq">F<sub>pick</sub> ≈ k·x + m·g + μ·N</p>
+      <p>Below μ·N a contact holds still. Above it, the parts slide and the drag stays at μ·N. The model uses μ = 0.22, about right for oiled brass.</p>
+    </section>
+    <section class="doc-card">
+      <h3>SPRINGS, HANDS AND LIMITS</h3>
+      <ul>
+        <li>Springs follow Hooke's law, with a little damping.</li>
+        <li>Turning pressure is a sideways force on the plug. A weak return spring brings the plug back when you let go.</li>
+        <li>The pick follows your mouse through a stiff spring of its own. Its push is capped, so it can't force a binding pin, and its tip rises no faster than a hand would press.</li>
+        <li>The key goes exactly where you slide it, at up to 250 px/s.</li>
+        <li>Each combination wheel turns freely until its drive pin catches the next one.</li>
+      </ul>
+    </section>
+    <section class="doc-card">
+      <h3>WHERE IT BENDS REALITY</h3>
+      <ul>
+        <li>It's a flat side view. The plug turning is drawn as a sideways slide.</li>
+        <li>Gaps are drawn far wider than real so you can see them. To make up for it, pins can only tilt a little: about 0.7° for standard pins and 4.6° for security pins.</li>
+        <li>Nothing bounces. Real pins click into place; these just stop.</li>
+        <li>Sizes and forces are in screen units, not millimetres and newtons. The ratios are what count.</li>
+        <li>Apart from the small offsets that set the binding order, every part is perfect: no wear, dirt or slop.</li>
+      </ul>
+    </section>
+    <section class="doc-card">
+      <h3>CHECKING IT</h3>
+      <p>A set of tests runs the engine without a browser. They check that pins bind in the order their holes are offset, that security pins jam at 50% tension and set once you ease off, that only the right key lifts every pin to the shear line, and that the combination lock and the shim behave as the posters say.</p>
+    </section>
+    <section class="doc-card wide">
+      <h3>THE NUMBERS</h3>
+      <p>The key lesson uses much firmer springs than picking. A key sweeps the pins up and down far faster than a pick, and soft springs couldn't keep them on the cuts. Picking keeps the soft springs, because binding and false sets are tuned around them. You can change most of these under <i>Physics settings</i> on any pin or key page; the changes last until you reload.</p>
+      <table class="nums">
+        <thead><tr><th>Setting</th><th>Picking</th><th>Key lesson</th></tr></thead>
+        <tbody>
+          <tr><td>Substeps per frame</td><td>24</td><td>24</td></tr>
+          <tr><td>Friction (μ)</td><td>0.22</td><td>0.22</td></tr>
+          <tr><td>Spring stiffness</td><td>3.5</td><td>60</td></tr>
+          <tr><td>Spring preload</td><td>40 px</td><td>40 px</td></tr>
+          <tr><td>Pin weight</td><td>0.6</td><td>0.6</td></tr>
+          <tr><td>Pin damping</td><td>8</td><td>8</td></tr>
+          <tr><td>Gravity</td><td>120</td><td>120</td></tr>
+          <tr><td>Strongest turning force</td><td>2000</td><td>–</td></tr>
+          <tr><td>Strongest pick push</td><td>1500</td><td>–</td></tr>
+          <tr><td>Speed limit</td><td>pick tip 200 px/s</td><td>key 250 px/s</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="doc-card wide doc-foot">
+      <p>The engine is about 470 lines of plain JavaScript with no libraries. <a href="js/engine.js" target="_blank" rel="noopener">Read the engine source</a> · <a href="js/locks.js" target="_blank" rel="noopener">How the locks are built</a></p>
+    </section>`;
+
 
   function pinLesson(o) {
     return Object.assign({
@@ -227,6 +303,14 @@
       note: 'Side view; plug rotation shown as sideways offset. Offsets and clearances exaggerated.',
       refs: PIN_REFS,
     },
+    {
+      id: 'engine', kind: 'doc', kicker: 'BEHIND THE MODEL', num: 'SIM',
+      title: 'The physics engine',
+      subtitle: 'What runs underneath every lesson, and where it bends reality.',
+      intro: 'Every lesson here runs on a small 2D physics engine written for this site. None of it is animated by hand. When a pin binds, sets or catches, the shapes, springs and friction made it happen.',
+      article: ENGINE_ARTICLE,
+      refs: 'References: M. Müller et al., Detailed Rigid Body Simulation with Extended Position Based Dynamics, 2020; MIT Guide to Lock Picking, 1991.',
+    },
   ];
 
   const NAV = [
@@ -234,6 +318,7 @@
     { group: 'Meet the lock: pins', items: ['standard', 'spool', 'serrated', 'mushroom', 'hybrid', ['falseset', '06 What is a false set?']] },
     { group: 'Meet the lock: other locks', items: ['combo', 'shim'] },
     { group: 'Practice', items: ['challenge'] },
+    { group: 'Behind the model', items: ['engine'] },
   ];
 
   root.Lessons = { LESSONS, NAV, SAFETY, SAFETY2 };

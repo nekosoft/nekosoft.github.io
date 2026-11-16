@@ -510,10 +510,16 @@
       const fs = o.fontSize || 11;
       const lf = P(fx1, fy0, fz1);
       label(ctx, 'fence', lf.x + 6, lf.y - 4, { color: C.teal, size: fs });
+      // both labels sit on one line below the parts, never across them
       const ld = P(0, dR, dz);
-      label(ctx, 'dial', ld.x, ld.y + fs + 6, { color: C.muted, size: fs, align: 'center' });
-      const lw = P(0, R, zOf(2) + T / 2);
-      if (o.axleLabel !== false) label(ctx, 'wheels on one axle', lw.x + 10, lw.y + fs + 8, { color: C.muted, size: fs, align: 'right' });
+      const rims = [];
+      for (let i = 0; i < 3; i++) for (const dzw of [-T / 2, T / 2]) for (let a = 0; a < Math.PI; a += Math.PI / 12) rims.push(P(R * Math.cos(a), R * Math.sin(a), zOf(i) + dzw));
+      const baseY = Math.max(ld.y, ...rims.map(p => p.y)) + fs + 8;
+      label(ctx, 'dial', ld.x, baseY, { color: C.muted, size: fs, align: 'center' });
+      if (o.axleLabel !== false) {
+        const wx = (Math.min(...rims.map(p => p.x)) + Math.max(...rims.map(p => p.x))) / 2;
+        label(ctx, 'wheels on one axle', Math.min(wx, ld.x - 40), baseY, { color: C.muted, size: fs, align: 'right' });
+      }
     }
   }
 
