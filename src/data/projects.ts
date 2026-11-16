@@ -71,6 +71,16 @@ export const hostedProjects: HostedProject[] = [
     cta: 'Open the workshop',
     tag: 'Training',
   },
+  {
+    name: 'Lockpicking, as a physics model',
+    kicker: 'Interactive lock simulator',
+    detail:
+      'Pick a pin-tumbler lock on screen and see why it gives way. Binding order, the false set on a spool pin and the plug pushing back are not animations: they come out of a small physics engine built on the MIT Guide to Lock Picking. It also covers a combination lock and a padlock shim, and the matching A4 posters are free to download.',
+    facts: ['11 lessons', 'mouse, touch or keyboard', 'printable posters'],
+    href: '/projects/lockpicking_lab/',
+    cta: 'Open the lab',
+    tag: 'Training',
+  },
 ];
 
 export const otherProjects: WorkItem[] = [

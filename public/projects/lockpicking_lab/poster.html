@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Lockpicking Posters A4</title>
+<style>
+  :root {
+    --font: "DejaVu Sans", "Verdana", "Segoe UI", system-ui, sans-serif;
+    --bg: #f5f2ea; --card: #ffffff; --ink: #1b2b33; --muted: #5b6b72; --teal: #0a7f8c; --teal-soft: #d4e8e6;
+    --housing: #dfe2dc; --mustard: #dba542; --rose: #c7536f; --line: #d9d6cc; --key: #e8bb5c; --steel: #b3c1c6;
+    --bore: #ffffff; --keyway: #f4f7f6; --dial: #1b2b33; --pick: #3d4b52; --chip: #ecefe9;
+  }
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #888; font-family: var(--font); color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.single { background: var(--bg); }
+  .poster { width: 210mm; height: 297mm; background: var(--bg); position: relative; overflow: hidden; page-break-after: always; break-after: page; margin: 0 auto 14px; }
+  body.single .poster { margin: 0; }
+  .bar { height: 5mm; background: var(--teal); }
+  .in { padding: 10mm 12mm 0; }
+  .krow { display: flex; justify-content: space-between; font-weight: 700; font-size: 11px; letter-spacing: .04em; }
+  .krow .k { color: var(--teal); white-space: pre; } .krow .n { color: var(--muted); }
+  h1 { font-size: 44px; line-height: 1.05; margin: 6mm 0 3mm; letter-spacing: -.01em; font-weight: 800; }
+  .sub { color: var(--muted); font-size: 16px; margin: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 2mm 18mm; margin: 8mm 0 5mm; font-size: 11px; color: var(--muted); }
+  .legend span { display: inline-flex; gap: 7px; align-items: center; } .legend i { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5mm; }
+  canvas { max-width: 100%; }
+  .panel { background: var(--card); border-radius: 7px; padding: 3.5mm 3.5mm 4mm; }
+  .panel h4 { margin: 0 0 2mm; font-size: 14px; display: flex; gap: 8px; align-items: baseline; } .panel h4 .k { color: var(--teal); font-size: 11px; }
+  .panel canvas { width: 100%; height: 84mm; display: block; }
+  .panel p { margin: 2mm 0 0; font-size: 11.5px; line-height: 1.45; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-top: 8mm; }
+  h3 { color: var(--teal); font-size: 13px; letter-spacing: .04em; margin: 0 0 3mm; }
+  .two p { font-size: 15.5px; line-height: 1.45; margin: 0; }
+  .remember { background: var(--teal-soft); border-radius: 7px; padding: 3.5mm 4.5mm; margin-top: 6mm; }
+  .remember h3 { font-size: 10px; margin-bottom: 1.5mm; } .remember p { margin: 0; font-size: 13px; line-height: 1.45; }
+  .note { font-size: 9px; color: var(--muted); margin: 3.5mm 0 0; }
+  .foot { position: absolute; left: 12mm; right: 12mm; bottom: 8mm; border-top: 1px solid var(--line); padding-top: 3mm; }
+  .foot b { font-size: 9.5px; display: block; } .foot .s2 { font-size: 10px; color: var(--muted); margin: 1mm 0 3mm; } .foot .r { font-size: 8px; color: var(--muted); }
+  .hero { background: var(--card); border-radius: 7px; padding: 3mm; margin-top: 6mm; }
+  .hero canvas { width: 100%; height: 92mm; display: block; }
+  .hero.tall canvas { height: 145mm; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm 10mm; margin-top: 10mm; }
+  .cards h4 { font-size: 20px; margin: 0 0 2mm; display: flex; gap: 10px; align-items: baseline; } .cards h4 .k { font-size: 12px; }
+  .cards p { font-size: 13px; margin: 0 0 0 28px; line-height: 1.45; }
+  .lead { font-size: 15px; line-height: 1.45; margin: 7mm 0 0; }
+  .lead2 { font-size: 14px; line-height: 1.45; margin: 2mm 0 0; }
+  table.meet { width: 100%; border-collapse: separate; border-spacing: 0 3mm; margin-top: 4mm; }
+  table.meet th { text-align: left; color: var(--teal); font-size: 10px; letter-spacing: .04em; padding: 0 3mm; }
+  table.meet td { background: var(--card); padding: 3.5mm 3mm; vertical-align: top; font-size: 11px; line-height: 1.45; }
+  table.meet td:first-child { border-radius: 7px 0 0 7px; width: 30mm; } table.meet td:last-child { border-radius: 0 7px 7px 0; }
+  table.meet .nm { color: var(--teal); font-weight: 800; font-size: 12px; letter-spacing: .03em; }
+  table.meet canvas { width: 16mm; height: 18mm; display: block; margin-top: 1.5mm; }
+  .poster.t-combo .panel canvas { height: 62mm; }
+  .comborow { display: grid; grid-template-columns: 34mm 66mm 1fr; gap: 4mm; align-items: center; margin-top: 3mm; }
+  .comborow canvas.c3d { width: 66mm; height: 60mm; }
+  .comborow canvas { width: 34mm; height: 52mm; display: block; }
+  .made { font-size: 8px; color: var(--muted); margin-top: 1mm; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="js/engine.js"></script>
+<script src="js/locks.js"></script>
+<script src="js/lessons.js"></script>
+<script src="js/render.js"></script>
+<script src="js/poster.js"></script>
+</body>
+</html>
