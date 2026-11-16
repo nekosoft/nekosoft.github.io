@@ -5,7 +5,7 @@
   'use strict';
   const { LESSONS, NAV } = window.Lessons;
   const R = window.Render, Locks = window.Locks;
-  const byId = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+  const byId = new Map(LESSONS.map(l => [l.id, l]));
   const $ = id => document.getElementById(id);
   const canvas = $('sim'), ctx = canvas.getContext('2d');
   const gCanvas = $('graph'), gctx = gCanvas.getContext('2d');
@@ -50,7 +50,7 @@
       const h = document.createElement('div'); h.className = 'nav-group'; h.textContent = g.group; el.appendChild(h);
       for (const it of g.items) {
         const [id, text] = Array.isArray(it) ? it : [it, null];
-        const l = byId[id];
+        const l = byId.get(id);
         const b = document.createElement('button'); b.className = 'nav-item'; b.dataset.id = id;
         const num = text ? text.split(' ')[0] : (l.num.split(' / ')[0]);
         b.innerHTML = `<span class="n">${num}</span>${text ? text.slice(num.length + 1) : l.title}`;
@@ -62,7 +62,7 @@
 
   // ------------------------------------------------------------- lessons
   function load(id) {
-    lesson = byId[id] || LESSONS[0];
+    lesson = byId.get(id) || LESSONS[0];
     document.querySelectorAll('.nav-item').forEach(b => b.setAttribute('aria-current', b.dataset.id === lesson.id ? 'true' : 'false'));
     $('kicker').textContent = lesson.kicker; $('pnum').textContent = lesson.num;
     $('title').textContent = lesson.title; $('subtitle').textContent = lesson.subtitle;
@@ -712,7 +712,7 @@
     if (!lesson || lesson.id !== id) load(id);
     if (step && lesson.steps && lesson.steps[+step - 1]) runStep(+step - 1);
     // ?ff=seconds fast-forwards the simulation (kiosk snapshots, testing)
-    const ff = +(new URLSearchParams(location.search).get('ff') || 0);
+    const ff = Math.min(60, +(new URLSearchParams(location.search).get('ff')) || 0);
     if (ff > 0 && lock) for (let i = 0; i < ff * 60; i++) simStep(1 / 60, 1 / 60);
   };
   window.addEventListener('hashchange', route);
