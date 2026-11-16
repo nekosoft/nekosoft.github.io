@@ -23,6 +23,16 @@ export interface HostedProject extends WorkItem {
 export const hostedProjects: HostedProject[] = [
   // newest first: add new projects at the top
   {
+    name: 'Probably Fine — Cyber Cats Edition',
+    kicker: 'Cybersecurity team quiz',
+    detail:
+      'A Jeopardy-style quiz for the whole room, no technical background needed. Teams work through a board covering social engineering, identity, cloud recovery and AI agents, a lightning round and a final incident built around a suspicious invoice, with a buzzer tie-break if it comes to that. One screen, run by a host; scores stay in the browser.',
+    facts: ['35 minutes', 'up to 12 teams', 'projector mode'],
+    href: '/projects/Probably_Fine_Cyber_Cats_v2/',
+    cta: 'Start the quiz',
+    tag: 'Training',
+  },
+  {
     name: 'Lockpicking, as a physics model',
     kicker: 'Interactive lock simulator',
     detail:
@@ -80,16 +90,6 @@ export const hostedProjects: HostedProject[] = [
     facts: ['5 phases', '~60 minutes', 'security & engineering'],
     href: '/projects/incident_roaming_bites/',
     cta: 'Open the console',
-    tag: 'Training',
-  },
-  {
-    name: 'Probably Fine — Cyber Cats Edition',
-    kicker: 'Cybersecurity team quiz',
-    detail:
-      'A Jeopardy-style quiz for the whole room, no technical background needed. Teams work through a board covering social engineering, identity, cloud recovery and AI agents, a lightning round and a final incident built around a suspicious invoice, with a buzzer tie-break if it comes to that. One screen, run by a host; scores stay in the browser.',
-    facts: ['35 minutes', 'up to 12 teams', 'projector mode'],
-    href: '/projects/Probably_Fine_Cyber_Cats_v2/',
-    cta: 'Start the quiz',
     tag: 'Training',
   },
 ];

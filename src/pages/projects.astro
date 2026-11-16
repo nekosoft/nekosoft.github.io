@@ -123,6 +123,16 @@ import { hostedProjects, otherProjects } from '../data/projects';
     background: linear-gradient(90deg, var(--a), var(--a2));
   }
 
+  /* with an odd number of projects the newest one spans the full row,
+     so the rest pair up and none is left on its own at the bottom */
+  .hosted-grid > :first-child:nth-last-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .hosted-grid > :first-child:nth-last-child(odd) p {
+    max-width: 68ch;
+  }
+
   /* format facts sit along the bottom, so tiles side by side line up */
   .facts {
     display: flex;
