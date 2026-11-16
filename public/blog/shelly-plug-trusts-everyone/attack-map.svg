@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" role="img" aria-labelledby="am-t am-d" font-family="'JetBrains Mono', ui-monospace, 'SF Mono', monospace">
+  <title id="am-t">Shelly Plug attack surface</title>
+  <desc id="am-d">Six groups of no-auth RPC methods: switch control, config and secrets, Matter pairing, script execution, SSRF, and firmware flash or owner lockout. Four confirmed, two need more testing.</desc>
+  <defs>
+    <style>
+      .card{fill:#1e1b4e;stroke:#524aa8;stroke-width:1.5;}
+      .t{fill:#f4f1ff;}
+      .mut{fill:#b9b2e0;}
+      .mono{fill:#53e8f4;font-size:11px;}
+      .h{font-size:14.5px;font-weight:700;letter-spacing:.03em;}
+      .sm{font-size:11.5px;}
+      .ic{fill:none;stroke:#a78bfa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    </style>
+  </defs>
+
+  <!-- row 1 -->
+  <!-- card 1: switch -->
+  <rect class="card" x="20" y="20" width="266" height="170" rx="12"/>
+  <path class="ic" d="M44 48 h20 M44 48 v16 M64 48 v16 M44 64 h20 M54 64 v10"/>
+  <circle cx="266" cy="42" r="5" fill="#ff4fd8"/>
+  <text class="t h" x="44" y="96">Flip the load</text>
+  <text class="mono" x="44" y="118">Switch.Set · Toggle</text>
+  <text class="mut sm" x="44" y="148">Turn whatever is plugged</text>
+  <text class="mut sm" x="44" y="164">in on or off remotely.</text>
+
+  <!-- card 2: secrets -->
+  <rect class="card" x="307" y="20" width="266" height="170" rx="12"/>
+  <path class="ic" d="M48 44 h18 v22 h-18 z M51 44 v-5 a6 6 0 0 1 12 0 v5"/>
+  <circle cx="553" cy="42" r="5" fill="#ff4fd8"/>
+  <text class="t h" x="331" y="96">Read config + secrets</text>
+  <text class="mono" x="331" y="118">GetConfig · KVS · Wifi</text>
+  <text class="mut sm" x="331" y="148">Home wifi password, MQTT</text>
+  <text class="mut sm" x="331" y="164">creds, tokens in KVS.</text>
+
+  <!-- card 3: matter -->
+  <rect class="card" x="594" y="20" width="266" height="170" rx="12"/>
+  <path class="ic" d="M618 40 h20 v20 h-20 z M623 46 h10 M623 52 h10"/>
+  <circle cx="840" cy="42" r="5" fill="#ff4fd8"/>
+  <text class="t h" x="618" y="96">Steal pairing code</text>
+  <text class="mono" x="618" y="118">Matter.GetSetupCode</text>
+  <text class="mut sm" x="618" y="148">Pair the plug to your own</text>
+  <text class="mut sm" x="618" y="164">hub — keeps control.</text>
+
+  <!-- row 2 -->
+  <!-- card 4: script exec -->
+  <rect class="card" x="20" y="210" width="266" height="170" rx="12"/>
+  <path class="ic" d="M44 232 l-8 8 l8 8 M64 232 l8 8 l-8 8 M58 230 l-8 20"/>
+  <circle cx="266" cy="232" r="5" fill="#ff4fd8"/>
+  <text class="t h" x="44" y="286">Run code</text>
+  <text class="mono" x="44" y="308">Script.Eval · PutCode</text>
+  <text class="mut sm" x="44" y="338">Arbitrary mJS, set to</text>
+  <text class="mut sm" x="44" y="354">survive a reboot.</text>
+
+  <!-- card 5: ssrf -->
+  <rect class="card" x="307" y="210" width="266" height="170" rx="12"/>
+  <circle class="ic" cx="57" cy="240" r="11"/>
+  <path class="ic" d="M46 240 h22 M57 229 v22 M49 233 a14 10 0 0 0 16 0 M49 247 a14 10 0 0 1 16 0"/>
+  <circle cx="553" cy="232" r="5" fill="none" stroke="#53e8f4" stroke-width="2"/>
+  <text class="t h" x="331" y="286">Make it fetch for you</text>
+  <text class="mono" x="331" y="308">HTTP.GET · HTTP.POST</text>
+  <text class="mut sm" x="331" y="338">SSRF / pivot. Scope not</text>
+  <text class="mut sm" x="331" y="354">yet fully tested.</text>
+
+  <!-- card 6: ota + lockout -->
+  <rect class="card" x="594" y="210" width="266" height="170" rx="12"/>
+  <path class="ic" d="M628 250 v-20 M628 230 l-7 7 M628 230 l7 7 M618 252 h20"/>
+  <circle cx="840" cy="232" r="5" fill="none" stroke="#53e8f4" stroke-width="2"/>
+  <text class="t h" x="618" y="286">Flash + lock out</text>
+  <text class="mono" x="618" y="308">Shelly.Update · SetAuth</text>
+  <text class="mut sm" x="618" y="338">OTA from your URL; set a</text>
+  <text class="mut sm" x="618" y="354">password against the owner.</text>
+
+  <!-- legend -->
+  <circle cx="300" cy="418" r="5" fill="#ff4fd8"/>
+  <text class="mut sm" x="312" y="422">confirmed on a plug I own</text>
+  <circle cx="560" cy="418" r="5" fill="none" stroke="#53e8f4" stroke-width="2"/>
+  <text class="mut sm" x="572" y="422">method exists · needs more testing</text>
+</svg>

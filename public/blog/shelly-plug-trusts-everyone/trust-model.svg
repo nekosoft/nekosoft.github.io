@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" role="img" aria-labelledby="tm-t tm-d" font-family="'JetBrains Mono', ui-monospace, 'SF Mono', monospace">
+  <title id="tm-t">Shelly Plug trust model</title>
+  <desc id="tm-d">Anyone in Wi-Fi range joins the open setup AP with no password, reaches the no-auth RPC API, and can flip the switch, dump secrets or persist a script.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#53e8f4"/>
+    </marker>
+    <style>
+      .box{fill:#1e1b4e;stroke:#524aa8;stroke-width:1.5;}
+      .chip{fill:#0d0b20;stroke:#35306b;stroke-width:1.5;}
+      .mut{fill:#b9b2e0;}
+      .mag{fill:#ff4fd8;}
+      .cy{fill:#53e8f4;}
+      .h{fill:#f4f1ff;font-size:22px;font-weight:700;letter-spacing:.03em;}
+      .sm{font-size:16px;}
+      .lbl{fill:#e2ddf4;font-size:16px;}
+      .chiplbl{font-size:17px;font-weight:700;}
+      .chipsub{font-size:14px;}
+      .cap{font-size:17px;letter-spacing:.03em;}
+      .fan{stroke:#ff4fd8;stroke-width:1.6;fill:none;opacity:.8;}
+      .flow{stroke:#53e8f4;stroke-width:2.4;fill:none;}
+    </style>
+  </defs>
+
+  <!-- the two stacked defaults, above each arrow -->
+  <text class="lbl" x="335" y="36" text-anchor="middle">① no Wi-Fi password</text>
+  <text class="lbl" x="685" y="36" text-anchor="middle">② no API login</text>
+
+  <!-- stage 1: attacker -->
+  <rect class="box" x="20" y="50" width="280" height="130" rx="14"/>
+  <circle cx="58" cy="90" r="12" fill="none" stroke="#ff4fd8" stroke-width="2.4"/>
+  <path d="M40 124 a18 18 0 0 1 36 0" fill="none" stroke="#ff4fd8" stroke-width="2.4"/>
+  <text class="h" x="96" y="96">ATTACKER</text>
+  <text class="sm mut" x="96" y="124">any phone or laptop</text>
+  <text class="sm mut" x="96" y="148">in Wi-Fi range</text>
+
+  <!-- stage 2: open AP -->
+  <rect class="box" x="370" y="50" width="280" height="130" rx="14"/>
+  <rect x="390" y="88" width="28" height="22" rx="3" fill="none" stroke="#53e8f4" stroke-width="2.4"/>
+  <path d="M396 88 v-6 a8 8 0 0 1 16 0 v6" fill="none" stroke="#53e8f4" stroke-width="2.4"/>
+  <text class="h" x="434" y="96">OPEN SETUP AP</text>
+  <text class="sm mut" x="434" y="124">ShellyPlugSG3-…</text>
+  <text class="sm cy" x="434" y="148">OPN · no password</text>
+
+  <!-- stage 3: no-auth API -->
+  <rect class="box" x="720" y="50" width="280" height="130" rx="14"/>
+  <text class="h" x="744" y="92">NO-AUTH RPC API</text>
+  <text class="sm mut" x="744" y="118">192.168.33.1 · HTTP</text>
+  <text class="sm mag" x="744" y="140">auth_en: false</text>
+  <text class="sm mut" x="744" y="162">120+ methods</text>
+
+  <!-- arrows -->
+  <line class="flow" x1="308" y1="115" x2="362" y2="115" marker-end="url(#arrow)"/>
+  <line class="flow" x1="658" y1="115" x2="712" y2="115" marker-end="url(#arrow)"/>
+
+  <!-- fan-out to outcomes -->
+  <path class="fan" d="M860 180 C 680 230, 360 230, 165 271"/>
+  <path class="fan" d="M860 180 C 740 235, 620 245, 500 271"/>
+  <path class="fan" d="M860 180 C 870 220, 850 245, 835 271"/>
+
+  <rect class="chip" x="20" y="275" width="290" height="70" rx="12"/>
+  <text class="chiplbl mag" x="165" y="308" text-anchor="middle">FLIP THE SWITCH</text>
+  <text class="chipsub mut" x="165" y="330" text-anchor="middle">control the load</text>
+
+  <rect class="chip" x="355" y="275" width="290" height="70" rx="12"/>
+  <text class="chiplbl mag" x="500" y="308" text-anchor="middle">DUMP SECRETS</text>
+  <text class="chipsub mut" x="500" y="330" text-anchor="middle">wifi pw · creds · tokens</text>
+
+  <rect class="chip" x="690" y="275" width="290" height="70" rx="12"/>
+  <text class="chiplbl mag" x="835" y="308" text-anchor="middle">PERSIST A SCRIPT</text>
+  <text class="chipsub mut" x="835" y="330" text-anchor="middle">survives reboot</text>
+
+  <text class="cap cy" x="500" y="382" text-anchor="middle">…all without ever typing a password</text>
+</svg>
