@@ -3,7 +3,7 @@ title: The smart plug that trusts everyone on its own network
 description: The Shelly Plug S Gen3 opens a passwordless setup AP and a no-auth RPC API. Sniffing it on the air, driving it from a phone, and what that hands an attacker.
 pubDate: 2026-11-16
 tags: ["IoT", "Wi-Fi", "Offensive Security"]
-draft: true
+draft: false
 ---
 
 I like IoT devices because they make a promise they can't keep. "Secure by default", "encrypted", "cloud-protected" - and then you hold one in your hand, press the button that puts it into setup mode, and it opens a Wi-Fi network with no password and an API that will do anything you ask it to.
