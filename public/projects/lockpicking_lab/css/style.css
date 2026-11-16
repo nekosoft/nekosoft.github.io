@@ -197,3 +197,21 @@ h3 { font-size: 15px; letter-spacing: 0.04em; color: var(--teal); margin: 0 0 10
   .twocol p { font-size: 17px; }
   #sim { height: 58vw; min-height: 300px; }
 }
+
+/* "What you need" tools page */
+.tool-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.tool-card { display: flex; flex-direction: column; }
+.tool-icon { height: 104px; display: flex; align-items: center; justify-content: center; margin: 0 0 14px; padding: 14px; background: var(--bg); border-radius: 8px; }
+.tool-icon svg { height: 100%; width: auto; max-width: 100%; fill: none; stroke-linecap: round; }
+.ti-metal { stroke: var(--ink); }
+.ti-handle { stroke: var(--teal); }
+.ti-body { stroke: var(--muted); }
+.ti-shear { stroke: var(--rose); }
+.ti-driver { stroke: var(--mustard); stroke-linecap: butt; }
+.ti-key { stroke: var(--teal); stroke-linecap: butt; }
+.doc-card .tool-map { font-size: 14px; color: var(--teal); font-weight: 600; margin-top: auto; padding-top: 6px; }
+.doc-card h3 .opt { font-size: 10.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 1px; }
+.tool-rules { border-left: 4px solid var(--rose); }
+@media (max-width: 1100px) { .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .tool-grid { gap: 12px; } .tool-card { padding: 14px; } .tool-icon { height: 76px; padding: 10px; } .tool-card p { font-size: 14px; } }
+@media (max-width: 340px) { .tool-grid { grid-template-columns: 1fr; } }

@@ -106,6 +106,38 @@
     </section>`;
 
 
+  const TOOL_ICONS = {
+    wrench: '<svg viewBox="0 0 120 72" aria-hidden="true"><path class="ti-metal" d="M28 12 V52 H100" stroke-width="10" stroke-linejoin="miter"/></svg>',
+    hook: '<svg viewBox="0 0 120 72" aria-hidden="true"><path class="ti-handle" d="M108 42 H54" stroke-width="15"/><path class="ti-metal" d="M54 42 H20 Q13 42 13 36 V33" stroke-width="5"/></svg>',
+    lock: '<svg viewBox="0 0 120 72" aria-hidden="true"><rect class="ti-body" x="16" y="8" width="88" height="56" rx="9" stroke-width="3"/><path class="ti-shear" d="M16 38 H104" stroke-width="2.5" stroke-dasharray="5 4"/><path class="ti-driver" d="M38 14 V34 M60 14 V30 M82 14 V36" stroke-width="9"/><path class="ti-key" d="M38 36 V56 M60 32 V56 M82 38 V56" stroke-width="9"/></svg>',
+    shim: '<svg viewBox="0 0 120 72" aria-hidden="true"><path class="ti-metal" d="M24 64 Q24 18 64 10 H100 V24 H67 Q40 30 40 64 Z" stroke-width="4.5" stroke-linejoin="round"/></svg>',
+  };
+
+  const toolCard = (icon, name, text, lab, opt) => `
+      <section class="doc-card tool-card">
+        <div class="tool-icon">${TOOL_ICONS[icon]}</div>
+        <h3>${name}${opt ? ' <span class="opt">OPTIONAL</span>' : ''}</h3>
+        <p>${text}</p>${lab ? `
+        <p class="tool-map">In the lab: ${lab}</p>` : ''}
+      </section>`;
+
+  const TOOLS_ARTICLE = `
+    <div class="tool-grid">${[
+      toolCard('wrench', 'TENSION WRENCH', 'Turns the plug gently, like a key would. Keep it light.', '<b>Turning pressure</b>'),
+      toolCard('hook', 'HOOK PICK', 'Lifts one pin at a time. A short hook is all you need.', '<b>Lift</b>, or drag on the lock'),
+      toolCard('lock', 'PRACTICE LOCK', 'One you own and don\'t rely on. Clear or re-pinnable locks are easiest to learn on.'),
+      toolCard('shim', 'PADLOCK SHIMS', 'Only for <i>The shim and the latch</i>.', '', true),
+    ].join('')}
+    </div>
+    <section class="doc-card wide tool-rules">
+      <h3>BEFORE YOU START</h3>
+      <ul>
+        <li><b>Only pick locks you own or have permission to pick.</b></li>
+        <li>Never pick a lock that's in use.</li>
+        <li>Check the law on picks where you live.</li>
+      </ul>
+    </section>`;
+
   function pinLesson(o) {
     return Object.assign({
       kind: 'pin', kicker: 'MEET THE LOCK', legend: LEGEND_PIN, note: SIDE_NOTE, refs: PIN_REFS,
@@ -114,6 +146,13 @@
 
   const LESSONS = [
     // ------------------------------------------------------------ basics
+    {
+      id: 'tools', kind: 'doc', kicker: 'LOCKSPORT  /  THE BASICS', num: '00 / 03',
+      title: 'What you need',
+      subtitle: 'Two small tools and a lock you own. No tools needed to use the lab itself.',
+      article: TOOLS_ARTICLE,
+      refs: 'Sources: MIT Guide to Lock Picking, appendix A (Tools); Lockwiki, Tension wrench.',
+    },
     {
       id: 'how', kind: 'key', kicker: 'LOCKSPORT  /  THE BASICS', num: '01 / 03',
       title: 'How a pin-tumbler lock works',
@@ -314,7 +353,7 @@
   ];
 
   const NAV = [
-    { group: 'Locksport / the basics', items: ['how', 'meet', 'falseset'] },
+    { group: 'Locksport / the basics', items: ['tools', 'how', 'meet', 'falseset'] },
     { group: 'Meet the lock: pins', items: ['standard', 'spool', 'serrated', 'mushroom', 'hybrid', ['falseset', '06 What is a false set?']] },
     { group: 'Meet the lock: other locks', items: ['combo', 'shim'] },
     { group: 'Practice', items: ['challenge'] },

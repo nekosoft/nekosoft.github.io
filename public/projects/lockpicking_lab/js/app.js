@@ -804,7 +804,7 @@
   buildNav();
   // #lesson or #lesson/step (1-based) for kiosks and deep links
   const route = () => {
-    const [id, step] = (location.hash || '#how').slice(1).split('/');
+    const [id, step] = (location.hash || '#tools').slice(1).split('/');
     if (!lesson || lesson.id !== id) load(id);
     if (step && lesson.steps && lesson.steps[+step - 1]) runStep(+step - 1);
     // ?ff=seconds fast-forwards the simulation (kiosk snapshots, testing)
