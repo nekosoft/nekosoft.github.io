@@ -36,13 +36,10 @@
 [hidden] { display: none !important; }
 html, body { margin: 0; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.45; -webkit-font-smoothing: antialiased; }
-.topbar { height: 14px; background: var(--teal); }
-.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 14px); }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 65px); }
 
 /* ---------------------------------------------------------------- nav */
-nav { border-right: 1px solid var(--line); padding: 22px 16px; position: sticky; top: 0; align-self: start; max-height: 100vh; overflow: auto; }
-.home { display: inline-block; font-weight: 800; font-size: 11px; letter-spacing: 0.1em; color: var(--teal); text-decoration: none; margin-bottom: 14px; }
-.home:hover { text-decoration: underline; }
+nav#nav { border-right: 1px solid var(--line); padding: 22px 16px; position: sticky; top: 64px; align-self: start; max-height: calc(100vh - 64px); overflow: auto; }
 .nav-links { margin-top: 16px; display: grid; gap: 8px; font-size: 13px; }
 .nav-links a { color: var(--teal); }
 .brand-mark { font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
@@ -184,7 +181,7 @@ h3 { font-size: 15px; letter-spacing: 0.04em; color: var(--teal); margin: 0 0 10
 /* ------------------------------------------------------------ mobile */
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; }
-  nav { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; }
+  nav#nav { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; }
   #navlist { display: flex; flex-wrap: wrap; gap: 4px; }
   .nav-group { flex-basis: 100%; margin: 8px 0 2px; }
   .nav-item { width: auto; }

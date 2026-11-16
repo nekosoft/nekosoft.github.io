@@ -1,0 +1,85 @@
+/* Luda Hex site header, copied from src/components/Header.astro so this
+   static page matches the rest of ludahex.nl. Scoped to .lh-header. */
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url(../fonts/space-grotesk-latin-wght-normal.woff2) format('woff2-variations');
+}
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url(../fonts/jetbrains-mono-latin-wght-normal.woff2) format('woff2-variations');
+}
+
+.lh-header {
+  --lh-border: #35306b;
+  --lh-text: #f4f1ff;
+  --lh-muted: #e2ddf4;
+  --lh-magenta: #ff4fd8;
+  --lh-cyan: #53e8f4;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(19, 16, 43, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--lh-border);
+}
+.lh-bar {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 64px;
+  box-sizing: border-box;
+}
+.lh-header a { text-decoration: none; }
+.lh-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk Variable', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--lh-text);
+}
+.lh-wordmark img { display: block; }
+.lh-wordmark:hover span { animation: lh-glitch 300ms steps(2, end) 1; }
+@keyframes lh-glitch {
+  0% { text-shadow: 2px 0 var(--lh-magenta), -2px 0 var(--lh-cyan); }
+  50% { text-shadow: -2px 0 var(--lh-magenta), 2px 0 var(--lh-cyan); }
+  100% { text-shadow: none; }
+}
+.lh-nav { margin-left: auto; }
+.lh-nav ul { display: flex; gap: 24px; list-style: none; padding: 0; margin: 0; }
+.lh-nav a {
+  font-family: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--lh-muted);
+}
+.lh-nav a:hover { color: var(--lh-cyan); }
+.lh-nav a[aria-current='page'] { color: var(--lh-magenta); }
+.lh-social { display: flex; gap: 12px; }
+.lh-social a { color: var(--lh-muted); display: flex; padding: 4px; }
+.lh-social a:hover { color: var(--lh-cyan); filter: drop-shadow(0 0 6px rgba(83, 232, 244, 0.5)); }
+.lh-header a:focus-visible { outline: 2px solid var(--lh-cyan); outline-offset: 3px; border-radius: 2px; }
+
+@media (max-width: 640px) {
+  .lh-bar { gap: 12px; }
+  .lh-wordmark span { display: none; }
+  .lh-nav ul { gap: 16px; }
+}
+/* phones: drop the social icons and give the links their own row */
+@media (max-width: 560px) {
+  .lh-social { display: none; }
+  .lh-bar { flex-wrap: wrap; height: auto; padding-block: 8px; row-gap: 8px; justify-content: space-between; }
+  .lh-nav { order: 3; flex-basis: 100%; margin-left: 0; }
+  .lh-nav ul { flex-wrap: wrap; justify-content: center; gap: 8px 24px; }
+}
