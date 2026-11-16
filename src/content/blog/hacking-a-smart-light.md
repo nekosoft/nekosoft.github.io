@@ -6,7 +6,7 @@ tags: ["IoT / Hardware", "Bluetooth LE"]
 draft: false
 ---
 
-I spend a lot of time telling people their Bluetooth gadgets are chattier than they think, and it turns out that's much easier to show than to explain. So I built a fake smart light called Nova Glow on an ESP32-C6, and left in the kind of mistakes I keep running into on real products. Everything below you can do yourself with [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) on your phone, against something that behaves like a light you might actually buy.
+I spend a lot of time telling people their Bluetooth gadgets are chattier than they think, and it turns out that's much easier to show than to explain. So I built a fake smart light called Nova Glow on an ESP32-C6, and left in the kind of mistakes I keep running into on real products. Everything below you can do yourself from your phone, with [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) and a browser, against something that behaves like a light you might actually buy.
 
 I'll cover:
 
@@ -14,6 +14,7 @@ I'll cover:
 - controlling the light with no pairing, and reading the Wi-Fi password straight off it
 - getting it to flood your phone with made-up alarms
 - the factory-unlock command that isn't in the app at all
+- driving the light from a phone over its open setup Wi-Fi, and reading the creds back
 - and what I'd want to see done instead
 
 ## BLE overview
@@ -88,14 +89,34 @@ The app only ever touches three characteristics. The device has more. Scroll the
 
 > This is a backdoor, left in because someone assumed nobody would look past the menu the app shows them. Attackers don't use the app. They list every characteristic on the device and poke the ones that aren't meant to be there. Plenty of shipped hardware has an engineering mode or an unlock string sitting right next to the normal controls, and "no one knows it's here" has never counted for much.
 
+## Driving the light from a phone over open Wi-Fi
+
+The C6 does Wi-Fi as well as Bluetooth, so I gave Nova Glow the other half of a real product: a setup access point, the sort a bulb throws up the first time you power it on.
+
+Join the open network called `Nova Glow XX Setup`. There's no password, which is already the first problem. A setup page opens on its own, that's the captive portal doing its job, or you can go straight to `http://192.168.4.1/`. What you get is a control panel for the light with no app installed at all: on, off, colour, brightness, all driving the real LED. That part is genuinely handy, and in a workshop it means anyone with a phone can join in.
+
+Under the controls is a "connect to your Wi-Fi" form, which is where the onboarding falls down. Fill it in, then open `/api/status`:
+
+```json
+{
+  "wifi_ssid":   "NovaLabs-Guest",
+  "wifi_pass":   "sunflower-42!",
+  "admin_pin":   "8080",
+  "cloud_token": "nv_live_7c1a9f3e"
+}
+```
+
+> **Real world:** this onboarding step shows up in nearly every smart device, and it is a soft spot. The access point is open, so anyone nearby can join. The whole thing runs over plain HTTP, so the Wi-Fi password you just typed crosses the air in the clear. And `/api/status` reads the lot back with nothing asked of whoever calls it. It is the same secret the Bluetooth `Config` characteristic gave up earlier, reachable a second way, and that is the real point: one weak value tends to leak through every interface a device exposes.
+
 ## What I'd want instead
 
-Same four problems, turned around:
+Same problems, turned around:
 
 - Make the device check that the phone is *allowed*, not just *able*. Pair, encrypt the link, and authorise the specific action rather than the connection.
 - Once setup is done, get the provisioning data off the radio, and keep anything sensitive behind that encrypted link.
 - Cap how much the device can send without being asked, and let whatever is listening treat events as claims to verify rather than facts.
 - Take debug and factory modes out of production builds, and work on the assumption that someone will find every characteristic you leave in.
+- Don't run first-time setup over an open access point and plain HTTP. Lock the network down, put it behind TLS, and never hand the credentials back out once they're stored.
 
 If there's one habit worth taking from this, it's assuming anything on the air is reachable by someone you didn't invite, and making the device decide every single time what that someone gets to do. Nova Glow decides nothing, which is exactly why it's such a good thing to pull apart.
 
