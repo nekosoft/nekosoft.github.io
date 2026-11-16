@@ -304,3 +304,17 @@ main:has(> .cta-strip:last-child) + footer {
   margin-top: 0;
   border-top: 0;
 }
+
+/* --- larger reading size on blog posts ---------------------------------- */
+.post .prose {
+  font-size: 1.2rem;
+  line-height: 1.72;
+}
+
+.post .prose h2 {
+  font-size: 1.75rem;
+}
+
+.post .prose h3 {
+  font-size: 1.35rem;
+}
