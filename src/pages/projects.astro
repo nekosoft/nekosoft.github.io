@@ -64,10 +64,6 @@ import { hostedProjects, otherProjects } from '../data/projects';
         })
       }
     </div>
-    <p class="note">
-      Talks, training and writing live on the
-      <a href="/about">about page</a>.
-    </p>
   </section>
 
   <ContactCTA />
@@ -96,8 +92,9 @@ import { hostedProjects, otherProjects } from '../data/projects';
     padding-top: var(--space-4);
   }
 
+  /* last section before the contact strip: same breathing room as the home page */
   .elsewhere {
-    padding-top: var(--space-7);
+    padding-block: var(--space-7) var(--space-8);
   }
 
   .note {
@@ -212,7 +209,8 @@ import { hostedProjects, otherProjects } from '../data/projects';
   /* open source & consulting — compact tiles */
   .other-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* two per row, so four tiles never leave one stranded on its own */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
   }
 

@@ -297,3 +297,10 @@ h3 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* pages that end on the contact strip: let the footer sit straight under
+   it, instead of leaving an empty band between two border lines */
+main:has(> .cta-strip:last-child) + footer {
+  margin-top: 0;
+  border-top: 0;
+}
