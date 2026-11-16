@@ -21,6 +21,17 @@ export interface HostedProject extends WorkItem {
 }
 
 export const hostedProjects: HostedProject[] = [
+  // newest first: add new projects at the top
+  {
+    name: 'Lockpicking, as a physics model',
+    kicker: 'Interactive lock simulator',
+    detail:
+      'Pick a pin-tumbler lock on screen and see why it gives way. Binding order, the false set on a spool pin and the plug pushing back are not animations: they come out of a small physics engine built on the MIT Guide to Lock Picking. It also covers a combination lock and a padlock shim, and the matching A4 posters are free to download.',
+    facts: ['11 lessons', 'mouse, touch or keyboard', 'printable posters'],
+    href: '/projects/lockpicking_lab/',
+    cta: 'Open the lab',
+    tag: 'Training',
+  },
   {
     name: 'Fish & Chips: who’s watching?',
     kicker: 'Anti-surveillance art workshop',
@@ -32,23 +43,13 @@ export const hostedProjects: HostedProject[] = [
     tag: 'Art',
   },
   {
-    name: 'Roaming Bites — The Promotion That Wasn’t',
-    kicker: 'Incident tabletop',
+    name: 'What would make you believe it?',
+    kicker: 'Social engineering workshop',
     detail:
-      'An AI agent with cloud credentials starts doing things nobody asked for. Pick a response team, work the evidence as it lands, and commit to decisions you cannot take back. Built for security and engineering teams.',
-    facts: ['5 phases', '~60 minutes', 'security & engineering'],
-    href: '/projects/incident_roaming_bites/',
-    cta: 'Open the console',
-    tag: 'Training',
-  },
-  {
-    name: 'Roaming Bites — The Page That Was Ours',
-    kicker: 'Incident tabletop',
-    detail:
-      'A phishing page hosted by the platform itself. Eight seats exist and you fill six — the gaps you leave shape what the room can see. Written for mixed rooms: product, support, legal and data alongside engineering.',
-    facts: ['6 phases', '~90 minutes', 'mixed cross-team rooms'],
-    href: '/projects/incident_roaming_bites_pages/',
-    cta: 'Open the console',
+      'Who targets us and why, what makes a story persuasive, and how public clues make it feel personal. Then teams of two or three build a pretext and the room pulls it apart.',
+    facts: ['~60 minutes', 'teams of 2–3', 'self-audit + exercise'],
+    href: '/projects/social_engineering_workshop/',
+    cta: 'Open the workshop',
     tag: 'Training',
   },
   {
@@ -62,23 +63,23 @@ export const hostedProjects: HostedProject[] = [
     tag: 'Training',
   },
   {
-    name: 'What would make you believe it?',
-    kicker: 'Social engineering workshop',
+    name: 'Roaming Bites — The Page That Was Ours',
+    kicker: 'Incident tabletop',
     detail:
-      'Who targets us and why, what makes a story persuasive, and how public clues make it feel personal. Then teams of two or three build a pretext and the room pulls it apart.',
-    facts: ['~60 minutes', 'teams of 2–3', 'self-audit + exercise'],
-    href: '/projects/social_engineering_workshop/',
-    cta: 'Open the workshop',
+      'A phishing page hosted by the platform itself. Eight seats exist and you fill six — the gaps you leave shape what the room can see. Written for mixed rooms: product, support, legal and data alongside engineering.',
+    facts: ['6 phases', '~90 minutes', 'mixed cross-team rooms'],
+    href: '/projects/incident_roaming_bites_pages/',
+    cta: 'Open the console',
     tag: 'Training',
   },
   {
-    name: 'Lockpicking, as a physics model',
-    kicker: 'Interactive lock simulator',
+    name: 'Roaming Bites — The Promotion That Wasn’t',
+    kicker: 'Incident tabletop',
     detail:
-      'Pick a pin-tumbler lock on screen and see why it gives way. Binding order, the false set on a spool pin and the plug pushing back are not animations: they come out of a small physics engine built on the MIT Guide to Lock Picking. It also covers a combination lock and a padlock shim, and the matching A4 posters are free to download.',
-    facts: ['11 lessons', 'mouse, touch or keyboard', 'printable posters'],
-    href: '/projects/lockpicking_lab/',
-    cta: 'Open the lab',
+      'An AI agent with cloud credentials starts doing things nobody asked for. Pick a response team, work the evidence as it lands, and commit to decisions you cannot take back. Built for security and engineering teams.',
+    facts: ['5 phases', '~60 minutes', 'security & engineering'],
+    href: '/projects/incident_roaming_bites/',
+    cta: 'Open the console',
     tag: 'Training',
   },
 ];
