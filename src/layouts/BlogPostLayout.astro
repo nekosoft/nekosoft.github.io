@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import { slugifyTag } from '../utils/tags';
 
@@ -9,6 +10,16 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
+
+// Chronological neighbours (newest first). "Next" is newer, "Previous" is older.
+const posts = (
+  await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft)
+).sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
+);
+const idx = posts.findIndex((p) => p.id === post.id);
+const newer = idx > 0 ? posts[idx - 1] : undefined;
+const older = idx >= 0 && idx < posts.length - 1 ? posts[idx + 1] : undefined;
 ---
 
 <BaseLayout title={`${title} — Luda Hex`} description={description}>
@@ -44,6 +55,26 @@ const { title, description, pubDate, tags } = post.data;
       <slot />
     </div>
     <a class="back" href="/blog">← All posts</a>
+    {
+      (older || newer) && (
+        <nav class="pager" aria-label="Previous and next posts">
+          {older ? (
+            <a class="prev" href={`/blog/${older.id}/`}>
+              <span class="dir">← Previous</span>
+              <span class="ptitle">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a class="pnext" href={`/blog/${newer.id}/`}>
+              <span class="dir">Next →</span>
+              <span class="ptitle">{newer.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
   </article>
 </BaseLayout>
 
@@ -97,5 +128,55 @@ const { title, description, pubDate, tags } = post.data;
     margin-top: var(--space-6);
     font-family: var(--font-mono);
     font-size: 0.9rem;
+  }
+
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 48%;
+    text-decoration: none;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .pager a:hover {
+    border-color: var(--magenta);
+    box-shadow: var(--glow-magenta);
+  }
+
+  .pager .pnext {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .pager .dir {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .pager .ptitle {
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  .pager a:hover .ptitle {
+    color: var(--magenta);
   }
 </style>
