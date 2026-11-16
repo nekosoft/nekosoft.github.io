@@ -125,7 +125,7 @@
     const cfg = Object.assign({
       W: 30, H: 60, clr: 4, spacing: 64, springSpace: 44, plugDepth: 96,
       lipT: 5, opening: 18, keywayH: 44, chisel: 9, tipW: 8, keyPinW: 26,
-      springK: 3.5, springPreload: 40, gravity: 120,
+      springK: 3.5, springPreload: 40, gravity: 120, springDamp: 2, pinDamp: 8,
       tensionMax: 2000, plugReturn: 15, maxTravel: 30, openAt: 23,
       pickMaxForce: 1500, pickKp: 1600, pickKd: 70,
       friction: 0.22, substeps: 24, mode: 'pick', maxTilt: 0.08,
@@ -187,15 +187,15 @@
       const cx = xs[i] + (p.offset || 0) / 2;
       const key = world.add(new Body({
         name: 'key' + i, mass: 0.6, x: cx, y: kTop, shapes: [keyPinShape(cfg.keyPinW, kLen, cfg.chisel, cfg.tipW)],
-        friction: cfg.friction, layer: L.KEYPIN, mask: L.HOUSING | L.PLUG | L.DRIVER | L.PICK | L.KEY, linDamp: 3, angDamp: 6,
+        friction: cfg.friction, layer: L.KEYPIN, mask: L.HOUSING | L.PLUG | L.DRIVER | L.PICK | L.KEY, linDamp: cfg.pinDamp, angDamp: 6,
       }));
       const driver = world.add(new Body({
         name: 'driver' + i, mass: 1, x: cx, y: kTop - H / 2 - 0.2, shapes: dShapes,
-        friction: cfg.friction, layer: L.DRIVER, mask: L.HOUSING | L.PLUG | L.KEYPIN, linDamp: 3, angDamp: 6,
+        friction: cfg.friction, layer: L.DRIVER, mask: L.HOUSING | L.PLUG | L.KEYPIN, linDamp: cfg.pinDamp, angDamp: 6,
       }));
       const spring = new Spring({
         body: driver, local: { x: 0, y: -H / 2 }, anchor: { x: xs[i], y: yTop },
-        rest: Pb + cfg.springSpace + cfg.springPreload, k: cfg.springK, damping: 0.4,
+        rest: Pb + cfg.springSpace + cfg.springPreload, k: cfg.springK, damping: cfg.springDamp,
       });
       world.forceFns.push(() => spring.apply());
       // real bores are tight: a pin can only rock a few degrees. The drawing
