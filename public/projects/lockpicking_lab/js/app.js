@@ -102,7 +102,7 @@
     const k = lesson.kind;
     if (k === 'pin') {
       const scene = lesson.challenge ? (S.challengeScene = makeChallengeScene()) : lesson.scene;
-      lock = Locks.buildPinLock(scene); lock.settle(0.8);
+      lock = buildPin(scene); lock.settle(0.8);
       S.tension = 0; S.lift = 0; S.col = 0;
       const restY = lock.ctl.pickRestY;
       let minY = Infinity;
@@ -115,7 +115,7 @@
         ? 'Drag up/down on the lock to lift · click a column or press 1-5 to move the pick · [ and ] set tension'
         : 'Drag up/down on the lock (or ↑ ↓) to lift · [ and ] or the slider set tension';
     } else if (k === 'key') {
-      lock = Locks.buildPinLock(Object.assign({ mode: 'key' }, lesson.scene));
+      lock = buildPin(Object.assign({ mode: 'key' }, lesson.scene));
       S.correct = lesson.scene.pins.map(p => p.keyLen);
       S.keyChoice = 'correct'; S.insert = 0; S.turn = 0; S.turnTarget = 0; S.blocked = [];
       lock.setKeyCuts(S.correct); lock.setKeyInsertion(0);
@@ -152,10 +152,89 @@
   function button(text, cls, fn) { const b = document.createElement('button'); b.className = 'b ' + (cls || ''); b.textContent = text; b.onclick = fn; return b; }
   function btnRow(...els) { const d = document.createElement('div'); d.className = 'btns'; els.forEach(e => d.appendChild(e)); return d; }
 
+  // ------------------------------------------------- physics settings
+  // Session only: kept in this object, never saved, gone on reload.
+  const TUNE = [
+    { k: 'tensionMax', label: 'Strongest turning force', min: 500, max: 4000, step: 50, fmt: v => v.toFixed(0), help: 'What 100% on the turning-pressure slider means.' },
+    { k: 'springK', label: 'Spring stiffness', min: 0.5, max: 12, step: 0.1, fmt: v => v.toFixed(1) },
+    { k: 'springPreload', label: 'Spring preload', min: 0, max: 80, step: 1, fmt: v => v.toFixed(0) + ' px', help: 'How squashed the spring is at rest.' },
+    { k: 'friction', label: 'Friction', min: 0, max: 0.6, step: 0.01, fmt: v => v.toFixed(2) },
+    { k: 'pinMass', label: 'Pin weight', min: 0.1, max: 2, step: 0.05, fmt: v => v.toFixed(2) + '×', help: 'Lighter pins react faster; heavier pins carry more momentum.' },
+    { k: 'pinDamp', label: 'Pin damping', min: 0, max: 20, step: 0.5, fmt: v => v.toFixed(1), help: 'Drag on the pins. Low values bounce.' },
+    { k: 'springDamp', label: 'Spring damping', min: 0, max: 5, step: 0.1, fmt: v => v.toFixed(1) },
+    { k: 'gravity', label: 'Gravity', min: 0, max: 400, step: 5, fmt: v => v.toFixed(0) },
+    { k: 'pickRise', label: 'Pick speed limit', min: 50, max: 1500, step: 10, fmt: v => v >= 1500 ? 'off' : v.toFixed(0) + ' px/s', pickOnly: true, help: 'How fast the pick tip can rise. Fast picks knock pins upward.' },
+    { k: 'plugReturn', label: 'Plug return spring', min: 0, max: 60, step: 1, fmt: v => v.toFixed(0) },
+  ];
+  const tune = {};
+  let tuneBase = null;   // engine defaults, read once from a throwaway lock
+  function tuneDefaults() {
+    if (!tuneBase) { const c = Locks.buildPinLock({ pins: [{ type: 'standard', keyLen: 50, offset: 0 }] }).cfg; tuneBase = {}; TUNE.forEach(t => { tuneBase[t.k] = c[t.k]; }); }
+    return tuneBase;
+  }
+  function buildPin(scene) {
+    const o = Object.assign({}, scene, tune);
+    if (o.pickRise >= 1500) o.pickRise = 0;
+    return Locks.buildPinLock(o);
+  }
+  /** change one setting on the running lock, without rebuilding it */
+  function setTune(k, v) {
+    tune[k] = v;
+    if (!lock || lock.kind !== 'pin') return;
+    const c = lock.cfg, old = c[k];
+    c[k] = k === 'pickRise' && v >= 1500 ? 0 : v;
+    for (const p of lock.pins) {
+      if (k === 'springK') p.spring.k = v;
+      if (k === 'springDamp') p.spring.damping = v;
+      if (k === 'springPreload') p.spring.rest += v - old;
+      if (k === 'pinDamp') { p.key.linDamp = v; p.driver.linDamp = v; }
+      if (k === 'pinMass') for (const [b, m] of [[p.key, 0.6 * v], [p.driver, v]]) {
+        b.inertia *= m / b.mass; b.mass = m;
+        if (b.imx) b.imx = 1 / m; if (b.imy) b.imy = 1 / m; if (b.ii) b.ii = 1 / b.inertia;
+        b.gravityScale = 1 / v;
+      }
+    }
+    if (k === 'friction') for (const b of lock.world.bodies) if (b.friction === old) b.friction = v;
+    if (k === 'gravity') lock.world.gy = v;
+  }
+  function buildTune() {
+    const box = $('tune'), body = $('tuneBody');
+    const isPin = lesson.kind === 'pin' || lesson.kind === 'key';
+    box.hidden = !isPin;
+    if (!isPin) return;
+    body.innerHTML = '';
+    const def = tuneDefaults();
+    const grid = document.createElement('div'); grid.className = 'tune-grid';
+    const sliders = [];
+    for (const t of TUNE) {
+      if (t.pickOnly && lesson.kind === 'key') continue;
+      const w = document.createElement('div'); w.className = 'ctl';
+      const lab = document.createElement('label'), out = document.createElement('output'), inp = document.createElement('input');
+      lab.textContent = t.label; lab.appendChild(out); lab.htmlFor = inp.id = 'tune-' + t.k;
+      inp.type = 'range'; inp.min = t.min; inp.max = t.max; inp.step = t.step;
+      const cur = tune[t.k] !== undefined ? tune[t.k] : def[t.k];
+      inp.value = t.k === 'pickRise' && !cur ? t.max : cur;
+      const upd = () => { const v = +inp.value; out.textContent = t.fmt(v) + (Math.abs(v - def[t.k]) < 1e-9 ? '' : ' *'); };
+      inp.addEventListener('input', () => { setTune(t.k, +inp.value); upd(); });
+      upd();
+      w.append(lab, inp);
+      if (t.help) { const h = document.createElement('small'); h.textContent = t.help; w.appendChild(h); }
+      grid.appendChild(w); sliders.push([t, inp, upd]);
+    }
+    const reset = button('Back to defaults', '', () => {
+      for (const [t, inp, upd] of sliders) { inp.value = t.k === 'pickRise' && !def[t.k] ? t.max : def[t.k]; setTune(t.k, def[t.k]); upd(); }
+      for (const k in tune) delete tune[k];
+    });
+    const note = document.createElement('p'); note.className = 'tune-note';
+    note.textContent = 'Changes apply straight away and last until you reload the page. Nothing is saved. * marks a changed value.';
+    body.append(note, grid, btnRow(reset));
+  }
+
   const UI = {};
   function buildControls() {
     const c = $('controls'); c.innerHTML = '';
     const k = lesson.kind;
+    buildTune();
     if (k === 'pin') {
       UI.tension = slider('tension', 'TURNING PRESSURE', 0, 0, 100, v => v + '%', v => { S.tension = v / 100; });
       UI.lift = slider('lift', 'LIFT', 0, 0, 1000, v => Math.round(v / 10) + '%', v => { S.lift = v / 1000; });
@@ -217,7 +296,7 @@
   }
   function resetPin() {
     S.tension = 0; S.lift = 0; UI.tension.set(0); UI.lift.set(0);
-    if (lesson.challenge) { lock = Locks.buildPinLock(S.challengeScene); lock.settle(0.8); selectPin(S.col || 0); S.startTime = performance.now(); S.solvedAt = null; }
+    if (lesson.challenge) { lock = buildPin(S.challengeScene); lock.settle(0.8); selectPin(S.col || 0); S.startTime = performance.now(); S.solvedAt = null; }
     else buildScene();
     hist = []; strip = [];
   }
