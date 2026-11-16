@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BLE color picker</title>
+<style>
+  :root{
+    --bg:#13102b; --bg-inset:#0d0b20; --bg-raise:#1e1b4e;
+    --border:#35306b; --border-bright:#524aa8;
+    --text:#f4f1ff; --text-muted:#b7b0d8;
+    --cyan:#53e8f4; --magenta:#ff4fd8; --purple:#a78bfa;
+    --picked:#53e8f4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--text); font-family:var(--mono); font-size:14px; line-height:1.5; padding:18px;}
+  .demo{display:flex; gap:20px; align-items:center; flex-wrap:wrap;}
+  .bulb{width:86px; height:86px; flex:none; border-radius:50%; background:var(--picked);
+    box-shadow:0 0 40px -2px var(--picked); border:1px solid rgba(255,255,255,.18);}
+  .ctl{flex:1 1 220px; min-width:200px;}
+  .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+  .row:last-child{margin-bottom:0;}
+  input[type=color]{-webkit-appearance:none; appearance:none; width:46px; height:46px;
+    border:1px solid var(--border-bright); border-radius:10px; background:none; cursor:pointer; padding:0; flex:none;}
+  input[type=color]::-webkit-color-swatch-wrapper{padding:4px}
+  input[type=color]::-webkit-color-swatch{border:none; border-radius:6px}
+  input[type=color]::-moz-color-swatch{border:none; border-radius:6px}
+  .lbl{font-size:12px; color:var(--text-muted); margin:0 0 2px; text-transform:uppercase; letter-spacing:.04em;}
+  .hex{font-size:22px; font-weight:500; letter-spacing:.04em; color:var(--cyan);}
+  .hex::before{content:"0x"; color:var(--text-muted); font-size:13px;}
+  button{font-family:var(--mono); font-size:12.5px; cursor:pointer; background:var(--bg-raise); color:var(--text);
+    border:1px solid var(--border-bright); border-radius:8px; padding:7px 12px;}
+  button:hover{border-color:var(--cyan); color:var(--cyan);}
+  .swatches{display:flex; gap:8px; flex-wrap:wrap;}
+  .sw{width:28px; height:28px; border-radius:7px; cursor:pointer; border:1px solid rgba(255,255,255,.2); padding:0;}
+  .sw:hover{outline:2px solid var(--cyan); outline-offset:1px;}
+</style>
+</head>
+<body>
+  <div class="demo">
+    <div class="bulb" id="bulb"></div>
+    <div class="ctl">
+      <div class="row">
+        <input type="color" id="cp" value="#53e8f4" aria-label="Pick a color">
+        <div>
+          <p class="lbl">Write this to Color (…0004)</p>
+          <span class="hex" id="hex">53E8F4</span>
+        </div>
+      </div>
+      <div class="row">
+        <button id="copy" type="button">Copy hex</button>
+        <div class="swatches" id="sw">
+          <button class="sw" type="button" style="background:#53e8f4" data-hex="#53e8f4" aria-label="Cyan"></button>
+          <button class="sw" type="button" style="background:#ff4fd8" data-hex="#ff4fd8" aria-label="Magenta"></button>
+          <button class="sw" type="button" style="background:#a78bfa" data-hex="#a78bfa" aria-label="Purple"></button>
+          <button class="sw" type="button" style="background:#34e5a0" data-hex="#34e5a0" aria-label="Green"></button>
+          <button class="sw" type="button" style="background:#ffd60a" data-hex="#ffd60a" aria-label="Amber"></button>
+          <button class="sw" type="button" style="background:#ffffff" data-hex="#ffffff" aria-label="White"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  (function(){
+    var cp=document.getElementById('cp'), hex=document.getElementById('hex'),
+        copy=document.getElementById('copy'), root=document.documentElement;
+    function apply(v){v=v.toLowerCase(); root.style.setProperty('--picked',v); hex.textContent=v.replace('#','').toUpperCase();}
+    cp.addEventListener('input',function(){apply(cp.value);});
+    document.getElementById('sw').addEventListener('click',function(e){
+      var b=e.target.closest('.sw'); if(!b) return; cp.value=b.getAttribute('data-hex'); apply(cp.value);
+    });
+    copy.addEventListener('click',function(){
+      var t=hex.textContent;
+      function done(){copy.textContent='Copied ✓'; setTimeout(function(){copy.textContent='Copy hex';},1200);}
+      function sel(){var r=document.createRange(); r.selectNodeContents(hex); var s=getSelection(); s.removeAllRanges(); s.addRange(r);}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(sel);}else{sel();}
+    });
+    apply(cp.value);
+  })();
+</script>
+</body>
+</html>
