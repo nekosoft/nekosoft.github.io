@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#231533">
+<title>Probably Fine Scorecard</title>
+<meta name="description" content="Printable scorecard for Probably Fine — Cyber Cats Edition: a team sheet and a host tally.">
+<link rel="icon" type="image/svg+xml" href="assets/cat-favicon.svg">
+<link rel="stylesheet" href="scorecard.css">
+</head>
+<body>
+<div class="toolbar no-print">
+  <a href="./">&larr; Back to the quiz</a>
+  <p>A4, double-sided. Front: team sheet, one per team. Back: host tally.</p>
+  <button type="button" id="print">Print scorecard</button>
+</div>
+
+<main class="sheet" aria-label="Team scorecard">
+  <header class="sheet-head">
+    <div>
+      <span class="eyebrow">PROBABLY FINE · CYBER CATS EDITION</span>
+      <h1>Team scorecard</h1>
+    </div>
+    <img src="assets/cat-favicon.svg" alt="" width="54" height="54">
+  </header>
+  <div class="write-line"><span class="label">Team name</span><span class="write"></span></div>
+  <p class="how">Circle the letter you choose. When the host reveals the answer, tick the box if you were right. Wrong answers score 0. Add up each row.</p>
+
+  <section>
+    <h2><span>01</span> The board <small>up to 3,000</small></h2>
+    <table class="grid board">
+      <colgroup><col class="c-cat"><col><col><col><col class="c-sub"></colgroup>
+      <thead><tr><th></th><th>100</th><th>200</th><th>300</th><th>Row total</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><b>You've got jail</b><small>SOCIAL ENGINEERING</small></th><td><span class="pts">100</span><span class="qt">The CEO needs a favour</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">200</span><span class="qt">Scan to pay</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">300</span><span class="qt">The familiar voice</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td class="sub"><span class="box"></span></td></tr>
+        <tr><th scope="row"><b>Password123!</b><small>IDENTITY &amp; ACCESS</small></th><td><span class="pts">100</span><span class="qt">One password to rule them all</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">200</span><span class="qt">Approve me, maybe</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">300</span><span class="qt">The six-digit code</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td class="sub"><span class="box"></span></td></tr>
+        <tr><th scope="row"><b>Cloudy with a chance of breaches</b><small>CLOUD &amp; RECOVERY</small></th><td><span class="pts">100</span><span class="qt">Secret cloud folder</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">200</span><span class="qt">The padlock</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">300</span><span class="qt">The backup that wasn’t</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td class="sub"><span class="box"></span></td></tr>
+        <tr><th scope="row"><b>Artificial overconfidence</b><small>AI &amp; AGENTS</small></th><td><span class="pts">100</span><span class="qt">The sources, please</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">200</span><span class="qt">An email gives orders</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">300</span><span class="qt">The intern has admin</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td class="sub"><span class="box"></span></td></tr>
+        <tr><th scope="row"><b>CSI: The office</b><small>EVERYDAY DETECTIVE</small></th><td><span class="pts">100</span><span class="qt">The mystery USB</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">200</span><span class="qt">Someone else’s payslip</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">300</span><span class="qt">Encoded, apparently</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td class="sub"><span class="box"></span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span>02</span> Lightning <small>up to 300</small></h2>
+    <table class="grid"><tbody><tr><td><span class="pts">100</span><span class="qt">The wrong Alex</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">100</span><span class="qt">The browser needs you</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td><td><span class="pts">100</span><span class="qt">Just for today</span><span class="row"><span class="abc"><i>A</i><i>B</i><i>C</i></span><span class="tick" title="Tick if right"></span></span></td></tr></tbody></table>
+  </section>
+
+  <section>
+    <h2><span>03</span> Final incident <small>up to 600</small></h2>
+    <table class="grid"><tbody><tr><td><span class="pts">200</span><span class="qt">Stop &amp; verify</span><span class="row"><span class="hint">host awards</span><span class="tick" title="Tick if awarded"></span></span></td><td><span class="pts">200</span><span class="qt">Add a safeguard</span><span class="row"><span class="hint">host awards</span><span class="tick" title="Tick if awarded"></span></span></td><td><span class="pts">200</span><span class="qt">Respond to Sam</span><span class="row"><span class="hint">host awards</span><span class="tick" title="Tick if awarded"></span></span></td></tr></tbody></table>
+  </section>
+
+  <section class="totals" aria-label="Totals">
+    <div><span class="label">Board</span><span class="box"></span></div>
+    <span class="op">+</span>
+    <div><span class="label">Lightning</span><span class="box"></span></div>
+    <span class="op">+</span>
+    <div><span class="label">Final</span><span class="box"></span></div>
+    <span class="op">=</span>
+    <div class="grand"><span class="label">Total <small>max 3,900</small></span><span class="box"></span></div>
+  </section>
+</main>
+
+<main class="sheet host" aria-label="Host tally">
+  <header class="sheet-head">
+    <div>
+      <span class="eyebrow">PROBABLY FINE · FOR THE HOST</span>
+      <h1>Host tally</h1>
+    </div>
+    <img src="assets/cat-favicon.svg" alt="" width="54" height="54">
+  </header>
+  <p class="how">Copy each team’s row totals from their sheet. Each board category is worth up to 600 (100 + 200 + 300).</p>
+  <table class="tally">
+    <thead><tr><th>#</th><th class="tn">Team</th><th scope="col"><span title="You've got jail">Got jail</span><small>/600</small></th><th scope="col"><span title="Password123!">Passwords</span><small>/600</small></th><th scope="col"><span title="Cloudy with a chance of breaches">Cloud</span><small>/600</small></th><th scope="col"><span title="Artificial overconfidence">AI</span><small>/600</small></th><th scope="col"><span title="CSI: The office">CSI</span><small>/600</small></th><th scope="col"><span>Lightning</span><small>/300</small></th><th scope="col"><span>Final</span><small>/600</small></th><th scope="col" class="tot"><span>Total</span><small>/3,900</small></th><th scope="col"><span>Rank</span></th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">2</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">3</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">4</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">5</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">6</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">7</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">8</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">9</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">10</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">11</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+      <tr><td class="n">12</td><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <section class="tie">
+    <h2><span>04</span> Tie-break <small>only if teams are level</small></h2>
+    <p class="how">First buzz answers. Right: that team takes the point. Wrong: nobody scores and you move on. Tick who won each question.</p>
+    <table class="tally tie-table">
+      <thead><tr><th class="tn">Tied team</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Q7</th><th>Q8</th><th class="tot">Won</th></tr></thead>
+      <tbody><tr><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td></tr><tr><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td></tr><tr><td class="tn"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="tot"></td></tr></tbody>
+    </table>
+  </section>
+  <div class="write-line"><span class="label">Winning team</span><span class="write"></span></div>
+</main>
+<script src="scorecard.js"></script>
+</body>
+</html>
