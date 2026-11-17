@@ -23,6 +23,16 @@ export interface HostedProject extends WorkItem {
 export const hostedProjects: HostedProject[] = [
   // newest first: add new projects at the top
   {
+    name: 'LLM Hacking — the Bot Tricks lab',
+    kicker: 'Guided LLM security lab',
+    detail:
+      'Seven hands-on labs that teach prompt injection, tool abuse and the lethal trifecta the way an attacker finds them — mapped to a tester’s engagement phases, each tied to a threat and the defence that answers it. Includes a threats-and-defences cheat sheet and an interactive threat modeller for LLM-connected apps.',
+    facts: ['7 labs', 'self-paced', 'security & engineering'],
+    href: '/projects/bot-tricks-lab/',
+    cta: 'Open the lab',
+    tag: 'Training',
+  },
+  {
     name: 'Probably Fine — Cyber Cats Edition',
     kicker: 'Cybersecurity team quiz',
     detail:

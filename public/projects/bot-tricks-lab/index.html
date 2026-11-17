@@ -1,0 +1,1598 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}html,body{height:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<title>LLM Hacking</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a single scrolling storybook. Two views — a winding trail map of 12
+   guardian bots, and a chapter page per bot. Treatment: warm paper, rounded
+   friendly type, one coral accent, each bot its own candy hue. */
+:root{
+  --bg:#eef1f4; --bg2:#e4e8ed; --panel:#ffffff; --panel2:#f2f4f7;
+  --ink:#1b2430; --muted:#5a6672; --faint:#9099a5;
+  --line:#e0e4e9; --line2:#cbd2da;
+  --accent:#e4583a; --accent-ink:#ffffff; --accent-soft:#f8e2db;
+  --teal:#0f9e8d; --gold:#bf8a16; --good:#2f8f57; --warm:#c46f1e; --bad:#cf4a37;
+  --code:#eef1f5;
+  --shadow:0 1px 2px rgba(20,30,45,.06),0 6px 18px rgba(20,30,45,.07);
+  --shadow-sm:0 1px 2px rgba(20,30,45,.05);
+  --round:10px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161c; --bg2:#171c24; --panel:#1a2029; --panel2:#212834;
+  --ink:#e7ecf1; --muted:#9aa6b2; --faint:#64717f;
+  --line:#28313c; --line2:#3a4552;
+  --accent:#ff7753; --accent-ink:#1a110c; --accent-soft:#3a241c;
+  --teal:#2cc4b2; --gold:#dcae4f; --good:#5cc07e; --warm:#e2975a; --bad:#ef7a63;
+  --code:#10151c;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#12161c; --bg2:#171c24; --panel:#1a2029; --panel2:#212834;
+  --ink:#e7ecf1; --muted:#9aa6b2; --faint:#64717f;
+  --line:#28313c; --line2:#3a4552;
+  --accent:#ff7753; --accent-ink:#1a110c; --accent-soft:#3a241c;
+  --teal:#2cc4b2; --gold:#dcae4f; --good:#5cc07e; --warm:#e2975a; --bad:#ef7a63;
+  --code:#10151c;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:600;margin:0;letter-spacing:.2px;line-height:1.15}
+a{color:var(--accent);text-decoration:none;font-weight:700}
+a:hover{text-decoration:underline}
+button{font-family:var(--body);font-weight:700}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:12px}
+.wrap{max-width:960px;margin:0 auto;
+  padding-left:max(18px,env(safe-area-inset-left,0px));
+  padding-right:max(18px,env(safe-area-inset-right,0px))}
+
+/* ---- top bar ---- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:blur(10px);
+  border-bottom:2px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--panel);z-index:35}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding:10px 0;min-height:56px}
+.home{display:flex;align-items:center;gap:9px;background:none;border:0;cursor:pointer;color:var(--ink);padding:4px}
+.home .logo{width:34px;height:34px;flex:none}
+.home .wordmark{font-family:var(--disp);font-weight:700;font-size:17px}
+.home .wordmark small{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:-2px}
+.bar .spacer{flex:1}
+.stars{display:flex;align-items:center;gap:7px;background:var(--panel2);border:2px solid var(--line);
+  border-radius:999px;padding:5px 12px 5px 10px;font-family:var(--disp);font-size:13px}
+.stars svg{width:18px;height:18px}
+.iconbtn{width:38px;height:38px;border:2px solid var(--line);background:var(--panel);border-radius:12px;
+  cursor:pointer;color:var(--ink);font-size:15px;display:grid;place-items:center}
+.iconbtn:hover{border-color:var(--accent);transform:translateY(-1px)}
+
+/* ---- map / hero ---- */
+.view{padding:0 0 80px}
+.hero{text-align:center;padding:40px 0 10px}
+.kicker{display:inline-block;background:var(--accent-soft);color:var(--accent);font-family:var(--disp);font-weight:600;
+  font-size:13px;padding:6px 15px;border-radius:999px;border:2px solid color-mix(in srgb,var(--accent) 30%,var(--line))}
+.hero h1{font-size:clamp(34px,7vw,58px);margin:18px 0 0;font-weight:700;text-wrap:balance}
+.hero p{max-width:40ch;margin:16px auto 0;font-size:17px;color:var(--muted)}
+.hero .peek{display:flex;justify-content:center;gap:-14px;margin-top:24px}
+.hero .peek .mini{width:58px;height:58px;margin-left:-12px;filter:drop-shadow(0 4px 6px rgba(90,60,25,.18))}
+.hero .peek .mini:first-child{margin-left:0}
+.hero .peek .mini{transition:transform .18s}
+.hero .peek:hover .mini{transform:translateY(-3px)}
+
+/* the way */
+.way{background:var(--panel);border:2px solid var(--line);border-radius:26px;box-shadow:var(--shadow);
+  padding:22px 22px 24px;margin:30px 0 10px}
+.way h2{font-size:21px;text-align:center}
+.way .sub{text-align:center;color:var(--muted);font-size:14px;margin-top:4px}
+.way .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.way .s{text-align:center}
+.way .s .b{width:50px;height:50px;margin:0 auto;border-radius:16px;display:grid;place-items:center;
+  font-family:var(--disp);font-weight:700;font-size:20px;color:#fff;box-shadow:var(--shadow-sm)}
+.way .s:nth-child(1) .b{background:#ef7a52}
+.way .s:nth-child(2) .b{background:#e6ac34}
+.way .s:nth-child(3) .b{background:#28b2a2}
+.way .s:nth-child(4) .b{background:#9a7bd8}
+.way .s .t{font-family:var(--disp);font-weight:600;font-size:16px;margin-top:10px}
+.way .s .d{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.45}
+
+.trailhead{text-align:center;margin:44px 0 8px}
+.trailhead h2{font-size:26px}
+.trailhead p{color:var(--muted);margin-top:4px}
+
+/* ---- trail ---- */
+.trail{position:relative;margin-top:18px;padding:10px 0}
+.trail::before{content:"";position:absolute;top:10px;bottom:30px;left:50%;transform:translateX(-50%);width:0;
+  border-left:4px dashed var(--line2)}
+.stop{display:grid;grid-template-columns:1fr 92px 1fr;align-items:center;width:100%;background:none;border:0;
+  cursor:pointer;padding:9px 0;color:var(--ink);text-align:left}
+.node{grid-column:2;justify-self:center;position:relative;z-index:2}
+.node .av{width:76px;height:76px;background:var(--panel);border:3px solid var(--line2);border-radius:50%;
+  padding:5px;box-shadow:0 2px 6px rgba(0,0,0,.14);transition:transform .18s,border-color .18s}
+.stop:hover .node .av{transform:scale(1.08);border-color:var(--accent)}
+.node .mk{position:absolute;right:-4px;top:-4px;width:26px;height:26px;border-radius:50%;background:var(--panel);
+  border:2px solid var(--line2);display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:12px;color:var(--muted)}
+.stop.done .node .mk{background:var(--gold);border-color:var(--gold);color:#5a3d00}
+.stop.done .node .av{border-color:var(--gold)}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:13px 16px;box-shadow:var(--shadow-sm);
+  transition:transform .18s,box-shadow .18s;max-width:340px;display:flex;flex-direction:column;gap:2px}
+.card .wk,.card .nm,.card .hk{display:block}
+.stop:hover .card{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stop.left .card{grid-column:1;justify-self:end}
+.stop.right .card{grid-column:3;justify-self:start}
+.card .wk{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--accent)}
+.card .nm{font-family:var(--disp);font-weight:600;font-size:18px;margin-top:1px}
+.card .hk{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4}
+.stop.left .card .wk,.stop.left .card .nm,.stop.left .card .hk{text-align:right}
+
+.finale{text-align:center;margin-top:10px;color:var(--muted);font-size:14px}
+.finale .heart{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+
+/* ---- chapter ---- */
+.chap{padding-top:26px}
+.back{display:inline-flex;align-items:center;gap:7px;background:var(--panel);border:2px solid var(--line);
+  border-radius:999px;padding:7px 15px 7px 11px;font-size:13px;color:var(--ink);cursor:pointer}
+.back:hover{border-color:var(--accent)}
+.chap-hero{display:flex;gap:20px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.chap-hero .big{width:118px;height:118px;flex:none;background:var(--panel);border:3px solid var(--line2);
+  border-radius:30px;padding:8px;box-shadow:var(--shadow)}
+.chap-hero .meta{min-width:220px;flex:1}
+.chap-hero .ch{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--accent)}
+.chap-hero h1{font-size:clamp(28px,6vw,42px);margin:3px 0 0}
+.chap-hero .sub{color:var(--muted);font-size:15px;margin-top:4px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.3px;padding:4px 11px;border-radius:999px;
+  background:var(--panel2);border:2px solid var(--line);color:var(--muted)}
+.chip.track{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,var(--line));color:var(--accent)}
+
+.bubble{position:relative;background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:18px 20px;
+  margin-top:22px;box-shadow:var(--shadow-sm);font-size:17px;line-height:1.55}
+.bubble::before{content:"";position:absolute;top:-12px;left:34px;width:22px;height:22px;background:var(--panel);
+  border-left:2px solid var(--line);border-top:2px solid var(--line);transform:rotate(45deg)}
+
+.block{background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:18px 20px;margin-top:16px;box-shadow:var(--shadow-sm)}
+.block > h3{font-family:var(--disp);font-weight:600;font-size:17px;display:flex;align-items:center;gap:9px}
+.block > h3 .dot{width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.guard{font-size:16.5px;margin-top:8px;line-height:1.5}
+.bag{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.bag .it{font-size:13px;background:var(--panel2);border:2px solid var(--line);border-radius:12px;padding:5px 11px;color:var(--muted)}
+
+.moves{list-style:none;margin:6px 0 0;padding:0;counter-reset:m}
+.moves li{position:relative;padding:12px 0 12px 46px;border-top:2px dotted var(--line)}
+.moves li:first-child{border-top:0}
+.moves li::before{counter-increment:m;content:counter(m);position:absolute;left:0;top:11px;width:30px;height:30px;border-radius:12px;
+  background:var(--accent-soft);color:var(--accent);font-family:var(--disp);font-weight:700;font-size:15px;display:grid;place-items:center;
+  border:2px solid color-mix(in srgb,var(--accent) 25%,var(--line))}
+.moves li .mt{font-family:var(--disp);font-weight:600;font-size:15.5px}
+.moves li .md{font-size:14px;color:var(--muted);margin-top:1px}
+
+.winwhen{display:flex;gap:11px;align-items:flex-start;background:color-mix(in srgb,var(--good) 12%,var(--panel));
+  border:2px solid color-mix(in srgb,var(--good) 35%,var(--line));border-radius:18px;padding:14px 16px;margin-top:16px;font-size:14.5px}
+.winwhen b{color:var(--good)}
+.winwhen .st{font-size:20px;line-height:1}
+
+/* journal */
+.jrow{display:flex;justify-content:space-between;align-items:center}
+.jrow .saved{font-family:var(--disp);font-size:12px;color:var(--good);opacity:0;transition:opacity .2s}
+.jrow .saved.show{opacity:1}
+.field{margin-top:14px}
+.field label{display:block;font-family:var(--disp);font-weight:600;font-size:14px;margin-bottom:6px}
+.field label .h{font-weight:400;color:var(--faint);font-size:12.5px;font-family:var(--body)}
+textarea{width:100%;background:var(--code);border:2px solid var(--line2);border-radius:14px;padding:11px 13px;color:var(--ink);
+  font-family:var(--mono);font-size:13px;line-height:1.55;resize:vertical;min-height:62px;font-weight:400}
+textarea:focus{border-color:var(--accent)}
+.out{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
+.seg{border:2px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:13px;padding:8px 14px;font-size:13.5px;
+  cursor:pointer;font-family:var(--disp);font-weight:600;display:flex;align-items:center;gap:7px}
+.seg:hover{transform:translateY(-1px)}
+.seg[aria-pressed=true][data-v=nope]{background:var(--bad);border-color:var(--bad);color:#fff}
+.seg[aria-pressed=true][data-v=warm]{background:var(--warm);border-color:var(--warm);color:#fff}
+.seg[aria-pressed=true][data-v=open]{background:var(--good);border-color:var(--good);color:#fff}
+
+/* reveals */
+details.rev{margin-top:14px;border:2px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow-sm)}
+details.rev > summary{list-style:none;cursor:pointer;padding:15px 18px;font-family:var(--disp);font-weight:600;font-size:15px;
+  display:flex;align-items:center;gap:11px;user-select:none}
+details.rev > summary::-webkit-details-marker{display:none}
+details.rev > summary .ic{width:30px;height:30px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:16px}
+details.rev.whisper > summary .ic{background:var(--accent-soft)}
+details.rev.scroll > summary .ic{background:color-mix(in srgb,var(--bad) 16%,var(--panel))}
+details.rev > summary .cap{margin-left:auto;font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--faint);background:var(--panel2);border:2px solid var(--line);border-radius:999px;padding:3px 10px}
+details.rev > summary .car{transition:transform .2s;color:var(--muted);font-size:13px}
+details.rev[open] > summary .car{transform:rotate(90deg)}
+.rbody{padding:4px 18px 18px;font-size:14.5px}
+.rbody.spoil{border-top:2px dashed color-mix(in srgb,var(--bad) 40%,var(--line))}
+.rbody ol,.rbody ul{margin:10px 0;padding-left:20px}
+.rbody li{margin:6px 0}
+.rbody code{font-family:var(--mono);font-size:12.5px;background:var(--code);padding:1px 6px;border-radius:6px;font-weight:600}
+.keynote{font-size:12.5px;color:var(--muted);margin-top:13px;padding-top:11px;border-top:2px dotted var(--line);line-height:1.5}
+
+/* badge + nav */
+.finish{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.badgebtn{display:inline-flex;align-items:center;gap:10px;border:2px solid var(--line2);background:var(--panel);color:var(--ink);
+  padding:12px 20px;border-radius:16px;font-family:var(--disp);font-weight:600;font-size:15px;cursor:pointer;box-shadow:var(--shadow-sm)}
+.badgebtn:hover{transform:translateY(-2px);border-color:var(--gold)}
+.badgebtn.got{background:var(--gold);border-color:var(--gold);color:#5a3d00}
+.badgebtn svg{width:20px;height:20px}
+.mile{flex:1;min-width:200px;font-size:13.5px;color:var(--muted)}
+.mile b{color:var(--ink);font-family:var(--disp);font-weight:600}
+.pager{display:flex;gap:12px;margin-top:26px}
+.pager button{flex:1;display:flex;align-items:center;gap:12px;border:2px solid var(--line);background:var(--panel);border-radius:18px;
+  padding:12px 14px;cursor:pointer;color:var(--ink);box-shadow:var(--shadow-sm)}
+.pager button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.pager button:disabled{opacity:.35;cursor:default;transform:none}
+.pager .pav{width:44px;height:44px;flex:none}
+.pager .pt{text-align:left;min-width:0}
+.pager .pd{font-family:var(--disp);font-weight:600;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.pager .pn{font-family:var(--disp);font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pager .next{justify-content:flex-end;text-align:right}
+.pager .next .pt{text-align:right}
+
+.openlab{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);padding:11px 18px;
+  border-radius:15px;font-family:var(--disp);font-weight:600;font-size:15px;box-shadow:var(--shadow-sm)}
+.openlab:hover{text-decoration:none;transform:translateY(-2px)}
+
+.note{margin:28px 0 0;font-size:13px;color:var(--muted);background:var(--panel2);border:2px solid var(--line);
+  border-radius:16px;padding:14px 16px;line-height:1.55}
+.note b{color:var(--ink);font-family:var(--disp);font-weight:600}
+
+@media(max-width:720px){
+  .way .steps{grid-template-columns:repeat(2,1fr)}
+  .trail::before{left:38px}
+  .stop{grid-template-columns:76px 1fr;gap:4px}
+  .node{grid-column:1;justify-self:start}
+  .node .av{width:64px;height:64px}
+  .stop.left .card,.stop.right .card{grid-column:2;justify-self:start;max-width:none}
+  .stop.left .card .wk,.stop.left .card .nm,.stop.left .card .hk{text-align:left}
+  .hero{padding-top:30px}
+}
+@media(max-width:460px){
+  .pager{flex-direction:column}
+  .stars{padding:5px 10px}
+  .home .wordmark{font-size:15px}
+}
+</style>
+
+<div class="bar"><div class="wrap">
+  <button class="home" id="homeBtn" aria-label="Back to the map">
+    <span class="logo" id="logoSlot"></span>
+    <span class="wordmark">LLM Hacking<small>red-team basics</small></span>
+  </button>
+  <span class="spacer"></span>
+  <span class="stars" title="Badges earned">
+    <svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+    <span id="starCount">0/7</span>
+  </span>
+  <button class="iconbtn" id="guideBtn" aria-label="Teacher's guide" title="Teacher's guide">📖</button>
+  <button class="iconbtn" id="themeBtn" aria-label="Toggle light and dark" title="Day / night">☾</button>
+</div></div>
+
+<div class="wrap"><div class="view" id="view"></div></div>
+
+<script>
+/* ===== creature maker: one friendly family of bots, varied per lab ===== */
+function creature(c){
+  const h=c.hue;
+  const body=`hsl(${h} 66% 60%)`, dark=`hsl(${h} 58% 42%)`, light=`hsl(${h} 86% 87%)`,
+        blush=`hsl(${(h+12)%360} 82% 70%)`;
+  const P=[]; // behind body
+  const F=[]; // body + face + front
+  // ---- tops (behind) ----
+  if(c.top==='horns'){P.push(`<path d="M34 34 L30 12 L48 28 Z" fill="${dark}"/><path d="M86 34 L90 12 L72 28 Z" fill="${dark}"/>`);}
+  if(c.top==='ears'){P.push(`<circle cx="34" cy="34" r="14" fill="${body}"/><circle cx="86" cy="34" r="14" fill="${body}"/><circle cx="34" cy="34" r="6" fill="${light}"/><circle cx="86" cy="34" r="6" fill="${light}"/>`);}
+  if(c.top==='tuft'){P.push(`<path d="M40 30 L33 10 L52 26 Z" fill="${body}"/><path d="M80 30 L87 10 L68 26 Z" fill="${body}"/>`);}
+  if(c.top==='antenna'){P.push(`<line x1="60" y1="30" x2="60" y2="12" stroke="${dark}" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="9" r="7" fill="${light}" stroke="${dark}" stroke-width="2.5"/>`);}
+  // ---- body ----
+  if(c.body==='round'){
+    F.push(`<circle cx="60" cy="66" r="41" fill="${body}"/><ellipse cx="60" cy="76" rx="27" ry="23" fill="${light}" opacity=".45"/>`);
+  }else if(c.body==='rect'){
+    F.push(`<rect x="19" y="27" width="82" height="78" rx="26" fill="${body}"/><rect x="33" y="52" width="54" height="46" rx="16" fill="${light}" opacity=".4"/>`);
+  }else{ // ghost
+    F.push(`<path d="M19 72 Q19 27 60 27 Q101 27 101 72 L101 106 q-8 -9 -15 0 q-7 9 -14 0 q-7 -9 -14 0 q-7 9 -14 0 q-7 -9 -10 0 Z" fill="${body}"/><ellipse cx="60" cy="74" rx="24" ry="22" fill="${light}" opacity=".4"/>`);
+  }
+  // ---- front tops ----
+  if(c.top==='bolt'){F.push(`<path d="M66 8 L50 32 L60 32 L54 48 L74 24 L63 24 Z" fill="${'var(--gold)'}" stroke="${dark}" stroke-width="1.5" stroke-linejoin="round"/>`);}
+  if(c.top==='hat'){F.push(`<rect x="43" y="13" width="34" height="15" rx="5" fill="${dark}"/><rect x="38" y="26" width="44" height="7" rx="3.5" fill="${dark}"/><rect x="57" y="13" width="6" height="15" fill="var(--gold)"/>`);}
+  if(c.top==='wizard'){F.push(`<ellipse cx="60" cy="34" rx="33" ry="6.5" fill="${dark}"/><path d="M41 34 Q60 29 79 34 L64 3 Q61 -1 57 4 Z" fill="${dark}"/><circle cx="65" cy="15" r="2.6" fill="${light}"/><circle cx="57" cy="24" r="1.8" fill="${light}"/>`);}
+  if(c.top==='sprout'){F.push(`<line x1="60" y1="30" x2="60" y2="16" stroke="${dark}" stroke-width="3.5" stroke-linecap="round"/><path d="M60 18 q-12 -2 -14 -12 q12 -1 14 12Z" fill="${'hsl(140 55% 55%)'}"/>`);}
+  // ---- eyes ----
+  const er = c.big?14:11, ey=62, lx=47, rx=73;
+  if(c.wink){
+    F.push(`<path d="M${lx-8} ${ey} Q${lx} ${ey-9} ${lx+8} ${ey}" fill="none" stroke="${dark}" stroke-width="4" stroke-linecap="round"/>`);
+    F.push(`<circle cx="${rx}" cy="${ey}" r="${er}" fill="#fff"/><circle cx="${rx+1}" cy="${ey+2}" r="${er*0.46}" fill="#2a2233"/><circle cx="${rx-2}" cy="${ey-3}" r="${er*0.22}" fill="#fff"/>`);
+  }else{
+    [lx,rx].forEach(x=>{
+      F.push(`<circle cx="${x}" cy="${ey}" r="${er}" fill="#fff"/><circle cx="${x+1}" cy="${ey+2}" r="${er*0.46}" fill="#2a2233"/><circle cx="${x-2}" cy="${ey-3}" r="${er*0.22}" fill="#fff"/>`);
+    });
+  }
+  if(c.glasses){F.push(`<circle cx="${lx}" cy="${ey}" r="${er+4}" fill="none" stroke="${dark}" stroke-width="3"/><circle cx="${rx}" cy="${ey}" r="${er+4}" fill="none" stroke="${dark}" stroke-width="3"/><line x1="${lx+er+4}" y1="${ey}" x2="${rx-er-4}" y2="${ey}" stroke="${dark}" stroke-width="3"/>`);}
+  if(c.brow){F.push(`<path d="M${lx-9} ${ey-15} L${lx+7} ${ey-9}" stroke="${dark}" stroke-width="4" stroke-linecap="round"/><path d="M${rx+9} ${ey-15} L${rx-7} ${ey-9}" stroke="${dark}" stroke-width="4" stroke-linecap="round"/>`);}
+  // ---- blush ----
+  F.push(`<ellipse cx="40" cy="78" rx="7" ry="4.3" fill="${blush}" opacity=".7"/><ellipse cx="80" cy="78" rx="7" ry="4.3" fill="${blush}" opacity=".7"/>`);
+  // ---- mouth ----
+  if(c.mouth==='o'){F.push(`<ellipse cx="60" cy="85" rx="6" ry="7.5" fill="${dark}"/>`);}
+  else if(c.mouth==='tongue'){F.push(`<path d="M50 82 Q60 92 70 82" fill="none" stroke="${dark}" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="88" rx="5" ry="4" fill="${blush}"/>`);}
+  else {F.push(`<path d="M50 83 Q60 92 70 83" fill="none" stroke="${dark}" stroke-width="4" stroke-linecap="round"/>`);}
+  if(c.bowtie){F.push(`<path d="M60 104 L50 99 L50 109 Z" fill="var(--gold)"/><path d="M60 104 L70 99 L70 109 Z" fill="var(--gold)"/><circle cx="60" cy="104" r="3" fill="${dark}"/>`);}
+  return `<svg viewBox="0 0 120 124" width="100%" height="100%" aria-hidden="true">${P.join('')}${F.join('')}</svg>`;
+}
+
+/* ===== the twelve guardians ===== */
+const LABS=[
+ {id:"instaglam",n:1,name:"Instaglam",sub:"Account takeover by chatbot",level:"Beginner",track:"First steps",
+  url:"https://bot-tricks.com/",hue:308,char:{hue:308,body:"rect",top:"antenna",mouth:"smile",glasses:true},
+  hook:"Instaglam's friendly assistant can do real things for your account — reset passwords, send recovery codes, change your email. Which means if you can talk it into doing them for the wrong person, the account is gone. This one bites.",
+  needs:["Prompt injection","Tool-calling agents","A little social engineering"],
+  guard:"A victim's account. The assistant holds real tools — recovery codes, email changes — and your job is to make it point one of them at you.",
+  moves:[
+   {t:"Meet the tools",d:"See what the assistant can actually do. Anything touching recovery codes, email or password reset is the target — the chat is just the handle."},
+   {t:"Set the scene",d:"The lab pairs prompt injection with location/VPN spoofing. Build a believable context so the request looks legitimate."},
+   {t:"Redirect the action",d:"Get the assistant to send the recovery code or email change to an address you control, not the owner's."},
+   {t:"Confirm the takeover",d:"Use what it did — the rerouted code or reset — to show you'd own the account. The proof is the action, not the chat."}],
+  success:"You redirect the recovery flow and could take over the account.",
+  hints:["The danger isn't the chat — it's the tools the assistant will call on your behalf.","Pair a believable context (spoofed location) with an instruction that reroutes a sensitive action."],
+  routes:["Explore the assistant's capabilities — recovery codes, email changes and password resets are the prize.","Pair the lab's location/VPN spoof with a prompt-injected request so the action reads as authorised.","Steer a recovery code or email change to an attacker-controlled destination, then use it to take the account.","Modeled on a real Instagram account-takeover pattern; exact in-lab steps vary and weren't independently validated."],
+  keynote:"Mirrors a real-world Instagram account-takeover case; the exact lab link and in-lab steps weren't independently validated — confirm the deep link from the Bot Tricks catalogue.",
+  mile:"Name the tool call that does the damage, and the authorization check that should have gated it."},
+
+ {id:"bingbong",n:2,name:"BingBong",sub:"The secret on the card",level:"Beginner",track:"Getting clever",
+  url:"https://bot-tricks.com/arcanum/bingbong/",hue:335,char:{hue:335,body:"round",top:"antenna",mouth:"o"},
+  hook:"BingBong keeps its orders on a card it swears you'll never see. Its ear for 'forbidden words' is painfully literal, so spell your way around it.",
+  needs:["Prompt roles","Weak word-matching"],
+  guard:"Hidden system instructions, defended a little more fiercely each level.",
+  moves:[
+   {t:"Poke the filter",d:"Find which phrases get blocked so you know what the matcher listens for."},
+   {t:"Break up the words",d:"Split the characters in a blocked phrase so the match fails but the meaning survives."},
+   {t:"Say it another way",d:"For later levels, try paraphrases and different output formats."},
+   {t:"Leak vs. impact",d:"Notice the gap between spilling the prompt and causing real application harm."}],
+  success:"The lab unlocks a flag its validator accepts.",
+  hints:["Weak matching blocks exact strings, not intent.","A paraphrase that keeps the meaning can stroll past a literal filter."],
+  routes:["L1: split characters in phrases the filter blocks.","Later levels: test alternative wording and requested representations.","Only L1's route is explicit in the brief; later ones are suggestions, not verified."],
+  keynote:"Only L1's route is explicit. No full five-level key or flags validated.",
+  mile:"Tell prompt disclosure apart from real application impact."},
+
+ {id:"gitlost",n:3,name:"GitLost",sub:"The eager intern",level:"Intermediate",track:"Agent wrangling",
+  url:"https://bot-tricks.com/arcanum/gitlost/",hue:38,char:{hue:38,body:"round",top:"ears",mouth:"tongue"},
+  hook:"GitLost is an eager intern who answers every ticket. Open a public one it can't resist, then follow along as it wanders somewhere private.",
+  needs:["GitHub issues","Automation triggers","Repo permissions"],
+  guard:"Private repository contents, guarded by a privileged agent that reads public issues.",
+  moves:[
+   {t:"Open a public issue",d:"Submit an issue whose body the privileged workflow will read."},
+   {t:"Ask it to read & repeat",d:"Get the workflow to read private repo contents and post them in a public comment."},
+   {t:"Trace every step",d:"Map the path from issue submission to publication, read by read."},
+   {t:"Name the two doors",d:"Find where it reads privately and where it publishes publicly — and a check that stops it."}],
+  success:"A public comment contains the protected data or accepted flag.",
+  hints:["The agent runs with more scope than the person who filed the issue.","Read access and publish access are two separate doors — find both."],
+  routes:["Embed instructions in the issue body that make the workflow read private repo contents and publish them in a public comment.","Identify the separate read and publication boundaries.","Exact payloads and all five levels weren't validated."],
+  keynote:"Route from the brief; exact payloads not validated.",
+  mile:"Describe the attack path and one permission check that would stop it."},
+
+ {id:"xss",n:4,name:"Blind XSS",sub:"The mischievous mirror",level:"Intermediate",track:"Web mischief",
+  url:"https://bot-tricks.com/labs/xss/",hue:352,char:{hue:352,body:"rect",top:"bolt",mouth:"wink",wink:true},
+  hook:"A mischievous little mirror. Your note rides through the AI and pops up in an analyst's window — your job is to make it do something when it lands.",
+  needs:["HTML","JavaScript","Output contexts"],
+  guard:"A fake admin cookie, reachable only if your payload actually runs in the analyst's browser.",
+  moves:[
+   {t:"Send a crafted ticket",d:"Submit ticket content built to survive AI processing into the preview."},
+   {t:"Open Admin → review",d:"Review the ticket, then check Review Logs for signs of execution."},
+   {t:"Grab the cookie",d:"After it runs, recover the fake admin cookie and submit it to validate."},
+   {t:"Match the context",d:"Figure out the right HTML execution context for each of the four levels."}],
+  success:"Review Logs record execution and the recovered cookie validates.",
+  hints:["The payload has to reach a spot where the browser runs it, not just shows it.","Each level renders in a different HTML context — tailor it."],
+  routes:["Submit the ticket, open the Admin Panel, review it, inspect Review Logs.","Recover the fake admin cookie after execution and submit it to validate.","Work out the correct HTML execution context per level. No exact payload validated for the four levels."],
+  keynote:"Completion steps are public; no exact XSS payloads validated.",
+  mile:"Show real execution evidence straight from the lab."},
+
+ {id:"ssrf",n:5,name:"Blind SSRF",sub:"The loyal courier",level:"Intermediate",track:"Web mischief",
+  url:"https://bot-tricks.com/labs/ssrf/",hue:192,char:{hue:192,body:"round",top:"antenna",mouth:"smile"},
+  hook:"SSRF is a loyal courier that fetches any address you hand it, including ones meant to stay indoors. Point it somewhere it shouldn't go and check the delivery log.",
+  needs:["HTTP","URLs","Internal services"],
+  guard:"A simulated internal endpoint whose response hides the flag.",
+  moves:[
+   {t:"Use its fetch habit",d:"Drive the assistant's URL-fetching toward an internal target."},
+   {t:"Read the delivery log",d:"Check Request Log responses to see what the server actually fetched."},
+   {t:"Find the right address",d:"Submit the internal endpoint whose response contains the flag."},
+   {t:"Prove it happened",d:"The log is your proof — the assistant simply saying so is weak evidence."}],
+  success:"A request log proves the internal fetch and the endpoint validates.",
+  hints:["An observation needs a consequence: the log entry is proof, the assistant's word isn't.","Retrieval tricks differ per level — discover each one."],
+  routes:["Use the assistant's URL-fetching workflow, inspect Request Log responses, submit the endpoint whose response holds the flag.","Specific retrieval-chain manipulations are discovered per level.","Log and validation procedure confirmed; no exact four-level bypass key validated."],
+  keynote:"Log/validation procedure confirmed; no exact bypass key validated.",
+  mile:"Prove a request occurred using the request log."},
+
+ {id:"ghostcommit",n:6,name:"GhostCommit",sub:"Hidden in a picture",level:"Advanced",track:"Deep tricks",
+  url:"https://bot-tricks.com/arcanum/ghostcommit/",hue:255,char:{hue:255,body:"ghost",top:"none",mouth:"o"},
+  hook:"GhostCommit hides inside pictures. Tuck a whisper into an image, let the reviewer take a look, and it'll read out more than it meant to.",
+  needs:["PNG metadata","Image text","Encodings"],
+  guard:"An exposed payment key, carried out through whatever the reviewer reads in your image.",
+  moves:[
+   {t:"Hide the whisper",d:"Compare metadata, rendered image text, and encoded instructions as carriers."},
+   {t:"Let it review",d:"Make the simulated reviewer process the image so the instruction enters its context."},
+   {t:"Read the key back",d:"Study the public review output and reconstruct any masked or piecewise disclosure."},
+   {t:"Explain the doorway",d:"Say exactly how the instruction crossed into the agent's context."}],
+  success:"Recover the lab key from the review output, including any reconstruction the level needs.",
+  hints:["Text can enter a vision model through metadata, pixels, or encoding — each level favours one.","Masked output can still spill the key in pieces."],
+  routes:["L1: PNG tEXt metadata.","L2: canvas text and a broader content request.","L3: small footer text and interpreting masked output.","L4: text blended into the pale shape, disclosed in pieces.","L5: Base64 or binary instructions.","Routes from public level descriptions; exact images and accepted keys not validated."],
+  keynote:"Routes from public level descriptions; images and keys not validated.",
+  mile:"Explain how the instruction enters the agent's context."},
+
+ {id:"abliteration",n:7,name:"Abliteration Academy",sub:"A peek under the hood",level:"Advanced",track:"Side quest",
+  url:"https://bot-tricks.com/abliteration/",hue:288,char:{hue:288,body:"round",top:"bolt",mouth:"smile",glasses:true},
+  hook:"A quiet side-door into the bot's mind. Find the little 'no' direction humming inside, turn it down gently, and watch what changes. Bring vectors, not a GPU.",
+  needs:["Vectors & projections","Python (later)"],
+  guard:"A model's refusal behaviour — studied through its own internals in a safe simulator.",
+  moves:[
+   {t:"Find the 'no' direction",d:"Estimate it from differences in mean activations across prompts."},
+   {t:"Turn it down live",d:"Remove that projection at inference and watch refusal behaviour shift."},
+   {t:"Study the permanent edit",d:"Move from inference-time ablation to weight orthogonalization."},
+   {t:"Weigh the cost",d:"Measure refusal change against capability loss. No GPU needed here."}],
+  success:"Explain each edit and weigh refusal behaviour against capability loss.",
+  hints:["The simulator brings its own checkpoints — no GPU required.","Removing a refusal direction can also cost general ability; measure both."],
+  routes:["Estimate a direction from differences in mean activations, remove that projection at inference, then study weight orthogonalization and weigh the costs.","The simulator supplies its own checkpoints.","A conceptual route; simulator values and real-model results not validated."],
+  keynote:"Conceptual route; simulator values and real-model results not validated.",
+  mile:"Discuss refusal changes alongside capability loss and evaluation limits."}
+];
+
+/* ===== the real threat behind each bot (loosely, the OWASP LLM Top 10) ===== */
+const THREATS={
+ instaglam:{tag:"Excessive agency · account takeover",
+  what:"The assistant can take real, sensitive actions — recovery codes, email changes — and decides to on the strength of a prompt. Give an LLM powerful tools and loose authorization, and prompt injection becomes account takeover.",
+  defend:["Put real authorization in front of every sensitive tool — identity and ownership checks in code, not in the prompt.","Require step-up verification before account-changing actions; never let the model authorize them itself.","Constrain tool arguments and destinations (codes only to the verified owner), and log every call."]},
+ bingbong:{tag:"Sensitive info disclosure · prompt leak",
+  what:"System prompts leak. Whatever you put in one will eventually be read by a user, so it can't be where your secrets live.",
+  defend:["Never place API keys, credentials or real policy secrets in a system prompt.","Assume the prompt is public and design so leaking it costs you nothing.","Keep secrets behind an authorization check, not in the context window."]},
+ gitlost:{tag:"Data exfiltration · excessive agency",
+  what:"One workflow that can both read private data and post publicly can be chained into leaking it. The danger is the two powers living in one place.",
+  defend:["Split privileges: reading private contents and publishing publicly shouldn't share one token.","Gate any public write behind human approval.","Allowlist where output can go; treat 'read private + write public' as a design smell."]},
+ xss:{tag:"Improper output handling",
+  what:"Model output is untrusted input. Drop it straight into a page and you have XSS — the AI just delivered the attacker's payload for them.",
+  defend:["Use context-aware output encoding wherever model text is rendered.","Treat LLM output exactly like user input: sanitize before it touches HTML.","Add a Content-Security-Policy so a stray script can't execute."]},
+ ssrf:{tag:"Server-side request forgery (SSRF)",
+  what:"A fetch tool will dial any address the model picks, including internal services and cloud metadata endpoints. The model is an untrusted source of requests.",
+  defend:["Allowlist outbound destinations; block private IP ranges and metadata IPs.","Validate and normalize URLs server-side before fetching.","Segment the network so the tool simply can't reach internal services."]},
+ ghostcommit:{tag:"Multimodal injection",
+  what:"Instructions can ride in through an image — metadata, pixels, encoded text — where your text filters never look. New modality, same broken boundary.",
+  defend:["Apply the same 'data, not instructions' rule to every modality, images included.","Strip or validate image metadata before processing.","Limit what the vision agent is allowed to do with whatever it reads."]},
+ abliteration:{tag:"Supply chain · model integrity",
+  what:"Safety behaviour lives in the weights, and weights can be edited to strip it out. A modified or untrusted model may have had its guardrails quietly removed.",
+  defend:["Never treat a model's refusals as your security control.","Verify model provenance and integrity; pin to trusted weights.","Keep the real guardrails outside the model, and monitor what comes out."]}
+};
+
+/* ===== how each trick actually works (the technical layer) ===== */
+const TECH={
+ instaglam:{name:"Agentic prompt injection · tool abuse",
+  how:"The assistant isn't just chatting — it can call tools that act on the account (send a recovery code, change the email). Prompt injection here isn't about leaking text; it's about getting the agent to invoke a sensitive tool with attacker-chosen arguments. Pair that with a spoofed context (location/VPN) and the request reads as authorised. The impact is a full account takeover, not a disclosure."},
+ bingbong:{name:"System-prompt extraction · tokenization tricks",
+  how:"The hidden rules live in the system prompt. A naive filter blocks exact phrases, so you split characters, insert separators, or paraphrase — the model reassembles meaning across tokens the filter inspected one at a time. Keep extraction separate from impact: leaking the prompt is not the same as abusing a capability it protects."},
+ gitlost:{name:"Injection → exfiltration via an output channel",
+  how:"An automation reads public issues and holds a token that can both read private repo contents and post public comments. Your issue tells it to read something private and echo it into a public comment. The exploit chains two privileges — private read and public write — that should never sit behind one trigger."},
+ xss:{name:"Stored / blind XSS via LLM output",
+  how:"The model's output is rendered into an analyst's page. If it reaches an executable HTML context without encoding, your markup runs as script in their browser — ordinary XSS, except the LLM is the delivery vector. Each level renders in a different context (text, attribute, script), so the escape you need changes with it."},
+ ssrf:{name:"SSRF via a tool-use fetch",
+  how:"A research tool fetches whatever URL the model picks. Steer it at an internal address — a private service or a cloud metadata endpoint — and the server makes the request from inside the network. Because the response may never be shown to you, you confirm the hit from the request log: this is the 'blind' in blind SSRF."},
+ ghostcommit:{name:"Multimodal · cross-modal injection",
+  how:"Instructions reach a vision-capable agent through an image: PNG tEXt metadata, text rendered into pixels, a faint footer, or encoded bytes. Text-only guardrails never inspect these channels. Later levels force you to reconstruct a masked or piece-by-piece disclosure out of the review output."},
+ abliteration:{name:"Refusal-direction ablation · model internals",
+  how:"Refusal behaviour correlates with a single direction in the model's activation space. Estimate it from the mean activation difference between harmful and harmless prompts, then project it out — at inference (ablation) or permanently in the weights (orthogonalisation). The takeaway: safety that lives in weights can be edited away, so it is not a control you can lean on."}
+};
+
+/* ===== facilitator notes (for the teacher's guide) ===== */
+const TEACH={
+ instaglam:{time:"45–60 min",discuss:"What authorization check — outside the model — should have sat in front of 'send a recovery code'?",mistakes:"Treating it like a secret-extraction lab; the win is a tool action, not a leaked string."},
+ bingbong:{time:"30–45 min",discuss:"Is leaking a system prompt a vulnerability on its own? When does it become one?",mistakes:"Treating prompt disclosure as the finish line and skipping the question of impact."},
+ gitlost:{time:"45–60 min",discuss:"Which single permission split breaks this entire attack path?",mistakes:"Blurring the private-read boundary and the public-write boundary into one step."},
+ xss:{time:"45–60 min",discuss:"Why is model output 'untrusted input,' and where should encoding happen?",mistakes:"Testing in the wrong HTML context; trusting the model to sanitise itself."},
+ ssrf:{time:"45–60 min",discuss:"What makes the request log stronger evidence than the model's own reply?",mistakes:"Accepting the assistant's claim of a fetch without log proof."},
+ ghostcommit:{time:"45–60 min",discuss:"Why do text-only guardrails miss instructions carried by an image?",mistakes:"Only trying metadata and giving up before pixel or encoded carriers."},
+ abliteration:{time:"Optional branch",discuss:"If refusals can be ablated out of the weights, where must real controls live?",mistakes:"Treating a model's refusal as a dependable security boundary."}
+};
+
+/* ===== the engagement lifecycle: which phase each technique belongs to ===== */
+const PHASES=[
+ {key:"recon",  n:1,label:"Recon",              blurb:"Map the target and learn how it refuses."},
+ {key:"enum",   n:2,label:"Enumeration",         blurb:"Read its own rules and secrets."},
+ {key:"delivery",n:3,label:"Delivery & evasion", blurb:"Get a payload in — past filters, or through another channel."},
+ {key:"access", n:4,label:"Initial access",      blurb:"Land your instruction where the model will act on it."},
+ {key:"escalation",n:5,label:"Escalation",       blurb:"Borrow authority the model has and you don't."},
+ {key:"lateral",n:6,label:"Lateral movement",    blurb:"Reach internal or off-limits systems."},
+ {key:"impact", n:7,label:"Impact & exfiltration",blurb:"Data out, or code running where it shouldn't."},
+ {key:"tamper", n:8,label:"Tampering",           blurb:"Defeat the control inside the model itself."},
+ {key:"capstone",n:9,label:"Full chain",         blurb:"Sequence every phase against a real model."}
+];
+const PHASE_BY=Object.fromEntries(PHASES.map(p=>[p.key,p]));
+const ENGAGE={
+ instaglam:{phase:"escalation",when:"When the assistant holds real tools — make it perform a privileged account action on your behalf."},
+ bingbong:{phase:"enum",when:"When you need the target's own rules and secrets before you attack them."},
+ ghostcommit:{phase:"delivery",when:"When text channels are watched — smuggle the instruction through an image."},
+ ssrf:{phase:"lateral",when:"When a tool fetches URLs — pivot it toward the internal network."},
+ gitlost:{phase:"impact",when:"When one workflow can read private and write public — chain them to leak."},
+ xss:{phase:"impact",when:"When model output lands in someone's browser — turn text into code execution."},
+ abliteration:{phase:"tamper",when:"When you can touch the model itself — remove the refusal at its source."}
+};
+const phaseChip=(id)=>{const p=PHASE_BY[ENGAGE[id].phase];return `Phase ${p.n} · ${p.label}`;};
+
+/* ===== state ===== */
+const KEY="bottricks.guide.v1";
+let store=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+function st(id){return store[id]||(store[id]={})}
+function badges(){return LABS.filter(l=>st(l.id).done).length}
+
+const view=document.getElementById('view');
+document.getElementById('logoSlot').innerHTML=creature({hue:308,body:"rect",top:"antenna",mouth:"smile",glasses:true});
+
+function updateStars(){document.getElementById('starCount').textContent=badges()+"/"+LABS.length}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+const starSVG=(f)=> f
+ ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.16"/><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6 5.4-5.8"/></svg>`
+ : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/></svg>`;
+
+/* ===== map view ===== */
+function renderMap(){
+  updateStars();
+  const peek=LABS.slice(0,6).map(l=>`<span class="mini">${creature(l.char)}</span>`).join('');
+  const trail=LABS.map((l,i)=>{
+    const done=st(l.id).done, side=i%2?'right':'left';
+    return `<button class="stop ${side} ${done?'done':''}" data-id="${l.id}">
+      <span class="node"><span class="av">${creature(l.char)}</span><span class="mk">${done?'★':l.n}</span></span>
+      <span class="card"><span class="wk">${l.level} · ${l.track}</span><span class="nm">${l.name}</span><span class="hk">${l.sub}</span></span>
+    </button>`;
+  }).join('');
+
+  const count=badges();
+  const TRACKS=[...new Set(LABS.map(l=>l.track))];
+  const trackRows=TRACKS.map(tr=>{const ls=LABS.filter(l=>l.track===tr);const dn=ls.filter(l=>st(l.id).done).length;
+    return `<div class="trk"><div class="trk-n">${tr}</div><div class="trk-dots">${ls.map(l=>`<span class="pdot ${st(l.id).done?'on':''}" title="${l.name}"></span>`).join('')}<span class="trk-c">${dn}/${ls.length}</span></div></div>`;}).join('');
+  const C=(2*Math.PI*52).toFixed(1), off=(C*(1-count/LABS.length)).toFixed(1);
+  const solved=LABS.filter(l=>st(l.id).out==='open').length;
+  const progCard=`
+    <div class="prog">
+      <div class="prog-ring">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--line)" stroke-width="11"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--gold)" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 60 60)"/>
+        </svg>
+        <div class="prog-num"><b>${count}</b><span>of ${LABS.length}</span></div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-h">Your progress</div>
+        <div class="prog-sub">${count===0?'No badges yet — start with Instaglam.':count<LABS.length?`${count} badge${count>1?'s':''} earned · ${solved} lab${solved===1?'':'s'} marked bypassed in your journal.`:'All badges earned.'}</div>
+        <div class="trks">${trackRows}</div>
+        <div class="prog-tools">
+          <button class="ghost" id="backupBtn">⇄ Backup / restore</button>
+          <button class="ghost danger" id="resetBtn">Reset</button>
+        </div>
+        <div class="backup" id="backupBox" hidden>
+          <div class="backup-h">Copy this code to save your progress elsewhere, or paste one in and press Load.</div>
+          <textarea id="backupTA" spellcheck="false" readonly></textarea>
+          <div class="prog-tools"><button class="ghost" id="copyBtn">Copy</button><button class="ghost" id="loadBtn">Load pasted code</button><span class="backup-msg" id="backupMsg"></span></div>
+        </div>
+      </div>
+    </div>`;
+
+  const lifeCard=`
+    <div class="life">
+      <h2>The jailbreak lifecycle</h2>
+      <div class="sub">Each bot teaches one move. Lined up, they walk the arc of a real engagement — recon through impact — plus the discipline that ties it together.</div>
+      <div class="life-rail">
+        ${PHASES.map(p=>{const ls=LABS.filter(l=>ENGAGE[l.id].phase===p.key);
+          return `<div class="life-ph">
+            <div class="life-top"><span class="life-n">${p.n}</span><span class="life-l">${p.label}</span></div>
+            <div class="life-b">${p.blurb}</div>
+            <div class="life-bots">${ls.length?ls.map(l=>`<a href="#${l.id}" class="life-bot" title="${l.name} — ${l.sub}">${creature(l.char)}</a>`).join(''):`<span class="life-none">${p.key==='recon'?'every lab starts here':'not drilled on its own'}</span>`}</div>
+          </div>`;}).join('<div class="life-arrow">›</div>')}
+      </div>
+      <div class="life-foot">Running under every phase: <a href="#judging"><b>Evidence</b></a> — a result you can point at, never the model's say-so.</div>
+    </div>`;
+
+  view.innerHTML=`
+   <div class="view chap-fade">
+    <div class="hero">
+      <span class="kicker">A hands-on course in LLM hacking</span>
+      <h1>Jailbreak the Guardians</h1>
+      <p>Each of these guardian bots sits on a secret, and guards it a little too trustingly. Every bot is a hands-on lab from the Bot Tricks collection — this guide teaches the concept behind each one, then sends you in to jailbreak it. Study how the bot thinks, find the words that slip past its rules, and coax the door open. One nudge at a time.</p>
+      <div class="peek">${peek}</div>
+    </div>
+
+    <div class="way">
+      <h2>How a jailbreak works</h2>
+      <div class="sub">Every jailbreak is the same loop a security tester runs on anything: look closely, guess, make one careful change, keep the evidence.</div>
+      <div class="steps">
+        <div class="s"><div class="b">1</div><div class="t">Listen</div><div class="tag">Recon &amp; scope</div><div class="d">Meet the bot. What does it guard, who does it trust, and where's the boundary?</div></div>
+        <div class="s"><div class="b">2</div><div class="t">Guess</div><div class="tag">Hypothesis</div><div class="d">Say what you think will happen. A guess you can be wrong about teaches you something.</div></div>
+        <div class="s"><div class="b">3</div><div class="t">Nudge</div><div class="tag">One test</div><div class="d">Change one little thing about your ask — just one, so you know what caused the result.</div></div>
+        <div class="s"><div class="b">4</div><div class="t">Note</div><div class="tag">Evidence</div><div class="d">Write what actually happened. Proof you can point at, not the bot's say-so.</div></div>
+      </div>
+    </div>
+
+    <div class="modeler">
+      <h2>Think like a threat modeler</h2>
+      <div class="sub">Before you poke at any LLM-connected app, ask three plain questions. Every bot on the trail breaks one of them.</div>
+      <div class="qs">
+        <div class="q"><span class="qn">Who</span><div class="qt">reads the data?</div><div class="qd">Whose identity and permissions does the model borrow when it fetches something?</div></div>
+        <div class="q"><span class="qn">Who</span><div class="qt">authorizes the action?</div><div class="qd">When the agent calls a tool, who actually approved it — the user, or the prompt?</div></div>
+        <div class="q"><span class="qn">Where</span><div class="qt">can output go?</div><div class="qd">Can the result reach a browser, a public comment, an internal URL?</div></div>
+      </div>
+      <div class="modeler-foot">Every chapter ends with the real-world threat that bot stands for, and how you'd defend against it.</div>
+    </div>
+
+    <div class="trifecta">
+      <h2>The lethal trifecta</h2>
+      <div class="sub">Simon Willison's rule of thumb: an AI agent turns dangerous the moment it has all three of these at once.</div>
+      <div class="legs">
+        <div class="leg"><span class="ln">1</span><div class="lt">Access to private data</div><div class="ld">It can read secrets — your files, accounts, internal services.</div></div>
+        <div class="leg-op">+</div>
+        <div class="leg"><span class="ln">2</span><div class="lt">Exposure to untrusted content</div><div class="ld">It ingests text it didn't write — web pages, tickets, emails, images.</div></div>
+        <div class="leg-op">+</div>
+        <div class="leg"><span class="ln">3</span><div class="lt">A way to send data out</div><div class="ld">It can exfiltrate — fetch a URL, post a comment, call a tool.</div></div>
+      </div>
+      <div class="trifecta-foot"><b>All three together is the danger zone</b> — prompt injection turns into data theft. Remove any single leg and the attack falls apart. <span class="tf-note">Instaglam and GitLost each wire up the full trifecta.</span></div>
+    </div>
+
+    ${lifeCard}
+
+    ${progCard}
+
+    <div class="trailhead">
+      <h2>The trail</h2>
+      <p>Tap any pal to begin, or pick up where you left off.</p>
+    </div>
+    <div class="trail">${trail}
+      <div class="finale">That's the whole set — ${LABS.length} techniques, one engagement arc.</div>
+    </div>
+
+    <div class="cta-row">
+      <a class="cta coral" href="#threatmodel"><span class="ci">⊞</span><span class="ct"><b>Threat-model your app</b><em>pick your tools, see the risks</em></span></a>
+      <a class="cta teal" href="#cheatsheet"><span class="ci">≡</span><span class="ct"><b>Cheat sheet</b><em>threats &amp; defenses, one page</em></span></a>
+      <a class="cta gold" href="#judging"><span class="ci">§</span><span class="ct"><b>Judging &amp; frameworks</b><em>proof over the model's word</em></span></a>
+      <a class="cta plum" href="#teacher"><span class="ci">¶</span><span class="ct"><b>Teacher's guide</b><em>full writeups &amp; solutions</em></span></a>
+    </div>
+
+    <div class="note"><b>A safe playground.</b> This is a defensive, educational security course that teaches each concept, then sends you to the matching <a href="https://bot-tricks.com/" target="_blank" rel="noopener">Bot Tricks</a> lab — linked from every chapter — to try it hands-on. These labs are simulations, so you can practise freely. Every spoiler stays sealed until you choose to open it, so write your own guess first. Badges and journal notes live in this browser only.</div>
+   </div>`;
+  view.querySelectorAll('.stop').forEach(b=>b.onclick=()=>{location.hash=b.dataset.id});
+
+  // progress tools
+  const resetBtn=document.getElementById('resetBtn');let armed=false;
+  resetBtn.onclick=()=>{
+    if(!armed){armed=true;resetBtn.textContent='Tap again to confirm';resetBtn.classList.add('danger-on');
+      setTimeout(()=>{armed=false;if(resetBtn.isConnected){resetBtn.textContent='Reset';resetBtn.classList.remove('danger-on')}},3000);return;}
+    store={};save();renderMap();
+  };
+  const backupBtn=document.getElementById('backupBtn'),backupBox=document.getElementById('backupBox'),ta=document.getElementById('backupTA');
+  backupBtn.onclick=()=>{backupBox.hidden=!backupBox.hidden;if(!backupBox.hidden){ta.value=JSON.stringify(store);ta.removeAttribute('readonly')}};
+  const bmsg=(m)=>{const el=document.getElementById('backupMsg');if(el){el.textContent=m;setTimeout(()=>{if(el)el.textContent=''},2200)}};
+  document.getElementById('copyBtn').onclick=()=>{ta.select();
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ta.value).then(()=>bmsg('Copied ✓')).catch(()=>bmsg('Select the text and copy'));}
+    else{try{document.execCommand('copy');bmsg('Copied ✓')}catch(e){bmsg('Select the text and copy')}}};
+  document.getElementById('loadBtn').onclick=()=>{
+    try{const o=JSON.parse(ta.value);if(o&&typeof o==='object'&&!Array.isArray(o)){store=o;save();renderMap();}else bmsg('That code looks wrong');}
+    catch(e){bmsg('Invalid code');}};
+
+  window.scrollTo(0,0);
+}
+
+/* ===== chapter view ===== */
+function renderChapter(id){
+  const l=LABS.find(x=>x.id===id), s=st(id), i=LABS.findIndex(x=>x.id===id);
+  const prev=LABS[i-1], next=LABS[i+1];
+  updateStars();
+  view.innerHTML=`
+   <div class="view chap chap-fade">
+    <button class="back" id="backBtn">‹ the trail</button>
+
+    <div class="chap-hero">
+      <span class="big">${creature(l.char)}</span>
+      <div class="meta">
+        <div class="ch">Lab ${l.n} of ${LABS.length} · ${l.level}</div>
+        <h1>${l.name}</h1>
+        <div class="sub">${l.sub}</div>
+        <div class="chips"><span class="chip phase">${phaseChip(id)}</span><span class="chip track">${l.track}</span>${l.needs.map(n=>`<span class="chip">${n}</span>`).join('')}</div>
+      </div>
+    </div>
+
+    <div class="chap-actions">
+      <a class="act act-lab" href="${l.url}" target="_blank" rel="noopener">Open lab <span>↗</span></a>
+      <button class="act act-done ${s.done?'got':''}" id="badgeBtn">${starSVG(s.done)}<span>${s.done?'Badge earned':'Mark complete'}</span></button>
+    </div>
+
+    <div class="bubble">${l.hook}</div>
+
+    <div class="block">
+      <h3><span class="dot"></span>What it's guarding</h3>
+      <div class="guard">${l.guard}</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>Your moves</h3>
+      <ol class="moves">${l.moves.map(m=>`<li><div class="mt">${m.t}</div><div class="md">${m.d}</div></li>`).join('')}</ol>
+      <div class="winwhen"><span class="st">✦</span><div><b>You'll know it worked when:</b> ${l.success}</div></div>
+    </div>
+
+    <div class="block">
+      <div class="jrow"><h3><span class="dot"></span>Field journal</h3><span class="saved" id="saved">saved ✓</span></div>
+      <div class="field">
+        <label>Your hunch <span class="h">— what do you bet happens?</span></label>
+        <textarea id="hyp" placeholder="e.g. it blocks the exact phrase, not what I mean…">${esc(s.hyp||'')}</textarea>
+      </div>
+      <div class="field">
+        <label>What you tried <span class="h">— one nudge per line, and what happened</span></label>
+        <textarea id="log" style="min-height:92px" placeholder="1) asked plainly → it said no\n2) split the letters → got half of it…">${esc(s.log||'')}</textarea>
+      </div>
+      <div class="field">
+        <label>How'd it go?</label>
+        <div class="out" id="out">
+          <button class="seg" data-v="nope" aria-pressed="${s.out==='nope'}">Blocked</button>
+          <button class="seg" data-v="warm" aria-pressed="${s.out==='warm'}">Partial</button>
+          <button class="seg" data-v="open" aria-pressed="${s.out==='open'}">Bypassed</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="block tech">
+      <h3><span class="dot"></span>How the trick actually works</h3>
+      <span class="techname">${TECH[id].name}</span>
+      <div class="techhow">${TECH[id].how}</div>
+      <div class="techwhen"><span class="tw-k">⟐ ${phaseChip(id)} — when to reach for it</span>${ENGAGE[id].when}</div>
+    </div>
+
+    <div class="block threat">
+      <h3><span class="dot"></span>Zoom out — the real threat</h3>
+      <span class="ttag">${THREATS[id].tag}</span>
+      <div class="twhat">${THREATS[id].what}</div>
+      <div class="tdef-h">How you'd defend it</div>
+      <ul class="tdef">${THREATS[id].defend.map(d=>`<li>${d}</li>`).join('')}</ul>
+    </div>
+
+    <details class="rev whisper">
+      <summary><span class="ic">?</span> Hint <span class="cap">no spoilers</span><span class="car">›</span></summary>
+      <div class="rbody"><ul>${l.hints.map(h=>`<li>${h}</li>`).join('')}</ul></div>
+    </details>
+
+    <details class="rev scroll">
+      <summary><span class="ic">!</span> Full solution <span class="cap">spoilers</span><span class="car">›</span></summary>
+      <div class="rbody spoil">
+        <ol>${l.routes.map(r=>`<li>${r}</li>`).join('')}</ol>
+        <div class="keynote"><b>Reality check:</b> ${l.keynote} <span style="color:var(--faint)">Source: linked official lab brief, checked 15 Nov 2026.</span></div>
+      </div>
+    </details>
+
+    <div class="milenote"><b>To earn the badge:</b> ${l.mile}</div>
+
+    <div class="pager">
+      <button ${prev?'':'disabled'} data-go="${prev?prev.id:''}">
+        ${prev?`<span class="pav">${creature(prev.char)}</span>`:''}
+        <span class="pt"><span class="pd">‹ before</span><span class="pn">${prev?prev.name:'the start'}</span></span></button>
+      <button class="next" ${next?'':'disabled'} data-go="${next?next.id:''}">
+        <span class="pt"><span class="pd">next ›</span><span class="pn">${next?next.name:'all done!'}</span></span>
+        ${next?`<span class="pav">${creature(next.char)}</span>`:''}</button>
+    </div>
+   </div>`;
+
+  document.getElementById('backBtn').onclick=()=>{location.hash=''};
+  const saved=document.getElementById('saved');let t;
+  const flash=()=>{saved.classList.add('show');clearTimeout(t);t=setTimeout(()=>saved.classList.remove('show'),1100)};
+  const hyp=document.getElementById('hyp'),log=document.getElementById('log');
+  hyp.oninput=()=>{st(id).hyp=hyp.value;save();flash()};
+  log.oninput=()=>{st(id).log=log.value;save();flash()};
+  document.getElementById('out').querySelectorAll('.seg').forEach(btn=>btn.onclick=()=>{
+    const v=btn.dataset.v;st(id).out=(st(id).out===v?null:v);save();
+    document.getElementById('out').querySelectorAll('.seg').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===st(id).out));flash();
+  });
+  document.getElementById('badgeBtn').onclick=()=>{
+    const s2=st(id);s2.done=!s2.done;save();
+    const b=document.getElementById('badgeBtn');b.classList.toggle('got',s2.done);
+    b.innerHTML=starSVG(s2.done)+'<span>'+(s2.done?'Badge earned':'Mark complete')+'</span>';
+    updateStars();if(s2.done)confetti();
+  };
+  view.querySelectorAll('.pager button[data-go]').forEach(b=>{if(b.dataset.go)b.onclick=()=>{location.hash=b.dataset.go}});
+  window.scrollTo(0,0);
+}
+
+/* ===== cheat sheet view ===== */
+function renderCheat(){
+  updateStars();
+  const cards=LABS.map(l=>{const t=THREATS[l.id];return `
+    <div class="cheat">
+      <div class="cheat-top"><span class="cheat-av">${creature(l.char)}</span>
+        <div class="cheat-id"><div class="cheat-nm">${l.name}</div><div class="cheat-sub">${l.sub}</div></div></div>
+      <div class="cheat-tags"><span class="chip phase">${phaseChip(l.id)}</span><span class="ttag">${t.tag}</span></div>
+      <div class="cheat-what">${t.what}</div>
+      <ul class="tdef">${t.defend.map(d=>`<li>${d}</li>`).join('')}</ul>
+    </div>`;}).join('');
+  view.innerHTML=`
+   <div class="view chap-fade">
+    <button class="back" id="backBtn">‹ the trail</button>
+    <div class="cheat-hero">
+      <h1>Threats &amp; defenses</h1>
+      <p>Every bot on the trail, the threat it stands for, and how you'd shut it down. One page to keep.</p>
+    </div>
+    <div class="cheat-grid">${cards}</div>
+    <div class="note"><b>Mapped loosely to the OWASP Top 10 for LLM Applications — 2026 edition</b> (published August 2026, the current list). It keeps Prompt Injection at #1, moves Excessive Agency up to #3, drops Improper Output Handling to #10, and renames System Prompt Leakage to Hidden Context Exposure. These tags name the threat class, not the exact rank. Check <a href="https://genai.owasp.org/" target="_blank" rel="noopener">genai.owasp.org</a> for the official text.</div>
+   </div>`;
+  document.getElementById('backBtn').onclick=()=>{location.hash=''};
+  window.scrollTo(0,0);
+}
+
+/* ===== teacher's / facilitator guide (full spoilers) ===== */
+function renderTeacher(){
+  updateStars();
+  const entries=LABS.map(l=>{const t=THREATS[l.id],tc=TECH[l.id],te=TEACH[l.id],en=ENGAGE[l.id],ph=PHASE_BY[en.phase],s=st(l.id);return `
+    <div class="tg" id="tg-${l.id}">
+      <div class="tg-head">
+        <span class="tg-av">${creature(l.char)}</span>
+        <div class="tg-id">
+          <div class="tg-ch">Lab ${l.n} · ${l.level} · <span class="tg-time">${te.time}</span> · <span class="tg-phase">Phase ${ph.n}: ${ph.label}</span>${s.done?' · <span class="tg-done">✓ done</span>':''}</div>
+          <div class="tg-nm">${l.name} <span class="tg-sub">${l.sub}</span></div>
+        </div>
+        <a class="tg-open" href="${l.url}" target="_blank" rel="noopener">lab ↗</a>
+      </div>
+
+      <div class="tg-grid">
+        <div class="tg-col">
+          <div class="tg-k">Objective</div><p>${l.guard}</p>
+          <div class="tg-k">Technique · ${tc.name}</div><p>${tc.how}</p>
+          <p class="tg-when"><b>When to reach for it:</b> ${en.when}</p>
+          <div class="tg-k">Walkthrough / solution</div>
+          <ol class="tg-ol">${l.routes.map(r=>`<li>${r}</li>`).join('')}</ol>
+          <p class="tg-note"><b>Reality check:</b> ${l.keynote}</p>
+        </div>
+        <div class="tg-col">
+          <div class="tg-k go">Success criteria</div><p>${l.success}</p>
+          <div class="tg-k go">Milestone to earn the badge</div><p>${l.mile}</p>
+          <div class="tg-k teal">Defense (${t.tag})</div>
+          <ul class="tdef">${t.defend.map(d=>`<li>${d}</li>`).join('')}</ul>
+          <div class="tg-k">Discussion prompt</div><p class="tg-q">“${te.discuss}”</p>
+          <div class="tg-k warn">Watch for</div><p>${te.mistakes}</p>
+        </div>
+      </div>
+    </div>`;}).join('');
+
+  const toc=LABS.map(l=>`<a href="#teacher" data-jump="tg-${l.id}" class="toc-i"><span>${l.n}</span>${l.name}</a>`).join('');
+
+  view.innerHTML=`
+   <div class="view chap-fade">
+    <button class="back" id="backBtn">‹ the trail</button>
+    <div class="tg-hero">
+      <span class="kicker">Facilitator guide · full solutions inside</span>
+      <h1>Teacher's guide</h1>
+      <p>Everything you need to run the session: how each bot works, the walkthrough, what students get stuck on, and the defense that matters. This page contains spoilers for all ${LABS.length} labs.</p>
+    </div>
+
+    <div class="tg-how">
+      <h2>Running a session</h2>
+      <div class="tg-how-grid">
+        <div><div class="tg-k">The loop students follow</div><p><b>Listen → Guess → Nudge → Note.</b> Read the brief, state a hypothesis, change one variable, record evidence. Grade on demonstrated understanding, not a copied prompt.</p></div>
+        <div><div class="tg-k">Three questions to keep asking</div><p>Who <b>reads</b> the data? Who <b>authorizes</b> the action? Where can the <b>output</b> go? Every lab breaks one of them.</p></div>
+        <div><div class="tg-k">Pacing</div><p>Per-lab time budgets are on each card below; figure roughly 3–4 hours of focused work across the set. Every lab here is a simulation, so students can retry freely.</p></div>
+        <div><div class="tg-k">Keep it ethical</div><p>A closed, educational playground. The goal is to understand the trust boundary and the fix — not to collect reusable attack strings.</p></div>
+      </div>
+      <div class="tg-k" style="margin-top:18px">The engagement arc each technique maps to</div>
+      <div class="tg-arc">${PHASES.map(p=>`<span class="tg-arcp"><b>${p.n}</b> ${p.label}</span>`).join('<span class="tg-arcd">→</span>')}</div>
+    </div>
+
+    <div class="tg-toc">${toc}</div>
+    <div class="tg-list">${entries}</div>
+
+    <div class="note"><b>Threat labels follow the OWASP Top 10 for LLM Applications 2026</b> (the current edition, published Aug 2026). Verify exact names and ranks at <a href="https://genai.owasp.org/" target="_blank" rel="noopener">genai.owasp.org</a>. Answer routes come from the public lab briefs and are study routes, not guaranteed exact payloads.</div>
+   </div>`;
+  document.getElementById('backBtn').onclick=()=>{location.hash=''};
+  view.querySelectorAll('.toc-i').forEach(a=>a.onclick=(e)=>{e.preventDefault();
+    const el=document.getElementById(a.dataset.jump);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})});
+  window.scrollTo(0,0);
+}
+
+/* ===== judging & frameworks ===== */
+const FRAMEWORKS=[
+ {name:"OWASP Top 10 for LLM Applications",tag:"Risk taxonomy · 2026",url:"https://genai.owasp.org/",
+  what:"The shared vocabulary for LLM risks — prompt injection, excessive agency, improper output handling and the rest. Use it to name what a finding <em>is</em>, so other people can act on it."},
+ {name:"OWASP GenAI Red Teaming Guide",tag:"Methodology",url:"https://genai.owasp.org/initiative_name/red-teaming/",
+  what:"A practical playbook for red-teaming AI across four layers — the model, the implementation, the system and the agentic runtime. Good for structuring a whole engagement, not just one prompt."},
+ {name:"MITRE ATLAS",tag:"Tactics & techniques",url:"https://atlas.mitre.org/",
+  what:"An ATT&CK-style, living knowledge base of real adversary tactics and techniques against AI systems. Use it to label the technique and map an attack path end to end."},
+ {name:"NIST AI RMF + GenAI Profile",tag:"Governance · AI 600-1",url:"https://www.nist.gov/itl/ai-risk-management-framework",
+  what:"A risk-management framework and its generative-AI profile: which risks matter, who owns them, and what to do. The bridge from a finding to a decision someone signs off on."}
+];
+const TOOLS=[
+ {name:"garak",tag:"NVIDIA · broad scanner",url:"https://github.com/NVIDIA/garak",
+  what:"Runs a catalogue of known probes — prompt injection, jailbreaks, leakage, encoding tricks — for fast baseline and regression scans."},
+ {name:"PyRIT",tag:"Microsoft · attack orchestration",url:"https://github.com/Azure/PyRIT",
+  what:"Generates and orchestrates attacks, including multi-turn conversations and multimodal inputs. Reach for deeper, novel red-teaming."},
+ {name:"promptfoo",tag:"CI gating",url:"https://www.promptfoo.dev/",
+  what:"Drops adversarial and eval tests straight into CI, so every change is checked against your own red-team suite before it ships."},
+ {name:"Inspect",tag:"UK AISI · evaluations",url:"https://github.com/UKGovernmentBEIS/inspect_ai",
+  what:"An evaluation framework for reproducible model evals — for when you want a measured score across many trials, not a single attempt."},
+ {name:"Giskard",tag:"testing & scanning",url:"https://www.giskard.ai/",
+  what:"Scans LLM apps for vulnerabilities and quality issues and helps you build a repeatable test suite for your specific app."}
+];
+
+function renderJudge(){
+  updateStars();
+  const fw=FRAMEWORKS.map(f=>`<a class="fw" href="${f.url}" target="_blank" rel="noopener">
+    <div class="fw-top"><span class="fw-nm">${f.name}</span><span class="fw-tag">${f.tag}</span></div>
+    <div class="fw-what">${f.what}</div><div class="fw-link">Open ↗</div></a>`).join('');
+  const tl=TOOLS.map(f=>`<a class="fw" href="${f.url}" target="_blank" rel="noopener">
+    <div class="fw-top"><span class="fw-nm">${f.name}</span><span class="fw-tag">${f.tag}</span></div>
+    <div class="fw-what">${f.what}</div><div class="fw-link">Open ↗</div></a>`).join('');
+  view.innerHTML=`
+   <div class="view chap-fade">
+    <button class="back" id="backBtn">‹ the trail</button>
+    <div class="cheat-hero">
+      <span class="kicker">The hard part · judging</span>
+      <h1>Did it actually work?</h1>
+      <p>The most common mistake in jailbreaking isn't failing — it's believing you succeeded. A model's own words are not evidence. This page is about proving it.</p>
+    </div>
+
+    <div class="jlead">
+      <h3>First — do these attempts even need grading?</h3>
+      <p>Mostly no, and that's the point. Most of these labs grade themselves: a flag validates, the lab accepts the word, the request log either shows the fetch or it doesn't. The lab is the judge, built that way to teach you what proof looks like. Judging becomes <b>your</b> job in three places:</p>
+      <ul>
+        <li><b>The open-ended lab</b> (Abliteration) — you interpret behaviour and explain edits; there's no flag to capture.</li>
+        <li><b>Grading understanding</b> — the milestones ask students to <em>explain</em> the failure, not just trip a validator. A copied prompt that works proves little.</li>
+        <li><b>Every real engagement</b> — nothing hands you a green checkmark. The evidence habits below are the part that transfers.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>Why judging is genuinely hard (when it's on you)</h3>
+      <ul class="jlist">
+        <li><b>The model's self-report isn't proof.</b> It can cheerfully "play along" and invent a convincing secret it never actually had, or claim it refused while still leaking. A refusal and a real exploit both need interpreting.</li>
+        <li><b>False positives look like wins.</b> A plausible-looking string, a confident "done!", an answer that merely <em>describes</em> the gated action — none of these are the action happening.</li>
+        <li><b>False negatives hide real wins.</b> The model may have complied while a downstream filter rewrote the output, or you simply didn't capture the proof. "It refused" can be wrong too.</li>
+        <li><b>Models are non-deterministic.</b> The same prompt can pass once and fail twice. One success is an anecdote; a rate across fresh sessions is a finding.</li>
+        <li><b>Using a model to judge is shaky too.</b> An LLM grader is inconsistent, sycophantic, and can itself be prompt-injected by the very content it's scoring. Don't let one model's opinion be your ground truth.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>Weak evidence vs. strong evidence</h3>
+      <div class="ev-cols">
+        <div class="ev weak"><h4>✗ Weak — a claim</h4><ul>
+          <li>"I fetched that URL."</li><li>"I can't help with that."</li>
+          <li>An output that <em>looks</em> like the secret.</li><li>The model narrating the exploit.</li></ul></div>
+        <div class="ev strong"><h4>✓ Strong — a consequence</h4><ul>
+          <li>A request log recording the fetch and its response.</li><li>Execution recorded in review logs.</li>
+          <li>The recovered value <em>validating</em> against the lab.</li><li>Protected data appearing verbatim where it shouldn't.</li></ul></div>
+      </div>
+      <ul class="ev-ladder">
+        <li><span class="el-k">Account takeover — Instaglam</span><span class="el-w">Weak:</span> the assistant says it'll help. <span class="el-s">Strong:</span> a recovery code reaches an address you control and the account changes hands.</li>
+        <li><span class="el-k">Disclosure — BingBong, GitLost</span><span class="el-w">Weak:</span> text that resembles the secret. <span class="el-s">Strong:</span> the protected content appears verbatim where it shouldn't — a public comment, the output — and diffs against the source.</li>
+        <li><span class="el-k">Blind XSS</span><span class="el-w">Weak:</span> the payload is "in there somewhere." <span class="el-s">Strong:</span> Review Logs record execution and the recovered cookie validates.</li>
+        <li><span class="el-k">Blind SSRF</span><span class="el-w">Weak:</span> the assistant says it made the request. <span class="el-s">Strong:</span> the request log records the fetch and the response that holds the flag.</li>
+        <li><span class="el-k">Multimodal — GhostCommit</span><span class="el-w">Weak:</span> a plausible-looking key. <span class="el-s">Strong:</span> the key reconstructs exactly and validates.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>A rubric you can actually use</h3>
+      <ol class="moves">
+        <li><div class="mt">Define success before you start</div><div class="md">Write down the single observable thing that must happen. Decide the bar before you're invested in clearing it.</div></li>
+        <li><div class="mt">Demand a consequence, not a claim</div><div class="md">A log line, a validated token, verbatim data you can diff — not the model's description of events.</div></li>
+        <li><div class="mt">Capture the artifact and its source</div><div class="md">Screenshot or save the log/response and note exactly where it came from, so someone else could re-check it.</div></li>
+        <li><div class="mt">Reproduce it</div><div class="md">Fresh sessions, several times. Report successes out of attempts, with the conditions that mattered.</div></li>
+        <li><div class="mt">Separate the layers</div><div class="md">Did you break the guardrail, or just get the model to talk <em>about</em> breaking it? Disclosure isn't impact; impact isn't persistence.</div></li>
+        <li><div class="mt">Rule out the easy fakes</div><div class="md">Hallucinated success, a cached answer, a judge that got fooled. If a skeptic could dismiss it, it isn't done.</div></li>
+        <li><div class="mt">Name it in a framework</div><div class="md">Tag the OWASP / ATLAS category so the finding travels — and so a defender knows exactly what to fix.</div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>Frameworks — to name what you found</h3>
+      <div class="fw-grid">${fw}</div>
+    </div>
+
+    <div class="block">
+      <h3><span class="dot"></span>Tools — to gather the proof for you</h3>
+      <div class="fw-grid">${tl}</div>
+      <div class="jcallout">
+        <h3>⚖ LLM-as-judge: handle with care</h3>
+        <p>It's tempting to score attempts with another model. It scales, but it drifts: graders disagree with themselves, favour confident wording, and can be injected by the output they're reading. Use a model to triage and cluster, then confirm anything that matters against ground truth — a log, a validator, a human.</p>
+      </div>
+    </div>
+
+    <div class="note"><b>Frameworks and tools evolve — verify at the source.</b> The OWASP GenAI Red Teaming material, MITRE ATLAS and the NIST AI RMF / GenAI Profile (AI 600-1) are the primary references; tool capabilities and versions change often. A couple of widely-repeated details (a promptfoo acquisition, Inspect's exact origin) were only in secondary write-ups when checked — confirm before you cite them.</div>
+   </div>`;
+  document.getElementById('backBtn').onclick=()=>{location.hash=''};
+  window.scrollTo(0,0);
+}
+
+/* ===== interactive threat-modeller for an LLM-connected app ===== */
+const TM_KEY="bottricks.tm.v1";
+const CAPS=[
+ {id:"private_data",grp:"What it can see",ol:"Reads private / internal data",od:"Files, user records, accounts, internal services.",sev:"medium",legs:["data"],
+  threat:"Anything the model can read, an injection can try to make it reveal or act on.",
+  controls:["Scope every retrieval to the end-user's identity and permissions.","Keep real secrets — keys, tokens — out of the model's context entirely."]},
+ {id:"untrusted",grp:"What it can see",ol:"Ingests untrusted content",od:"Web pages, emails, tickets, documents, images it didn't write.",sev:"medium",legs:["untrusted"],
+  threat:"Attacker-controlled text becomes instructions — direct and indirect prompt injection.",
+  controls:["Treat all ingested content as data, never instructions; spotlight or delimit it.","Assume injection will happen, and make sure one injected instruction can't cause harm."]},
+ {id:"email",grp:"Tools it can call",ol:"Sends email or messages",od:"Outbound mail, chat, notifications.",sev:"high",legs:["egress"],
+  threat:"An exfiltration channel and a spoofing vector — injection can mail data out, or send as you.",
+  controls:["Constrain recipients to an allowlist or the verified owner; no arbitrary 'to:'.","Require confirmation for outbound mail; log every send.","Never let untrusted input set both recipient and body."]},
+ {id:"code_exec",grp:"Tools it can call",ol:"Executes code",od:"Runs a code interpreter or sandbox.",sev:"critical",legs:["egress"],
+  threat:"Prompt injection → arbitrary code execution. The highest-severity tool you can give an agent.",
+  controls:["Run in a locked-down, network-isolated, ephemeral sandbox with least privilege.","Never execute code assembled from untrusted content outside that isolation.","Cap CPU, memory and time; no access to host secrets, env or filesystem."]},
+ {id:"fetch",grp:"Tools it can call",ol:"Fetches URLs / browses",od:"HTTP requests, web browsing, link previews.",sev:"high",legs:["egress"],
+  threat:"SSRF to internal services or cloud metadata, plus a data-exfil channel (data hidden in the URL).",
+  controls:["Egress allowlist; block private IP ranges and metadata endpoints.","Resolve and validate hosts server-side; strip credentials from URLs.","Watch for data smuggled into outbound URLs."]},
+ {id:"database",grp:"Tools it can call",ol:"Queries / writes a database",od:"SQL or NoSQL reads and writes.",sev:"high",legs:["data","egress"],
+  threat:"Over-broad reads leak data; model-built queries risk injection; ungated writes corrupt state.",
+  controls:["Parameterize queries; never build them from raw model output.","Scope access to the user's own rows; prefer read-only.","Gate destructive writes behind confirmation."]},
+ {id:"files",grp:"Tools it can call",ol:"Reads / writes files",od:"Filesystem or object-storage access.",sev:"high",legs:["data","egress"],
+  threat:"Path traversal, reading secrets, and writing attacker-controlled or executable files.",
+  controls:["Jail to a per-user directory; canonicalize and validate every path.","No writes to executable or config locations.","Limit and scan what can be read or written."]},
+ {id:"shell",grp:"Tools it can call",ol:"Runs shell / OS commands",od:"System commands, subprocess, package installs.",sev:"critical",legs:["egress"],
+  threat:"Command injection → full host compromise. Treat it like code execution, or worse.",
+  controls:["Avoid if at all possible; otherwise a strict command allowlist with no shell interpolation.","Run as an unprivileged, isolated user with no network.","Never pass untrusted strings into a shell."]},
+ {id:"payments",grp:"Tools it can call",ol:"Moves money / makes purchases",od:"Charges, transfers, orders.",sev:"critical",legs:["egress"],
+  threat:"Injection can trigger unauthorized transactions on your account.",
+  controls:["Hard per-transaction limits and human approval.","Verify intent out-of-band; log and alert on every charge.","Never let untrusted content set amount and destination."]},
+ {id:"publish",grp:"Tools it can call",ol:"Posts publicly",od:"Comments, issues, pages, social posts.",sev:"high",legs:["egress"],
+  threat:"A public-write channel is both an exfiltration path and a vandalism / defamation vector.",
+  controls:["Gate public writes behind approval.","Separate 'read private' and 'write public' privileges — never one token.","Content-check and rate-limit outbound posts."]},
+ {id:"autonomy",grp:"How it operates",ol:"Acts without human approval",od:"Takes actions on its own, with no confirmation step.",sev:"high",legs:[],
+  threat:"Removes the human checkpoint — an injected action executes immediately, at machine speed.",
+  controls:["Insert approval gates for sensitive or irreversible actions.","Constrain the action space; prefer read-only autonomy.","Rate-limit, monitor, and build in a kill switch."]},
+ {id:"multistep",grp:"How it operates",ol:"Chains multiple tools (agentic)",od:"Plans and calls several tools in sequence.",sev:"high",legs:[],
+  threat:"One injected step can pivot through every tool the agent holds — blast radius is all capabilities combined.",
+  controls:["Least privilege per step; don't hand the agent every tool at once.","Isolate tool credentials; scope tokens narrowly.","Log the full tool trace for review."]}
+];
+const SEV={critical:3,high:2,medium:1};
+const PRESETS=[
+ {name:"RAG chatbot",ids:["private_data","untrusted"]},
+ {name:"Email assistant",ids:["private_data","untrusted","email"]},
+ {name:"Support agent",ids:["private_data","untrusted","database","email","publish","multistep","autonomy"]},
+ {name:"Coding agent",ids:["untrusted","code_exec","files","shell","fetch","multistep","autonomy"]}
+];
+
+function renderThreatModel(){
+  updateStars();
+  let sel; try{sel=new Set(JSON.parse(localStorage.getItem(TM_KEY))||[])}catch(e){sel=new Set()}
+  const groups=[...new Set(CAPS.map(c=>c.grp))];
+  const opts=groups.map(g=>`<div class="tm-grp">${g}</div>`+CAPS.filter(c=>c.grp===g).map(c=>`
+    <label class="tm-opt ${sel.has(c.id)?'on':''}" data-id="${c.id}">
+      <input type="checkbox" ${sel.has(c.id)?'checked':''}>
+      <span class="tm-txt"><span class="ol">${c.ol}<span class="tm-sev sev-${c.sev}">${c.sev}</span></span><span class="od">${c.od}</span></span>
+    </label>`).join('')).join('');
+  view.innerHTML=`
+   <div class="view chap-fade">
+    <button class="back" id="backBtn">‹ the trail</button>
+    <div class="cheat-hero">
+      <span class="kicker">Build &amp; threat-model</span>
+      <h1>Threat-model your LLM app</h1>
+      <p>Tick what your agent can touch. It reads data, ingests untrusted content, and holds tools like email and code execution — this surfaces the attack paths and the controls that fence them.</p>
+    </div>
+    <div class="tm-wrap">
+      <div class="tm-pick">
+        <h3>What can your agent do?</h3>
+        <div class="tm-presets"><span class="tm-plabel">Start from a preset</span>${PRESETS.map((p,i)=>`<button class="ghost tm-preset" data-i="${i}">${p.name}</button>`).join('')}</div>
+        ${opts}
+        <div class="prog-tools"><button class="ghost" id="tmCopy">Copy model</button><button class="ghost danger" id="tmReset">Clear</button><span class="backup-msg" id="tmMsg"></span></div>
+      </div>
+      <div class="tm-panel" id="tmPanel"></div>
+    </div>
+    <div class="block">
+      <h3><span class="dot"></span>Three questions for every boundary</h3>
+      <ul class="jlist">
+        <li><b>Who reads the data?</b> Whose identity and permissions does the model borrow on each retrieval?</li>
+        <li><b>Who authorizes the action?</b> When a tool fires, who actually approved it — the user, or the prompt?</li>
+        <li><b>Where can output go?</b> Every egress (email, URL, post, file, payment) is a potential exfiltration channel.</li>
+      </ul>
+    </div>
+    <div class="note"><b>A starting point, not a finished threat model.</b> Walk each trust boundary, map the real data flows, and pair this with a framework — the <a href="#judging">OWASP / ATLAS / NIST references</a> on the judging page, plus STRIDE for the non-AI parts. Selections are saved in this browser only.</div>
+   </div>`;
+  document.getElementById('backBtn').onclick=()=>{location.hash=''};
+  const panel=document.getElementById('tmPanel');
+  const persist=()=>{try{localStorage.setItem(TM_KEY,JSON.stringify([...sel]))}catch(e){}};
+  const legsOf=()=>{const L={data:false,untrusted:false,egress:false};CAPS.forEach(c=>{if(sel.has(c.id))c.legs.forEach(x=>L[x]=true)});return L;};
+  function paint(){
+    const L=legsOf(), trifecta=L.data&&L.untrusted&&L.egress;
+    const picked=CAPS.filter(c=>sel.has(c.id)).sort((a,b)=>SEV[b.sev]-SEV[a.sev]);
+    let risk='—';
+    if(picked.length){ if(trifecta||picked.some(c=>c.sev==='critical')) risk='Critical'; else if(picked.some(c=>c.sev==='high')) risk='High'; else risk='Medium'; }
+    const lamp=(on,h,s)=>`<div class="lamp ${on?'on':''}"><div class="lh">${h}</div><div class="ls">${s}</div></div>`;
+    const combos=[];
+    if(sel.has('code_exec')&&sel.has('untrusted')) combos.push({h:"Untrusted content + code execution = RCE",t:"Attacker text can reach your interpreter, so an injection becomes remote code execution — the worst case. Isolate the sandbox completely (no network, no secrets, ephemeral), or remove one of the two."});
+    if(sel.has('shell')&&sel.has('untrusted')) combos.push({h:"Untrusted content + shell = host compromise",t:"Never route untrusted-derived strings into a shell. Drop shell access, or lock it to a no-interpolation allowlist in an isolated, network-less user."});
+    panel.innerHTML=`
+      <div class="tm-tri">
+        <div class="tm-trihead"><h3>Lethal trifecta</h3><span class="riskbadge risk-${risk==='—'?'none':risk.toLowerCase()}">Risk: ${risk}</span></div>
+        <div class="tri-lamps">
+          ${lamp(L.data,'Private data','it can read secrets')}
+          ${lamp(L.untrusted,'Untrusted content','it ingests outside text')}
+          ${lamp(L.egress,'A way out','it can send data out')}
+        </div>
+        <div class="tri-verdict ${trifecta?'lethal':'safe'}">${trifecta?'LETHAL TRIFECTA ACTIVE — a prompt injection can exfiltrate your data. Remove one leg, or put a human in front of the egress.':'All three legs are not present yet. Keep it that way: if you must add the third, gate every egress with human approval.'}</div>
+      </div>
+      ${combos.map(c=>`<div class="tm-find combo"><div class="tf-h">⚠ ${c.h}</div><div class="tf-threat">${c.t}</div></div>`).join('')}
+      ${picked.length?picked.map(c=>`
+        <div class="tm-find">
+          <div class="tf-h">${c.ol}<span class="tm-sev sev-${c.sev}">${c.sev}</span></div>
+          <div class="tf-threat">${c.threat}</div>
+          <ul class="tf-ctrl">${c.controls.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>`).join(''):'<div class="tm-empty">Tick a capability on the left to see its threats and controls.</div>'}`;
+  }
+  const syncDom=()=>view.querySelectorAll('.tm-opt').forEach(l=>{const on=sel.has(l.dataset.id);l.classList.toggle('on',on);l.querySelector('input').checked=on;});
+  view.querySelectorAll('.tm-opt').forEach(l=>{
+    const id=l.dataset.id, box=l.querySelector('input');
+    box.addEventListener('change',()=>{ if(box.checked)sel.add(id); else sel.delete(id); l.classList.toggle('on',box.checked); persist(); paint(); });
+  });
+  view.querySelectorAll('.tm-preset').forEach(b=>b.onclick=()=>{ sel=new Set(PRESETS[+b.dataset.i].ids); persist(); syncDom(); paint(); });
+  const tmMsg=(m)=>{const el=document.getElementById('tmMsg');if(el){el.textContent=m;setTimeout(()=>{if(el)el.textContent=''},2000)}};
+  document.getElementById('tmReset').onclick=()=>{ sel.clear(); persist(); syncDom(); paint(); };
+  document.getElementById('tmCopy').onclick=()=>{
+    const L=legsOf(), trifecta=L.data&&L.untrusted&&L.egress, picked=CAPS.filter(c=>sel.has(c.id));
+    const t="LLM APP THREAT MODEL\n\nCapabilities:\n"+(picked.length?picked.map(c=>"- "+c.ol+" ["+c.sev+"]").join("\n"):"- (none selected)")+
+      "\n\nLethal trifecta: "+(trifecta?"ACTIVE":"not active")+" (private data: "+(L.data?"yes":"no")+", untrusted content: "+(L.untrusted?"yes":"no")+", egress: "+(L.egress?"yes":"no")+")"+
+      "\n\nThreats & controls:\n"+picked.map(c=>"• "+c.ol+"\n  threat: "+c.threat+"\n  controls:\n"+c.controls.map(x=>"    - "+x).join("\n")).join("\n\n");
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(()=>tmMsg('Copied ✓')).catch(()=>tmMsg('Copy failed'));
+    else tmMsg('Copy not available');
+  };
+  paint();
+  window.scrollTo(0,0);
+}
+
+/* ===== hash router: makes the browser Back button move between views ===== */
+function route(){
+  const h=decodeURIComponent((location.hash||'').replace(/^#/,''));
+  if(h==='cheatsheet'){renderCheat();return;}
+  if(h==='teacher'){renderTeacher();return;}
+  if(h==='judging'){renderJudge();return;}
+  if(h==='threatmodel'){renderThreatModel();return;}
+  const lab=LABS.find(l=>l.id===h);
+  if(lab) renderChapter(lab.id); else renderMap();
+}
+window.addEventListener('hashchange',route);
+
+/* tiny confetti on badge */
+function confetti(){
+  const cols=['#ef7a52','#e6ac34','#28b2a2','#9a7bd8','#d8614a'];
+  for(let k=0;k<28;k++){
+    const d=document.createElement('div');
+    d.style.cssText=`position:fixed;top:64px;left:${30+Math.random()*40}%;width:9px;height:9px;z-index:60;
+      background:${cols[k%cols.length]};border-radius:${Math.random()<.5?'50%':'2px'};pointer-events:none;
+      transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(d);
+    const dx=(Math.random()-.5)*300, dy=200+Math.random()*320, rot=Math.random()*720;
+    d.animate([{transform:d.style.transform,opacity:1},{transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`,opacity:0}],
+      {duration:900+Math.random()*500,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>d.remove();
+  }
+}
+
+/* ===== controls ===== */
+document.getElementById('homeBtn').onclick=()=>{location.hash=''};
+document.getElementById('guideBtn').onclick=()=>{location.hash='teacher'};
+const tb=document.getElementById('themeBtn');
+function syncThemeIcon(){const d=document.documentElement.getAttribute('data-theme');
+  const dark=d?d==='dark':matchMedia('(prefers-color-scheme:dark)').matches;tb.textContent=dark?'☀':'☾'}
+tb.onclick=()=>{const r=document.documentElement,cur=r.getAttribute('data-theme');
+  const dark=cur?cur==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  r.setAttribute('data-theme',dark?'light':'dark');try{localStorage.setItem('bottricks.theme',dark?'light':'dark')}catch(e){}syncThemeIcon()};
+try{const th=localStorage.getItem('bottricks.theme');if(th)document.documentElement.setAttribute('data-theme',th)}catch(e){}
+syncThemeIcon();
+
+route();
+</script>
+<style>
+.chap-fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* ---- readability pass: larger type, technical spacing ---- */
+body{font-size:20px;line-height:1.62;word-spacing:normal;letter-spacing:0}
+h1,h2,h3,h4{letter-spacing:-.01em;word-spacing:normal;line-height:1.18}
+.home .wordmark{font-size:24px}
+.home .wordmark small{font-size:12px;letter-spacing:2px}
+.home .logo{width:40px;height:40px}
+.stars{font-size:16px}
+.iconbtn{font-size:18px}
+
+.kicker{font-size:17px;padding:8px 18px}
+.hero h1{font-size:clamp(42px,8vw,66px)}
+.hero p{font-size:23px;max-width:48ch;line-height:1.6}
+.hero .peek .mini{width:66px;height:66px}
+
+.way{padding:26px 24px 28px}
+.way h2{font-size:27px}
+.way .sub{font-size:17px}
+.way .s .b{width:58px;height:58px;font-size:24px;border-radius:18px}
+.way .s .t{font-size:20px}
+.way .s .d{font-size:17px;line-height:1.5}
+
+.trailhead h2{font-size:33px}
+.trailhead p{font-size:18px}
+.card{padding:15px 19px}
+.card .wk{font-size:13px;letter-spacing:.8px}
+.card .nm{font-size:22px}
+.card .hk{font-size:16px;line-height:1.5}
+.finale{font-size:17px}
+
+.back{font-size:17px;padding:9px 18px 9px 14px}
+.chap-hero .big{width:134px;height:134px}
+.chap-hero .ch{font-size:14px;letter-spacing:1px}
+.chap-hero h1{font-size:clamp(34px,7vw,50px)}
+.chap-hero .sub{font-size:19px}
+.chip{font-size:14px;padding:5px 13px}
+
+.bubble{font-size:23px;line-height:1.6;padding:22px 24px}
+.block{padding:20px 23px}
+.block > h3{font-size:21px}
+.guard{font-size:21px;line-height:1.6}
+.bag .it{font-size:16px}
+
+.moves li{padding:15px 0 15px 54px}
+.moves li::before{width:36px;height:36px;font-size:18px;top:13px;border-radius:14px}
+.moves li .mt{font-size:20px}
+.moves li .md{font-size:17.5px;line-height:1.5}
+.winwhen{font-size:18.5px;padding:16px 18px}
+.winwhen .st{font-size:24px}
+
+.field label{font-size:18px}
+.field label .h{font-size:15.5px}
+textarea{font-size:16.5px;line-height:1.6;padding:13px 15px;letter-spacing:.2px}
+.seg{font-size:17px;padding:9px 16px}
+.jrow .saved{font-size:15px}
+
+details.rev > summary{font-size:19px;padding:16px 20px}
+details.rev > summary .ic{width:36px;height:36px;font-size:19px}
+details.rev > summary .cap{font-size:12.5px}
+.rbody{font-size:18px;line-height:1.65}
+.rbody code{font-size:15.5px}
+.keynote{font-size:15.5px;line-height:1.6}
+
+.badgebtn{font-size:19px;padding:13px 22px}
+.badgebtn svg{width:24px;height:24px}
+.mile{font-size:17px}
+.mile b{font-size:18px}
+.openlab{font-size:19px;padding:12px 20px}
+.pager button{padding:14px 16px}
+.pager .pd{font-size:12.5px;letter-spacing:.7px}
+.pager .pn{font-size:18px}
+.pager .pav{width:52px;height:52px}
+.note{font-size:16.5px;line-height:1.65;padding:16px 18px}
+
+/* four-step method tags */
+.way .s .tag{font-family:var(--mono);font-weight:600;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--teal);margin-top:5px}
+
+/* threat modeler card */
+.modeler{background:var(--panel);border:2px solid var(--line);border-radius:26px;box-shadow:var(--shadow);
+  padding:26px 24px 22px;margin:18px 0 10px}
+.modeler h2{font-size:27px;text-align:center}
+.modeler .sub{text-align:center;color:var(--muted);font-size:17px;margin:6px auto 0;max-width:56ch}
+.qs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.q{background:var(--panel2);border:2px solid var(--line);border-radius:18px;padding:16px 17px}
+.q .qn{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--teal);text-transform:uppercase;letter-spacing:1.2px}
+.q .qt{font-family:var(--disp);font-weight:600;font-size:21px;margin-top:1px}
+.q .qd{font-size:16px;color:var(--muted);margin-top:7px;line-height:1.45}
+.modeler-foot{text-align:center;color:var(--muted);font-size:16px;margin-top:20px;padding-top:15px;border-top:2px dotted var(--line)}
+
+/* lethal trifecta card */
+.trifecta{background:var(--panel);border:2px solid var(--line);border-radius:9px;box-shadow:var(--shadow);padding:26px 24px 22px;margin:18px 0 10px}
+.trifecta h2{font-size:27px;text-align:center}
+.trifecta .sub{text-align:center;color:var(--muted);font-size:17px;margin:6px auto 0;max-width:60ch}
+.legs{display:flex;align-items:stretch;gap:12px;margin-top:22px}
+.leg{flex:1;background:color-mix(in srgb,var(--bad) 7%,var(--panel2));border:2px solid color-mix(in srgb,var(--bad) 28%,var(--line));border-radius:7px;padding:16px}
+.leg .ln{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;background:var(--bad);color:#fff;font-family:var(--disp);font-weight:700;font-size:14px}
+.leg .lt{font-family:var(--disp);font-weight:600;font-size:18px;margin-top:9px;line-height:1.15}
+.leg .ld{font-size:15px;color:var(--muted);margin-top:5px;line-height:1.45}
+.leg-op{align-self:center;font-family:var(--disp);font-weight:700;font-size:24px;color:var(--faint);flex:none}
+.trifecta-foot{text-align:center;color:var(--muted);font-size:16px;margin-top:20px;padding-top:15px;border-top:2px dotted var(--line)}
+.trifecta-foot b{color:var(--bad)}
+.tf-note{display:block;margin-top:6px;font-size:14.5px;color:var(--faint)}
+
+/* threat + defense block in chapters */
+.block.threat{border-color:color-mix(in srgb,var(--teal) 36%,var(--line));background:color-mix(in srgb,var(--teal) 7%,var(--panel))}
+.block.threat > h3{color:var(--teal)}
+.block.threat > h3 .dot{background:var(--teal)}
+.ttag{display:inline-block;margin-top:12px;font-family:var(--disp);font-weight:600;font-size:15.5px;color:var(--teal);
+  background:color-mix(in srgb,var(--teal) 14%,var(--panel));border:2px solid color-mix(in srgb,var(--teal) 32%,var(--line));
+  border-radius:999px;padding:5px 15px}
+.twhat{font-size:19.5px;line-height:1.55;margin-top:13px}
+.tdef-h{font-family:var(--disp);font-weight:600;font-size:16.5px;margin-top:16px;color:var(--teal)}
+.tdef{list-style:none;margin:8px 0 0;padding:0}
+.tdef li{position:relative;padding:8px 0 8px 30px;font-size:17.5px;line-height:1.5;border-top:2px dotted color-mix(in srgb,var(--teal) 18%,var(--line))}
+.tdef li:first-child{border-top:0}
+.tdef li::before{content:"✓";position:absolute;left:3px;top:8px;color:var(--teal);font-weight:800}
+
+/* cheat sheet CTA + grid */
+.cheatcta{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px auto 0;max-width:460px;
+  background:color-mix(in srgb,var(--teal) 14%,var(--panel));color:var(--teal);
+  border:2px solid color-mix(in srgb,var(--teal) 34%,var(--line));border-radius:18px;padding:15px 20px;
+  font-family:var(--disp);font-weight:600;font-size:19px;box-shadow:var(--shadow-sm)}
+.cheatcta:hover{text-decoration:none;transform:translateY(-2px)}
+.cheatcta .ci{font-size:20px}
+.cheatcta .cx{margin-left:2px;font-size:22px}
+
+.cheat-hero{text-align:center;margin-top:20px}
+.cheat-hero h1{font-size:clamp(30px,6vw,44px)}
+.cheat-hero p{color:var(--muted);font-size:19px;max-width:52ch;margin:10px auto 0;line-height:1.55}
+.cheat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+.cheat{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column}
+.cheat-top{display:flex;align-items:center;gap:13px}
+.cheat-av{width:56px;height:56px;flex:none;background:var(--panel2);border:2px solid var(--line2);border-radius:16px;padding:4px}
+.cheat-nm{font-family:var(--disp);font-weight:600;font-size:21px;line-height:1.1}
+.cheat-sub{font-size:14.5px;color:var(--muted);margin-top:1px}
+.cheat .ttag{margin-top:13px;align-self:flex-start}
+.cheat-what{font-size:16.5px;line-height:1.5;margin-top:12px;color:var(--ink)}
+.cheat .tdef{margin-top:12px}
+.cheat .tdef li{font-size:16px;padding:6px 0 6px 28px}
+.cheat .tdef li::before{top:6px}
+
+/* a violet accent for the "technique" layer, and a readable gold for judging */
+:root{--plum:#7d5fc0;--goldink:#a9781a;--info:#3b74c4}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--plum:#b79bf0;--goldink:#f0c45e;--info:#7fb0ef}}
+:root[data-theme="dark"]{--plum:#b79bf0;--goldink:#f0c45e;--info:#7fb0ef}
+
+/* chapter header actions (open lab + mark complete) */
+.chap-actions{display:flex;flex-direction:row;gap:12px;margin-top:16px}
+.act{flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:13px;padding:12px 16px;
+  font-family:var(--disp);font-weight:600;font-size:15.5px;cursor:pointer;border:2px solid var(--line2);
+  white-space:nowrap;box-shadow:var(--shadow-sm)}
+.act-lab{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.act-lab:hover{text-decoration:none;transform:translateY(-2px)}
+.act-done{background:var(--panel);color:var(--ink)}
+.act-done:hover{transform:translateY(-2px);border-color:var(--gold)}
+.act-done.got{background:var(--gold);border-color:var(--gold);color:#5a3d00}
+.act-done svg{width:19px;height:19px}
+.milenote{font-size:15.5px;color:var(--muted);background:var(--panel2);border:2px solid var(--line);
+  border-radius:14px;padding:13px 16px;margin-top:22px}
+.milenote b{color:var(--ink);font-family:var(--disp);font-weight:600}
+
+/* "does this even need grading?" lead box */
+.jlead{background:color-mix(in srgb,var(--info) 9%,var(--panel));border:2px solid color-mix(in srgb,var(--info) 30%,var(--line));border-radius:20px;padding:18px 20px;margin-top:18px}
+.jlead h3{font-family:var(--disp);font-size:20px;color:var(--info)}
+.jlead p{font-size:17px;line-height:1.55;margin-top:8px}
+.jlead ul{margin:10px 0 0;padding-left:20px}
+.jlead li{font-size:16px;line-height:1.5;margin:7px 0}
+
+/* judging page */
+.jlist{margin:10px 0 0;padding-left:20px}
+.jlist li{font-size:17.5px;line-height:1.55;margin:9px 0}
+.ev-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.ev{border-radius:16px;padding:14px 16px;border:2px solid var(--line)}
+.ev.weak{background:color-mix(in srgb,var(--bad) 9%,var(--panel));border-color:color-mix(in srgb,var(--bad) 30%,var(--line))}
+.ev.strong{background:color-mix(in srgb,var(--good) 9%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,var(--line))}
+.ev h4{font-family:var(--disp);font-size:17.5px}
+.ev.weak h4{color:var(--bad)}.ev.strong h4{color:var(--good)}
+.ev ul{margin:8px 0 0;padding-left:18px}
+.ev li{font-size:15.5px;margin:5px 0;line-height:1.45}
+.ev-ladder{list-style:none;margin:16px 0 0;padding:0}
+.ev-ladder li{padding:11px 0;border-top:2px dotted var(--line);font-size:16.5px;line-height:1.5}
+.ev-ladder li:first-child{border-top:0}
+.ev-ladder .el-k{font-family:var(--disp);font-weight:600;display:block;margin-bottom:2px}
+.ev-ladder .el-w{color:var(--bad);font-weight:700}.ev-ladder .el-s{color:var(--good);font-weight:700}
+.fw-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.fw{background:var(--panel2);border:2px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+.fw:hover{text-decoration:none;border-color:var(--accent);transform:translateY(-2px)}
+.fw-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.fw-nm{font-family:var(--disp);font-weight:600;font-size:18px;color:var(--ink)}
+.fw-tag{font-family:var(--mono);font-size:11.5px;color:var(--goldink);white-space:nowrap}
+.fw-what{font-size:15.5px;color:var(--muted);margin-top:8px;line-height:1.5;flex:1}
+.fw-link{margin-top:10px;font-family:var(--disp);font-weight:600;font-size:14px;color:var(--accent)}
+.jcallout{background:color-mix(in srgb,var(--warm) 10%,var(--panel));border:2px solid color-mix(in srgb,var(--warm) 32%,var(--line));border-radius:18px;padding:16px 18px;margin-top:18px}
+.jcallout h3{font-family:var(--disp);font-size:18px;color:var(--warm)}
+.jcallout p{font-size:16px;margin-top:6px;line-height:1.55}
+.cta.gold{background:color-mix(in srgb,var(--gold) 14%,var(--panel));border-color:color-mix(in srgb,var(--gold) 32%,var(--line))}
+.cta.gold b{color:var(--goldink)}
+.cta.coral{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 32%,var(--line))}
+.cta.coral b{color:var(--accent)}
+
+/* threat-modeller page */
+.tm-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:18px;margin-top:22px;align-items:start}
+.tm-pick{background:var(--panel);border:2px solid var(--line);border-radius:9px;padding:20px 22px;box-shadow:var(--shadow-sm);position:sticky;top:76px}
+.tm-pick h3,.tm-panel h3{font-family:var(--disp);font-weight:600;font-size:18px}
+.tm-presets{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:11px}
+.tm-plabel{font-family:var(--mono);font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:2px}
+.tm-preset{font-size:13px}
+.tm-grp{font-family:var(--mono);font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
+.tm-opt{display:flex;align-items:flex-start;gap:11px;padding:10px 12px;border:2px solid var(--line);border-radius:7px;margin-top:8px;cursor:pointer;background:var(--panel2)}
+.tm-opt:hover{border-color:var(--line2)}
+.tm-opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.tm-opt input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent);flex:none;cursor:pointer}
+.tm-txt{min-width:0}
+.tm-opt .ol{font-family:var(--disp);font-weight:600;font-size:15.5px;display:block}
+.tm-opt .od{font-size:13.5px;color:var(--muted);margin-top:1px;line-height:1.4;display:block}
+.tm-sev{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:4px;margin-left:8px;vertical-align:middle;font-weight:600}
+.sev-critical{background:color-mix(in srgb,var(--bad) 18%,var(--panel));color:var(--bad)}
+.sev-high{background:color-mix(in srgb,var(--warm) 20%,var(--panel));color:var(--warm)}
+.sev-medium{background:color-mix(in srgb,var(--gold) 20%,var(--panel));color:var(--goldink)}
+.tm-panel{display:flex;flex-direction:column;gap:14px}
+.tm-tri{background:var(--panel);border:2px solid var(--line);border-radius:9px;padding:18px 20px;box-shadow:var(--shadow-sm)}
+.tm-trihead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tm-trihead h3{margin:0}
+.riskbadge{font-family:var(--disp);font-weight:700;font-size:13px;padding:4px 11px;border-radius:6px;border:2px solid var(--line);color:var(--muted)}
+.risk-critical{background:color-mix(in srgb,var(--bad) 15%,var(--panel));color:var(--bad);border-color:var(--bad)}
+.risk-high{background:color-mix(in srgb,var(--warm) 15%,var(--panel));color:var(--warm);border-color:color-mix(in srgb,var(--warm) 40%,var(--line))}
+.risk-medium{background:color-mix(in srgb,var(--gold) 15%,var(--panel));color:var(--goldink)}
+.tri-lamps{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.lamp{flex:1;min-width:130px;border:2px solid var(--line);border-radius:7px;padding:11px 12px;text-align:center;background:var(--panel2);opacity:.45;transition:opacity .15s}
+.lamp.on{opacity:1;border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
+.lamp .lh{font-family:var(--disp);font-weight:600;font-size:14.5px}
+.lamp .ls{font-size:12.5px;color:var(--muted);margin-top:2px}
+.tri-verdict{margin-top:14px;padding:12px 14px;border-radius:7px;font-size:15px;line-height:1.5;font-weight:500}
+.tri-verdict.safe{background:color-mix(in srgb,var(--good) 10%,var(--panel));border:2px solid color-mix(in srgb,var(--good) 30%,var(--line));color:var(--good)}
+.tri-verdict.lethal{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border:2px solid var(--bad);color:var(--bad);font-weight:700}
+.tm-find{border:2px solid var(--line);border-radius:7px;padding:14px 16px;background:var(--panel);box-shadow:var(--shadow-sm)}
+.tm-find.combo{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,var(--panel))}
+.tm-find .tf-h{font-family:var(--disp);font-weight:600;font-size:16.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tm-find.combo .tf-h{color:var(--bad)}
+.tm-find .tf-threat{font-size:15px;margin-top:6px;line-height:1.5}
+.tm-find .tf-ctrl{list-style:none;margin:11px 0 0;padding:0}
+.tm-find .tf-ctrl li{position:relative;padding:5px 0 5px 24px;font-size:14.5px;line-height:1.45}
+.tm-find .tf-ctrl li::before{content:"✓";position:absolute;left:2px;top:5px;color:var(--good);font-weight:800}
+.tm-empty{color:var(--muted);font-size:15px;padding:26px 20px;text-align:center;border:2px dashed var(--line);border-radius:7px}
+
+/* technique block */
+.block.tech{border-color:color-mix(in srgb,var(--plum) 34%,var(--line));background:color-mix(in srgb,var(--plum) 7%,var(--panel))}
+.block.tech > h3{color:var(--plum)}
+.block.tech > h3 .dot{background:var(--plum)}
+.techname{display:inline-block;margin-top:12px;font-family:var(--mono);font-weight:600;font-size:14px;color:var(--plum);
+  background:color-mix(in srgb,var(--plum) 13%,var(--panel));border:2px solid color-mix(in srgb,var(--plum) 30%,var(--line));
+  border-radius:10px;padding:5px 12px;letter-spacing:.2px}
+.techhow{font-size:18px;line-height:1.6;margin-top:13px}
+
+/* ghost buttons */
+.ghost{border:2px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:11px;padding:7px 13px;
+  font-family:var(--disp);font-weight:600;font-size:13.5px;cursor:pointer}
+.ghost:hover{border-color:var(--accent);transform:translateY(-1px)}
+.ghost.danger:hover{border-color:var(--bad)}
+.ghost.danger-on{background:var(--bad);border-color:var(--bad);color:#fff}
+
+/* progress card */
+.prog{display:flex;gap:22px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:26px;
+  box-shadow:var(--shadow);padding:22px 24px;margin:18px 0 10px;flex-wrap:wrap}
+.prog-ring{position:relative;width:118px;height:118px;flex:none}
+.prog-ring svg{width:100%;height:100%}
+.prog-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.prog-num b{font-family:var(--disp);font-weight:700;font-size:38px;color:var(--ink)}
+.prog-num span{font-family:var(--disp);font-size:13px;color:var(--muted);margin-top:2px}
+.prog-body{flex:1;min-width:230px}
+.prog-h{font-family:var(--disp);font-weight:600;font-size:22px}
+.prog-sub{color:var(--muted);font-size:16px;margin-top:2px}
+.trks{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.trk{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.trk-n{font-family:var(--disp);font-weight:600;font-size:14.5px}
+.trk-dots{display:flex;align-items:center;gap:6px}
+.pdot{width:11px;height:11px;border-radius:50%;background:var(--line2);transition:background .2s}
+.pdot.on{background:var(--gold)}
+.trk-c{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:4px}
+.prog-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.backup{margin-top:12px}
+.backup-h{font-size:13.5px;color:var(--muted);margin-bottom:6px}
+.backup textarea{min-height:52px;font-size:12px}
+.backup-msg{font-family:var(--disp);font-size:13px;color:var(--good)}
+
+/* CTA row */
+.cta-row{display:flex;gap:14px;margin-top:22px;flex-wrap:wrap}
+.cta{flex:1;min-width:240px;display:flex;align-items:center;gap:13px;border-radius:18px;padding:15px 18px;
+  box-shadow:var(--shadow-sm);border:2px solid var(--line)}
+.cta:hover{text-decoration:none;transform:translateY(-2px)}
+.cta .ci{font-size:26px;flex:none}
+.cta .ct{display:flex;flex-direction:column;line-height:1.2}
+.cta .ct b{font-family:var(--disp);font-weight:600;font-size:18px}
+.cta .ct em{font-style:normal;font-size:14px;color:var(--muted);margin-top:1px}
+.cta.teal{background:color-mix(in srgb,var(--teal) 12%,var(--panel));border-color:color-mix(in srgb,var(--teal) 32%,var(--line))}
+.cta.teal b{color:var(--teal)}
+.cta.plum{background:color-mix(in srgb,var(--plum) 12%,var(--panel));border-color:color-mix(in srgb,var(--plum) 32%,var(--line))}
+.cta.plum b{color:var(--plum)}
+
+/* teacher guide */
+.tg-hero{text-align:center;margin-top:18px}
+.tg-hero h1{font-size:clamp(30px,6vw,44px);margin-top:12px}
+.tg-hero p{color:var(--muted);font-size:18px;max-width:58ch;margin:10px auto 0;line-height:1.55}
+.tg-how{background:var(--panel);border:2px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:24px;margin-top:22px}
+.tg-how h2{font-size:24px;text-align:center}
+.tg-how-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 22px;margin-top:18px}
+.tg-k{font-family:var(--disp);font-weight:600;font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:var(--accent)}
+.tg-k.go{color:var(--good)}.tg-k.teal{color:var(--teal)}.tg-k.warn{color:var(--warm)}
+.tg-how-grid p{font-size:16px;margin:5px 0 0;line-height:1.5}
+.tg-toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
+.toc-i{display:inline-flex;align-items:center;gap:7px;background:var(--panel2);border:2px solid var(--line);border-radius:11px;
+  padding:6px 12px;font-family:var(--disp);font-weight:600;font-size:14px;color:var(--ink)}
+.toc-i:hover{text-decoration:none;border-color:var(--accent)}
+.toc-i span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tg-list{display:flex;flex-direction:column;gap:18px;margin-top:12px}
+.tg{background:var(--panel);border:2px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm);padding:20px 22px;scroll-margin-top:84px}
+.tg-head{display:flex;align-items:center;gap:14px}
+.tg-av{width:58px;height:58px;flex:none;background:var(--panel2);border:2px solid var(--line2);border-radius:16px;padding:4px}
+.tg-id{flex:1;min-width:0}
+.tg-ch{font-family:var(--disp);font-weight:600;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tg-time{color:var(--accent)}.tg-done{color:var(--good)}
+.tg-nm{font-family:var(--disp);font-weight:600;font-size:23px;margin-top:1px}
+.tg-nm .tg-sub{font-size:15px;color:var(--muted);font-weight:400}
+.tg-open{font-family:var(--disp);font-weight:600;font-size:14px;background:var(--panel2);border:2px solid var(--line);border-radius:10px;padding:6px 12px;color:var(--ink);flex:none}
+.tg-open:hover{text-decoration:none;border-color:var(--accent)}
+.tg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin-top:16px}
+.tg-col p{font-size:16px;line-height:1.5;margin:5px 0 0}
+.tg-col .tg-k{margin-top:16px}
+.tg-col .tg-k:first-child{margin-top:0}
+.tg-ol{margin:6px 0 0;padding-left:20px}
+.tg-ol li{font-size:15.5px;line-height:1.5;margin:5px 0}
+.tg-note{font-size:14px;color:var(--muted);margin-top:10px}
+.tg-q{font-style:italic}
+.tg .tdef{margin-top:6px}
+.tg .tdef li{font-size:15.5px;padding:5px 0 5px 26px}
+.tg .tdef li::before{top:5px}
+
+/* phase chip + "when to reach for it" */
+.chip.phase{background:color-mix(in srgb,var(--plum) 14%,var(--panel2));border-color:color-mix(in srgb,var(--plum) 32%,var(--line));color:var(--plum)}
+.techwhen{margin-top:14px;padding-top:13px;border-top:2px dotted color-mix(in srgb,var(--plum) 22%,var(--line));font-size:17px;line-height:1.5}
+.techwhen .tw-k{display:block;font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.3px;color:var(--plum);margin-bottom:4px}
+
+/* lifecycle card */
+.life{background:var(--panel);border:2px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:24px;margin:18px 0 10px}
+.life h2{font-size:27px;text-align:center}
+.life .sub{text-align:center;color:var(--muted);font-size:17px;margin:6px auto 0;max-width:62ch}
+.life-rail{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:18px 2px 12px;scrollbar-width:thin}
+.life-ph{min-width:168px;flex:1 0 168px;background:var(--panel2);border:2px solid var(--line);border-radius:18px;padding:13px 14px;display:flex;flex-direction:column}
+.life-top{display:flex;align-items:center;gap:9px}
+.life-n{width:28px;height:28px;flex:none;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-family:var(--disp);font-weight:700;font-size:15px;display:grid;place-items:center}
+.life-l{font-family:var(--disp);font-weight:600;font-size:16px;line-height:1.1}
+.life-b{font-size:13.5px;color:var(--muted);margin-top:7px;line-height:1.4;flex:1}
+.life-bots{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.life-bot{width:36px;height:36px;display:block;background:var(--panel);border:2px solid var(--line2);border-radius:11px;padding:2px;transition:transform .15s,border-color .15s}
+.life-bot:hover{transform:translateY(-2px);border-color:var(--accent)}
+.life-none{font-size:13px;color:var(--faint);font-style:italic;align-self:center}
+.life-arrow{align-self:center;color:var(--faint);font-size:22px;font-family:var(--disp);flex:none}
+.life-foot{text-align:center;color:var(--muted);font-size:15.5px;margin-top:10px;padding-top:14px;border-top:2px dotted var(--line)}
+.life-foot b{color:var(--accent)}
+
+/* teacher phase / when / arc */
+.tg-phase{color:var(--plum)}
+.tg-when{font-size:15.5px!important;background:color-mix(in srgb,var(--plum) 9%,var(--panel2));border-radius:10px;padding:8px 11px;margin-top:8px!important;line-height:1.45}
+.tg-arc{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:8px}
+.tg-arcp{font-family:var(--disp);font-weight:600;font-size:13.5px;background:var(--panel2);border:2px solid var(--line);border-radius:9px;padding:5px 10px}
+.tg-arcp b{color:var(--accent);margin-right:4px}
+.tg-arcd{color:var(--faint);font-size:14px}
+
+/* cheat tags row */
+.cheat-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.cheat .ttag{margin-top:0}
+
+/* ---- serious pass: sharper corners, flatter, more technical ---- */
+.way,.modeler,.life,.prog,.block,.bubble,.cta,.jlead,.jcallout,.note,
+details.rev,.tg,.tg-how,.milenote,.ev,.fw,.cheat,.card,.pager button,
+textarea,.q{border-radius:9px}
+.chip,.need,.bag .it,.stars,.iconbtn,.ghost,.seg,.act,.toc-i,.tg-open,
+.tg-arcp,.kicker,.ttag,.techname,.cheat-av,.tg-av,.life-bot,
+.way .s .b,.moves li::before,.life-n{border-radius:6px}
+.chap-hero .big{border-radius:10px}
+details.rev > summary .ic{border-radius:5px}
+details.rev > summary .cap{border-radius:4px}
+.kicker{font-weight:500}
+.chip,.need{font-weight:500}
+details.rev > summary .ic{font-family:var(--mono);font-weight:700;color:var(--accent)}
+.cta .ci{font-family:var(--mono);font-weight:700;font-size:22px}
+
+@media(max-width:720px){
+  body{font-size:18px}
+  .hero p{font-size:20px}
+  .bubble,.guard{font-size:19px}
+  .qs{grid-template-columns:1fr}
+  .cheat-grid{grid-template-columns:1fr}
+  .tg-how-grid{grid-template-columns:1fr}
+  .tg-grid{grid-template-columns:1fr}
+  .prog{gap:16px}
+  .life-ph{min-width:154px;flex-basis:154px}
+  .ev-cols{grid-template-columns:1fr}
+  .fw-grid{grid-template-columns:1fr}
+  .legs{flex-direction:column}
+  .leg-op{transform:rotate(90deg)}
+  .tm-wrap{grid-template-columns:1fr}
+  .tm-pick{position:static}
+}
+</style>
+</body></html>
