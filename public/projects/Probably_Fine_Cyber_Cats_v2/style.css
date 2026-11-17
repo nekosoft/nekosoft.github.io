@@ -104,3 +104,4 @@ footer{font-size:16px}
 @media(max-width:760px){.cat-terminal{flex-basis:300px}}
 @media(max-width:520px){.cat-terminal{flex-basis:auto;width:100%;max-width:none}}
 .projector .tile small{font-size:16px}
+.scorecard-link{color:#8250b6;font-weight:800}.scorecard-link:hover{color:#6e3b9e}
